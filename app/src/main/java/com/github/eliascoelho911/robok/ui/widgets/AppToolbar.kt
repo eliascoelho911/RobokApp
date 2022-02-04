@@ -23,7 +23,7 @@ class AppToolbar @JvmOverloads constructor(
         set(value) {
             stopLoadingAnimation()
             field = value
-            updateConnectionStatusIcon()
+            updateConnectionStatusIconView()
         }
 
     private val _statusDrawable: Drawable
@@ -31,7 +31,7 @@ class AppToolbar @JvmOverloads constructor(
             return if (connectionStatus == DISCONNECTED)
                 getDrawable(context, R.drawable.ic_usb_off_24dp)!!.apply { setTint(_redColor) }
             else
-                getDrawable(context, R.drawable.ic_circle_16dp)!!.apply { setTint(_greenColor) }
+                getDrawable(context, R.drawable.ic_usb_24dp)!!.apply { setTint(_greenColor) }
         }
 
     private val _loadingAnimation by lazy {
@@ -59,7 +59,7 @@ class AppToolbar @JvmOverloads constructor(
     init {
         inflate(context, R.layout.app_toolbar, this)
         clickListeners()
-        updateConnectionStatusIcon()
+        updateConnectionStatusIconView()
     }
 
     private fun clickListeners() {
@@ -77,7 +77,7 @@ class AppToolbar @JvmOverloads constructor(
         refresh.clearAnimation()
     }
 
-    private fun updateConnectionStatusIcon() {
+    private fun updateConnectionStatusIconView() {
         connection_status.setCompoundDrawablesWithIntrinsicBounds(null, null, _statusDrawable, null)
     }
 }
