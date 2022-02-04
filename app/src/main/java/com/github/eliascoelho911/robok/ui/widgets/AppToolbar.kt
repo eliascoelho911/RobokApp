@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.animation.Animation
 import android.view.animation.RotateAnimation
+import androidx.annotation.AttrRes
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat.getDrawable
 import com.github.eliascoelho911.robok.R
@@ -16,7 +17,7 @@ import kotlinx.android.synthetic.main.app_toolbar.view.*
 class AppToolbar @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0,
+    @AttrRes defStyleAttr: Int = 0,
 ) : Toolbar(context, attrs, defStyleAttr) {
     var onClickRefreshButton: () -> Unit = {}
     var connectionStatus: ConnectionStatus = DISCONNECTED
