@@ -1,4 +1,4 @@
-package com.github.eliascoelho911.robok.presentation.ui
+package com.github.eliascoelho911.robok.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

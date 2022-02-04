@@ -1,4 +1,4 @@
-package com.github.eliascoelho911.robok.presentation.ui.screens.main
+package com.github.eliascoelho911.robok.ui.screens.main
 
 import android.os.Bundle
 import android.view.LayoutInflater

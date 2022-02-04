@@ -1,4 +1,4 @@
-package com.github.eliascoelho911.robok.presentation.ui.widgets
+package com.github.eliascoelho911.robok.ui.widgets
 
 import android.R.integer.config_longAnimTime
 import android.content.Context
@@ -9,7 +9,7 @@ import android.view.animation.RotateAnimation
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat.getDrawable
 import com.github.eliascoelho911.robok.R
-import com.github.eliascoelho911.robok.presentation.ui.widgets.ConnectionStatus.DISCONNECTED
+import com.github.eliascoelho911.robok.ui.widgets.ConnectionStatus.DISCONNECTED
 import com.github.eliascoelho911.robok.util.getInteger
 import kotlinx.android.synthetic.main.app_toolbar.view.*
 

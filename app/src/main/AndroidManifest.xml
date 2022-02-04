@@ -10,7 +10,7 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.Robok">
         <activity
-                android:name=".presentation.ui.RootActivity"
+                android:name="com.github.eliascoelho911.robok.ui.RootActivity"
                 android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

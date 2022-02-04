@@ -4,7 +4,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <com.github.eliascoelho911.robok.presentation.ui.widgets.AppToolbar
+    <com.github.eliascoelho911.robok.ui.widgets.AppToolbar
             android:id="@+id/app_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
