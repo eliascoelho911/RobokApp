@@ -5,4 +5,5 @@
     <string name="speech_toolbar_refresh">Atualizar status de conexão com robô</string>
     <string name="rubiks_cube_scanner_button_label">Escanear</string>
     <string name="speech_capture">Capturar</string>
+    <string name="error_capture_cube_face">Erro ao capturar a face do cubo</string>
 </resources>
