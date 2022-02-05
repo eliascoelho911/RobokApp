@@ -20,7 +20,10 @@ fun Bitmap.getColorsOfGrid(
             val currentItemGlobalY = (itemHeight * y) + itemRelativeCenterY
 
             val pixel = getPixel(currentItemGlobalX, currentItemGlobalY)
-            colors.add(Color.rgb(pixel, pixel, pixel))
+            val red = Color.red(pixel)
+            val green = Color.green(pixel)
+            val blue = Color.blue(pixel)
+            colors.add(Color.rgb(red, green, blue))
         }
     }
 
