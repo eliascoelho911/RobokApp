@@ -4,4 +4,5 @@
     <string name="toolbar_connection_label">Conexão com robô</string>
     <string name="speech_toolbar_refresh">Atualizar status de conexão com robô</string>
     <string name="rubiks_cube_scanner_button_label">Escanear</string>
+    <string name="speech_capture">Capturar</string>
 </resources>

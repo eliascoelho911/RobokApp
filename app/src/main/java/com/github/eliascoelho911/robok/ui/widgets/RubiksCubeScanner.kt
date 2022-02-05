@@ -2,7 +2,6 @@ package com.github.eliascoelho911.robok.ui.widgets
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.View
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.FrameLayout
 import android.widget.GridLayout
@@ -20,6 +19,7 @@ import androidx.core.view.setMargins
 import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import com.github.eliascoelho911.robok.R
+import com.github.eliascoelho911.robok.ui.animation.openWithAnimation
 import com.github.eliascoelho911.robok.util.dpToPx
 import kotlinx.android.synthetic.main.rubiks_cube_scanner.view.*
 
@@ -48,11 +48,11 @@ class RubiksCubeScanner @JvmOverloads constructor(
         start_scan.isVisible = false
         cameraProviderFuture.addListener({
             val cameraProvider = cameraProviderFuture.get()
-            bindPreview(cameraProvider)
+            bindCameraPreview(cameraProvider)
         }, ContextCompat.getMainExecutor(context))
     }
 
-    private fun bindPreview(cameraProvider: ProcessCameraProvider) {
+    private fun bindCameraPreview(cameraProvider: ProcessCameraProvider) {
         showGrid()
 
         val preview = Preview.Builder()

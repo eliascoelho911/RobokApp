@@ -5,14 +5,18 @@
         <item name="colorOnPrimary">@color/white</item>
         <item name="colorSecondary">@color/green_a400</item>
         <item name="colorSecondaryVariant">@color/green_a700</item>
-        <item name="colorOnSecondary">?attr/colorPrimary</item>
-        <item name="android:windowBackground">?attr/colorPrimary</item>
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="colorOnSecondary">@color/purple_1E0E28</item>
+        <item name="colorBackground">@color/purple_1E0E28</item>
+        <item name="colorBackgroundVariant">@color/purple_120619</item>
+        <item name="colorOnBackground">@color/white</item>
+        <item name="android:windowBackground">?attr/colorBackground</item>
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorBackgroundVariant</item>
+        <item name="android:navigationBarColor">?attr/colorBackground</item>
     </style>
     
     <style name="Theme.Robok.TextStyle.H6" parent="TextAppearance.AppCompat">
         <item name="android:fontFamily">@font/ubuntu_medium</item>
         <item name="android:textSize">18sp</item>
-        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:textColor">?attr/colorOnBackground</item>
     </style>
 </resources>

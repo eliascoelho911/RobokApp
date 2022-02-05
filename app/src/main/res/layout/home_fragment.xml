@@ -16,4 +16,17 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/capture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_camera_24dp"
+            app:tint="@color/white"
+            android:visibility="gone"
+            android:layout_marginTop="8dp"
+            android:contentDescription="@string/speech_capture"
+            app:layout_constraintTop_toBottomOf="@id/rubiks_cube_scanner"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
