@@ -1,6 +1,7 @@
 package com.github.eliascoelho911.robok.ui.screens.main
 
 import android.Manifest.permission.CAMERA
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,10 +12,12 @@ import androidx.activity.result.contract.ActivityResultContracts.RequestPermissi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.github.eliascoelho911.robok.R
+import com.github.eliascoelho911.robok.domain.RubikCube
+import com.github.eliascoelho911.robok.domain.RubikCubeColor
 import com.github.eliascoelho911.robok.ui.animation.openWithAnimation
+import kotlinx.android.synthetic.main.cube_scanner.grid
 import kotlinx.android.synthetic.main.home_fragment.capture
-import kotlinx.android.synthetic.main.home_fragment.rubiks_cube_scanner
-import kotlinx.android.synthetic.main.rubiks_cube_scanner.grid
+import kotlinx.android.synthetic.main.home_fragment.grid_scanner
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeFragment : Fragment() {
@@ -39,31 +42,39 @@ class HomeFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        rubiks_cube_scanner.closeCamera()
+        grid_scanner.closeCamera()
     }
 
     private fun startCamera(permissionIsGranted: Boolean) {
         if (permissionIsGranted) {
-            rubiks_cube_scanner.startCamera(viewLifecycleOwner,
-                executor = _executor)
+            grid_scanner.run {
+                columns = RubikCube.NumberOfColumnsOnTheSide
+                rows = RubikCube.NumberOfRowsOnTheSide
+                startCamera(viewLifecycleOwner, _executor)
+            }
             capture.openWithAnimation()
         }
     }
 
     private fun clickListeners() {
-        rubiks_cube_scanner.onClickStartScan = {
+        grid_scanner.onClickStartScan = {
             _requestPermissionToStartCamera.launch(CAMERA)
         }
         capture.setOnClickListener {
-            rubiks_cube_scanner.lookForTheCubeFace(_executor, onFound = {
-                it.forEachIndexed { index, color ->
-                    grid.getChildAt(index).setBackgroundColor(color)
-                }
+            grid_scanner.lookForTheGridColors(_executor, onFound = {
+                showColors(it)
             }, onFailure = {
                 Toast.makeText(requireContext(),
                     getString(R.string.error_capture_cube_face),
                     Toast.LENGTH_SHORT).show()
             })
+        }
+    }
+
+    private fun showColors(it: List<Color>) {
+        it.forEachIndexed { index, color ->
+            val rubikCubeColor = RubikCubeColor.findBySimilarity(color)
+            grid.getChildAt(index).setBackgroundColor(rubikCubeColor.androidColor.toArgb())
         }
     }
 
