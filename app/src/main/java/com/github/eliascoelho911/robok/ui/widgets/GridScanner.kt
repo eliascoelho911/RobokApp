@@ -2,7 +2,8 @@ package com.github.eliascoelho911.robok.ui.widgets
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Bitmap
+import android.graphics.Color
+import android.graphics.ColorSpace
 import android.util.AttributeSet
 import android.util.Size
 import android.view.Surface.ROTATION_0
@@ -28,27 +29,39 @@ import androidx.lifecycle.LifecycleOwner
 import com.github.eliascoelho911.robok.R
 import com.github.eliascoelho911.robok.util.converters.toBitmap
 import com.github.eliascoelho911.robok.util.dpToPx
-import com.github.eliascoelho911.robok.util.getColorsOfGrid
 import com.github.eliascoelho911.robok.util.rotate
 import java.util.concurrent.Executor
-import kotlinx.android.synthetic.main.rubiks_cube_scanner.view.camera_preview
-import kotlinx.android.synthetic.main.rubiks_cube_scanner.view.start_scan
+import kotlin.math.pow
+import kotlin.math.sqrt
+import kotlinx.android.synthetic.main.cube_scanner.view.camera_preview
+import kotlinx.android.synthetic.main.cube_scanner.view.start_scan
 
 private const val GridItemsMargin = 4
 
-class RubiksCubeScanner @JvmOverloads constructor(
+class GridScanner @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     @AttrRes defStyleAttr: Int = 0,
     @StyleRes defStyleRes: Int = 0,
 ) : FrameLayout(context, attrs, defStyleAttr, defStyleRes) {
     var onClickStartScan: () -> Unit = {}
+    var columns: Int = -1
+        set(value) {
+            invalidate()
+            field = value
+        }
+    var rows: Int = -1
+        set(value) {
+            invalidate()
+            field = value
+        }
 
     init {
-        inflate(context, R.layout.rubiks_cube_scanner, this).run {
+        inflate(context, R.layout.cube_scanner, this).run {
             _gridView = findViewById(R.id.grid)
         }
         clickListeners()
+        initAttrs(attrs)
     }
 
     fun startCamera(lifecycleOwner: LifecycleOwner, executor: Executor) {
@@ -74,7 +87,8 @@ class RubiksCubeScanner @JvmOverloads constructor(
             override fun onCaptureSuccess(image: ImageProxy) {
                 super.onCaptureSuccess(image)
                 val bitmap = image.image?.toBitmap()?.rotate(90f) ?: return
-                onFound.invoke(bitmap.getColors())
+//                val colors = bitmap.getColors()
+//                onFound.invoke()
                 image.close()
             }
 
@@ -85,8 +99,23 @@ class RubiksCubeScanner @JvmOverloads constructor(
         })
     }
 
-    private fun Bitmap.getColors() =
-        getColorsOfGrid(3, 3)
+    private fun initAttrs(attrs: AttributeSet?) {
+        context.theme.obtainStyledAttributes(
+            attrs,
+            R.styleable.GridScanner,
+            0, 0
+        ).apply {
+            try {
+                columns = getInteger(R.styleable.GridScanner_columns, -1)
+                rows = getInteger(R.styleable.GridScanner_rows, -1)
+            } finally {
+                recycle()
+            }
+        }
+    }
+
+//    private fun Bitmap.getColors() =
+//        getColorsOfGridBySimilarity(3, 3)
 
     private fun bindCamera(lifecycleOwner: LifecycleOwner) {
         val cameraProvider = _cameraProviderFuture.get()
@@ -131,8 +160,8 @@ class RubiksCubeScanner @JvmOverloads constructor(
         _gridView.viewTreeObserver.addOnDrawListener {
             _gridView.children.forEach {
                 it.updateLayoutParams {
-                    width = (_gridView.width / 3) - (context.dpToPx(GridItemsMargin) * 2)
-                    height = (_gridView.height / 3) - (context.dpToPx(GridItemsMargin) * 2)
+                    width = (_gridView.width / columns) - (context.dpToPx(GridItemsMargin) * 2)
+                    height = (_gridView.height / rows) - (context.dpToPx(GridItemsMargin) * 2)
                 }
             }
         }
@@ -158,4 +187,43 @@ class RubiksCubeScanner @JvmOverloads constructor(
             .setTargetRotation(ROTATION_0)
             .build()
     }
+}
+
+private fun List<Color>.standardizeBySimilarity(): List<Color> {
+    val clusters = getClusters().toList()
+    return map { currentColor ->
+        clusters.single { it.second.contains(currentColor) }.first
+    }
+}
+
+private fun List<Color>.getClusters(): Map<Color, List<Color>> {
+    val colorsOutOfClusters = toMutableList()
+    val clusters = mutableListOf<List<Color>>()
+
+    forEach { currentColor ->
+        if (currentColor in colorsOutOfClusters) {
+            colorsOutOfClusters.filter {
+                currentColor.similarityFrom(it) < 30f
+            }.let {
+                clusters.add(it)
+                colorsOutOfClusters.removeAll(it)
+            }
+        }
+    }
+
+    return clusters.associateBy { cluster ->
+        val defaultColor = cluster.maxByOrNull { it.luminance() }!!
+        defaultColor
+    }
+}
+
+private fun Color.similarityFrom(other: Color): Float {
+    val referenceCL = ColorSpace.connect(colorSpace, ColorSpace.get(ColorSpace.Named.CIE_LAB))
+        .transform(red(), green(), blue())
+    val otherCL = ColorSpace.connect(other.colorSpace, ColorSpace.get(ColorSpace.Named.CIE_LAB))
+        .transform(other.red(), other.green(), other.blue())
+
+    return sqrt((otherCL[0] - referenceCL[0]).pow(2)
+            + (otherCL[1] - referenceCL[1]).pow(2)
+            + (otherCL[2] - referenceCL[2]).pow(2))
 }
