@@ -39,6 +39,7 @@ import com.github.eliascoelho911.robok.ui.animation.CenterAlignedScaleAnimation
 import com.github.eliascoelho911.robok.util.converters.toBitmap
 import com.github.eliascoelho911.robok.util.dpToPx
 import com.github.eliascoelho911.robok.util.rotate
+import com.github.eliascoelho911.robok.util.setOnAnimationEndListener
 import java.util.concurrent.Executor
 import kotlinx.android.synthetic.main.cube_scanner.view.camera_preview
 import kotlinx.android.synthetic.main.cube_scanner.view.fade
@@ -225,18 +226,6 @@ class GridScanner @JvmOverloads constructor(
         start_scan.setOnClickListener {
             onClickStartScan.invoke()
         }
-    }
-
-    private fun Animation.setOnAnimationEndListener(onAnimationEnd: () -> Unit) {
-        setAnimationListener(object : Animation.AnimationListener {
-            override fun onAnimationStart(p0: Animation?) {}
-
-            override fun onAnimationEnd(p0: Animation?) {
-                onAnimationEnd.invoke()
-            }
-
-            override fun onAnimationRepeat(p0: Animation?) {}
-        })
     }
 
     private var _gridView: GridLayout

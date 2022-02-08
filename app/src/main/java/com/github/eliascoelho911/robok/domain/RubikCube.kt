@@ -21,7 +21,9 @@ class RubikCube(val sides: List<RubikCubeSide> = List(NumberOfSides) { RubikCube
     }
 }
 
-class RubikCubeSide(private val _colors: MutableList<RubikCubeColor> = MutableList(NumberOfCells) { WHITE }) {
+class RubikCubeSide(colors: List<RubikCubeColor> = List(NumberOfCells) { WHITE }) {
+    private val _colors by lazy { colors.toMutableList() }
+    val colors: List<RubikCubeColor> get() = _colors
 
     fun get(x: Int, y: Int): RubikCubeColor {
         validate(x, y)
@@ -30,7 +32,7 @@ class RubikCubeSide(private val _colors: MutableList<RubikCubeColor> = MutableLi
     }
 
     fun get(index: Int): RubikCubeColor {
-        return _colors[index]
+        return colors[index]
     }
 
     fun put(x: Int, y: Int, color: RubikCubeColor) {
@@ -73,4 +75,17 @@ enum class RubikCubeColor(@ColorRes id: Int) {
     val androidColor: (context: Context) -> Color = {
         Color.valueOf(ContextCompat.getColor(it, id))
     }
+}
+
+class RubikCubeBuilder {
+    private val _sides = mutableListOf<RubikCubeSide>()
+
+    fun withSide(colors: List<RubikCubeColor>): RubikCubeBuilder {
+        _sides.add(RubikCubeSide(colors))
+        return this
+    }
+
+    val lengthOfSides: Int get() = _sides.size
+
+    fun build() = RubikCube(_sides)
 }

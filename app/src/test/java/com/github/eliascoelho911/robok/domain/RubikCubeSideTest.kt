@@ -7,12 +7,12 @@ import org.junit.Before
 import org.junit.Test
 
 class RubikCubeSideTest {
-    private val colors = mockk<MutableList<RubikCubeColor>>()
+    private val colors = mockk<List<RubikCubeColor>>(relaxed = true)
     private val side = RubikCubeSide(colors)
 
     @Before
     fun setup() {
-        every { colors[any()] } returns mockk()
+        every { side.colors } returns colors
     }
 
     @Test
