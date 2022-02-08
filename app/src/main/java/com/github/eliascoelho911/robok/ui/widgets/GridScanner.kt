@@ -107,7 +107,7 @@ class GridScanner @JvmOverloads constructor(
         })
     }
 
-    fun coloringItem(index: Int, color: Color, onAnimationEnd: () -> Unit = {}) {
+    fun tintItem(index: Int, color: Color, onAnimationEnd: () -> Unit = {}) {
         val drawable = getDrawable(context, R.drawable.rounded_cell_grid)
             ?.apply { setTint(color.toArgb()) }
         val child = _gridView.getChildAt(index) as ImageView

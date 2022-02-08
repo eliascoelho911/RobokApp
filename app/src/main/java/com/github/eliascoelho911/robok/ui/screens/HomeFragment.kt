@@ -61,8 +61,8 @@ class HomeFragment : Fragment() {
             _requestPermissionToStartCamera.launch(CAMERA)
         }
         capture.setOnClickListener {
-            grid_scanner.lookForTheGridColors(_executor, onFound = {
-                showColors(it)
+            grid_scanner.lookForTheGridColors(_executor, onFound = { colors ->
+                colors.tintGridItems()
             }, onFailure = {
                 Toast.makeText(requireContext(),
                     getString(R.string.error_capture_cube_face),
@@ -71,11 +71,11 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun showColors(it: List<Color>) {
-        it.forEachIndexed { index, color ->
+    private fun List<Color>.tintGridItems() {
+        forEachIndexed { index, color ->
             val rubikCubeColor = RubikCubeColor.findBySimilarity(requireContext(), color)
             val newColor = rubikCubeColor.androidColor(requireContext())
-            grid_scanner.coloringItem(index, newColor, onAnimationEnd = {
+            grid_scanner.tintItem(index, newColor, onAnimationEnd = {
                 grid_scanner.removeItemColor(index)
             })
         }
