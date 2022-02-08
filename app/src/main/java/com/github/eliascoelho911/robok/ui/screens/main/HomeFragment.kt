@@ -73,8 +73,9 @@ class HomeFragment : Fragment() {
 
     private fun showColors(it: List<Color>) {
         it.forEachIndexed { index, color ->
-            val rubikCubeColor = RubikCubeColor.findBySimilarity(color)
-            grid.getChildAt(index).setBackgroundColor(rubikCubeColor.androidColor.toArgb())
+            val rubikCubeColor = RubikCubeColor.findBySimilarity(requireContext(), color)
+            val colorInt = rubikCubeColor.androidColor(requireContext()).toArgb()
+            grid.getChildAt(index).setBackgroundColor(colorInt)
         }
     }
 

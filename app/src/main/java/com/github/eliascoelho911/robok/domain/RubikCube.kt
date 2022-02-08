@@ -1,6 +1,10 @@
 package com.github.eliascoelho911.robok.domain
 
+import android.content.Context
 import android.graphics.Color
+import androidx.annotation.ColorRes
+import androidx.core.content.ContextCompat
+import com.github.eliascoelho911.robok.R
 import com.github.eliascoelho911.robok.analyzers.similarityFrom
 import com.github.eliascoelho911.robok.domain.RubikCube.Companion.NumberOfCells
 import com.github.eliascoelho911.robok.domain.RubikCube.Companion.NumberOfColumnsOnTheSide
@@ -53,17 +57,20 @@ class RubikCubeSide(private val _colors: MutableList<RubikCubeColor> = MutableLi
 private const val MinSimilarity = 60f
 
 @Suppress("unused")
-enum class RubikCubeColor(r: Int, g: Int, b: Int) {
-    WHITE(255, 255, 255), BLUE(7, 121, 191),
-    RED(156, 20, 22), YELLOW(199, 179, 64),
-    ORANGE(214, 96, 60), GREEN(32, 181, 63);
+enum class RubikCubeColor(@ColorRes id: Int) {
+    WHITE(R.color.white), BLUE(R.color.blue_a400),
+    RED(R.color.red_a700), YELLOW(R.color.yellow_a400),
+    ORANGE(R.color.orange_a700), GREEN(R.color.green_a400);
 
     companion object {
-        fun findBySimilarity(color: Color): RubikCubeColor = values().mapNotNull { rubikCubeColor ->
-            val similarity = color.similarityFrom(rubikCubeColor.androidColor)
-            (similarity to rubikCubeColor).takeIf { it.first < MinSimilarity }
-        }.minByOrNull { it.first }?.second ?: WHITE
+        fun findBySimilarity(context: Context, color: Color): RubikCubeColor =
+            values().mapNotNull { rubikCubeColor ->
+                val similarity = color.similarityFrom(rubikCubeColor.androidColor(context))
+                (similarity to rubikCubeColor).takeIf { it.first < MinSimilarity }
+            }.minByOrNull { it.first }?.second ?: WHITE
     }
 
-    val androidColor by lazy { Color.valueOf(Color.rgb(r, g, b)) }
+    val androidColor: (context: Context) -> Color = {
+        Color.valueOf(ContextCompat.getColor(it, id))
+    }
 }

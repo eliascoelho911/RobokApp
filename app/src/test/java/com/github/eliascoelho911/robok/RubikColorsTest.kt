@@ -7,6 +7,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+import org.robolectric.shadows.ShadowInstrumentation.getInstrumentation
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [30])
@@ -17,7 +18,7 @@ class RubikColorsTest : BaseTest() {
             bitmap.getColorsOfGrid(3, 3).forEachIndexed { index, color ->
                 assertEquals("index: $index, file: ${side.path}",
                     side.rubikCubeSide.get(index),
-                    RubikCubeColor.findBySimilarity(color))
+                    RubikCubeColor.findBySimilarity(getInstrumentation().context, color))
             }
         }
     }
