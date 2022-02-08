@@ -12,6 +12,13 @@
             android:layout_height="match_parent"
             android:visibility="gone" />
 
+    <View
+            android:id="@+id/fade"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/black"
+            android:visibility="gone"/>
+
     <Button
             android:id="@+id/start_scan"
             android:layout_width="wrap_content"

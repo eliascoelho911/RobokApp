@@ -1,4 +1,4 @@
-package com.github.eliascoelho911.robok.ui.screens.main
+package com.github.eliascoelho911.robok.ui.screens
 
 import android.Manifest.permission.CAMERA
 import android.graphics.Color
@@ -15,7 +15,7 @@ import com.github.eliascoelho911.robok.R
 import com.github.eliascoelho911.robok.domain.RubikCube
 import com.github.eliascoelho911.robok.domain.RubikCubeColor
 import com.github.eliascoelho911.robok.ui.animation.openWithAnimation
-import kotlinx.android.synthetic.main.cube_scanner.grid
+import com.github.eliascoelho911.robok.ui.viewmodels.HomeViewModel
 import kotlinx.android.synthetic.main.home_fragment.capture
 import kotlinx.android.synthetic.main.home_fragment.grid_scanner
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -74,8 +74,10 @@ class HomeFragment : Fragment() {
     private fun showColors(it: List<Color>) {
         it.forEachIndexed { index, color ->
             val rubikCubeColor = RubikCubeColor.findBySimilarity(requireContext(), color)
-            val colorInt = rubikCubeColor.androidColor(requireContext()).toArgb()
-            grid.getChildAt(index).setBackgroundColor(colorInt)
+            val newColor = rubikCubeColor.androidColor(requireContext())
+            grid_scanner.coloringItem(index, newColor, onAnimationEnd = {
+                grid_scanner.removeItemColor(index)
+            })
         }
     }
 

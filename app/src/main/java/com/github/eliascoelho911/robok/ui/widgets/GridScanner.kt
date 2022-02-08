@@ -3,9 +3,16 @@ package com.github.eliascoelho911.robok.ui.widgets
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.util.Size
 import android.view.Surface.ROTATION_0
+import android.view.View
+import android.view.animation.AccelerateInterpolator
+import android.view.animation.AlphaAnimation
+import android.view.animation.Animation
+import android.view.animation.AnimationSet
+import android.view.animation.DecelerateInterpolator
 import android.widget.FrameLayout
 import android.widget.GridLayout
 import android.widget.ImageView
@@ -27,12 +34,16 @@ import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.LifecycleOwner
 import com.github.eliascoelho911.robok.R
 import com.github.eliascoelho911.robok.analyzers.getColorsOfGrid
+import com.github.eliascoelho911.robok.ui.animation.AnimationDurations
+import com.github.eliascoelho911.robok.ui.animation.CenterAlignedScaleAnimation
 import com.github.eliascoelho911.robok.util.converters.toBitmap
 import com.github.eliascoelho911.robok.util.dpToPx
 import com.github.eliascoelho911.robok.util.rotate
 import java.util.concurrent.Executor
 import kotlinx.android.synthetic.main.cube_scanner.view.camera_preview
+import kotlinx.android.synthetic.main.cube_scanner.view.fade
 import kotlinx.android.synthetic.main.cube_scanner.view.start_scan
+
 
 private const val GridItemsMargin = 4
 
@@ -65,7 +76,7 @@ class GridScanner @JvmOverloads constructor(
     fun startCamera(lifecycleOwner: LifecycleOwner, executor: Executor) {
         camera_preview.isVisible = true
         start_scan.isVisible = false
-        showGrid()
+        _gridView.show()
         _cameraProviderFuture.addListener({
             bindCamera(lifecycleOwner)
         }, executor)
@@ -94,6 +105,55 @@ class GridScanner @JvmOverloads constructor(
                 onFailure.invoke(exception)
             }
         })
+    }
+
+    fun coloringItem(index: Int, color: Color, onAnimationEnd: () -> Unit = {}) {
+        val drawable = getDrawable(context, R.drawable.rounded_cell_grid)
+            ?.apply { setTint(color.toArgb()) }
+        val child = _gridView.getChildAt(index) as ImageView
+
+        child.setImageDrawableWithScaleInAnimation(drawable, onAnimationEnd)
+        fade.startFadeAnimation()
+    }
+
+    fun removeItemColor(index: Int) {
+        val drawable = getDrawable(context, R.drawable.outline_rounded_cell_grid)
+
+        val child = _gridView.getChildAt(index) as ImageView
+        child.scaleOutAnimation(onAnimationEnd = {
+            child.setImageDrawable(drawable)
+            child.isVisible = true
+        })
+    }
+
+    private fun ImageView.setImageDrawableWithScaleInAnimation(
+        drawable: Drawable?,
+        onAnimationEnd: () -> Unit,
+    ) {
+        isVisible = false
+        setImageDrawable(drawable)
+        val scaleAnimation = _scaleInAnimation.apply {
+            setOnAnimationEndListener(onAnimationEnd)
+        }
+        startAnimation(scaleAnimation)
+        isVisible = true
+    }
+
+    private fun ImageView.scaleOutAnimation(
+        onAnimationEnd: () -> Unit,
+    ) {
+        val scaleAnimation = _scaleOutAnimation.apply {
+            setOnAnimationEndListener {
+                isVisible = false
+                onAnimationEnd()
+            }
+        }
+        startAnimation(scaleAnimation)
+    }
+
+    private fun View.startFadeAnimation() {
+        startAnimation(_fadeAnimation)
+        isVisible = true
     }
 
     private fun initAttrs(attrs: AttributeSet?) {
@@ -130,8 +190,8 @@ class GridScanner @JvmOverloads constructor(
         }
     }
 
-    private fun showGrid() {
-        _gridView.isVisible = true
+    private fun GridLayout.show() {
+        isVisible = true
         addGridItems()
         adjustSizeOfGridItemsRelativeToParent()
     }
@@ -140,7 +200,7 @@ class GridScanner @JvmOverloads constructor(
         for (i in 0 until 9) {
             ImageView(context).apply {
                 id = generateViewId()
-                setImageDrawable(getDrawable(context, R.drawable.outline_square_rounded))
+                setImageDrawable(getDrawable(context, R.drawable.outline_rounded_cell_grid))
                 layoutParams = GridLayout.LayoutParams().apply {
                     setMargins(context.dpToPx(GridItemsMargin))
                 }
@@ -167,6 +227,18 @@ class GridScanner @JvmOverloads constructor(
         }
     }
 
+    private fun Animation.setOnAnimationEndListener(onAnimationEnd: () -> Unit) {
+        setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(p0: Animation?) {}
+
+            override fun onAnimationEnd(p0: Animation?) {
+                onAnimationEnd.invoke()
+            }
+
+            override fun onAnimationRepeat(p0: Animation?) {}
+        })
+    }
+
     private var _gridView: GridLayout
     private val _cameraProviderFuture by lazy { ProcessCameraProvider.getInstance(context) }
     private val _preview by lazy {
@@ -181,4 +253,48 @@ class GridScanner @JvmOverloads constructor(
             .setTargetRotation(ROTATION_0)
             .build()
     }
+    private val _fadeAnimation: Animation
+        get() {
+            val fadeIn = AlphaAnimation(0f, 0.7f).apply {
+                interpolator = DecelerateInterpolator()
+                duration = AnimationDurations.medium
+            }
+            val fadeOut = AlphaAnimation(0.7f, 0f).apply {
+                interpolator = AccelerateInterpolator()
+                startOffset = AnimationDurations.long
+                duration = AnimationDurations.medium
+            }
+            return AnimationSet(false).apply {
+                fillBefore = true
+                fillAfter = true
+            }.apply {
+                addAnimation(fadeIn)
+                addAnimation(fadeOut)
+            }
+        }
+    private val _scaleInAnimation: Animation
+        get() =
+            CenterAlignedScaleAnimation(
+                fromX = 0f,
+                toX = 1f,
+                fromY = 0f,
+                toY = 1f,
+            ).apply {
+                duration = AnimationDurations.short
+                interpolator = AccelerateInterpolator()
+                fillAfter = true
+                fillBefore = true
+            }
+    private val _scaleOutAnimation: Animation
+        get() = CenterAlignedScaleAnimation(
+            fromX = 1f,
+            toX = 0f,
+            fromY = 1f,
+            toY = 0f,
+        ).apply {
+            duration = AnimationDurations.short
+            interpolator = DecelerateInterpolator()
+            startOffset = AnimationDurations.medium
+            fillBefore = true
+        }
 }
