@@ -61,8 +61,8 @@ private const val MinSimilarity = 60f
 @Suppress("unused")
 enum class RubikCubeColor(@ColorRes id: Int) {
     WHITE(R.color.white), BLUE(R.color.blue_a400),
-    RED(R.color.red_a700), YELLOW(R.color.yellow_a400),
-    ORANGE(R.color.orange_a700), GREEN(R.color.green_a400);
+    RED(R.color.red_9D1519), YELLOW(R.color.yellow_a400),
+    ORANGE(R.color.orange_EB735A), GREEN(R.color.green_a400);
 
     companion object {
         fun findBySimilarity(context: Context, color: Color): RubikCubeColor =

@@ -6,8 +6,9 @@
     <color name="green_a700">#FF00C853</color>
     <color name="blue_a400">#FF00B0FF</color>
     <color name="yellow_a400">#FFEA00</color>
-    <color name="orange_a700">#FF6D00</color>
+    <color name="orange_EB735A">#EB735A</color>
     <color name="red_a700">#FFFF1744</color>
+    <color name="red_9D1519">#9D1519</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 </resources>
