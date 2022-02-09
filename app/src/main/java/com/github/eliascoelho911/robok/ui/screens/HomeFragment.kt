@@ -12,12 +12,14 @@ import androidx.activity.result.contract.ActivityResultContracts.RequestPermissi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.github.eliascoelho911.robok.R
-import com.github.eliascoelho911.robok.domain.RubikCube
-import com.github.eliascoelho911.robok.domain.RubikCubeBuilder
-import com.github.eliascoelho911.robok.domain.RubikCubeColor
+import com.github.eliascoelho911.robok.constants.RubikCubeConstants
+import com.github.eliascoelho911.robok.domain.Box
+import com.github.eliascoelho911.robok.domain.RubikCubeSide
+import com.github.eliascoelho911.robok.domain.SidePosition
 import com.github.eliascoelho911.robok.ui.animation.closeWithAnimation
 import com.github.eliascoelho911.robok.ui.animation.openWithAnimation
 import com.github.eliascoelho911.robok.ui.viewmodels.HomeViewModel
+import com.github.eliascoelho911.robok.util.toMatrix
 import kotlinx.android.synthetic.main.home_fragment.capture
 import kotlinx.android.synthetic.main.home_fragment.grid_scanner
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -40,6 +42,18 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         clickListeners()
+        observers()
+    }
+
+    private fun observers() {
+        scannedRubikCubeObserver()
+    }
+
+    private fun scannedRubikCubeObserver() {
+        _viewModel.scannedRubikCube.observe(viewLifecycleOwner) {
+            if (it.sides.size == RubikCubeConstants.NumberOfSides)
+                capture.closeWithAnimation()
+        }
     }
 
     override fun onDestroy() {
@@ -50,8 +64,8 @@ class HomeFragment : Fragment() {
     private fun startCamera(permissionIsGranted: Boolean) {
         if (permissionIsGranted) {
             grid_scanner.run {
-                columns = RubikCube.NumberOfColumnsOnTheSide
-                rows = RubikCube.NumberOfRowsOnTheSide
+                columns = RubikCubeConstants.LineHeight
+                rows = RubikCubeConstants.LineHeight
                 startCamera(viewLifecycleOwner, _executor)
             }
             capture.openWithAnimation()
@@ -63,43 +77,50 @@ class HomeFragment : Fragment() {
             _requestPermissionToStartCamera.launch(CAMERA)
         }
         capture.setOnClickListener {
-            onClickGridScannerListener()
+            onClickCaptureListener()
         }
     }
 
-    private fun onClickGridScannerListener() {
+    private fun onClickCaptureListener() {
+        capture.isClickable = false
         grid_scanner.lookForTheGridColors(_executor, onFound = { colors ->
-            colors.toRubikCubeColor().let { rubikCubeColors ->
-                rubikCubeColors.tintGridItems()
-                _rubikCubeBuilder.withSide(rubikCubeColors)
+            colors.toBoxColor().let { boxColors ->
+                boxColors.tintGridItems(onAnimationEnd = {
+                    capture.isClickable = true
+                })
+                boxColors.createAndAddScannedSize()
             }
         }, onFailure = {
             Toast.makeText(requireContext(),
                 getString(R.string.error_capture_cube_face),
                 Toast.LENGTH_SHORT).show()
         })
-
-        if (_rubikCubeBuilder.lengthOfSides == RubikCube.NumberOfSides) {
-            _viewModel.scannedRubikCube = _rubikCubeBuilder.build()
-            capture.closeWithAnimation()
-        }
     }
 
-    private fun List<Color>.toRubikCubeColor() = map {
-        RubikCubeColor.findBySimilarity(requireContext(), it)
+    private fun List<Box>.createAndAddScannedSize() {
+        val matrix = toMatrix(
+            width = RubikCubeConstants.LineHeight,
+            height = RubikCubeConstants.LineHeight
+        )
+        val position = _lastSideScanned?.position?.next() ?: SidePosition.first()
+        _viewModel.addScannedSide(RubikCubeSide(position, matrix))
     }
 
-    private fun List<RubikCubeColor>.tintGridItems() {
+    private fun List<Color>.toBoxColor() = map {
+        Box.findBySimilarity(requireContext(), it)
+    }
+
+    private fun List<Box>.tintGridItems(onAnimationEnd: () -> Unit) {
         forEachIndexed { index, rubikCubeColor ->
             val color = rubikCubeColor.androidColor(requireContext())
             grid_scanner.tintItem(index, color, onAnimationEnd = {
-                grid_scanner.removeItemColor(index)
+                grid_scanner.removeItemColor(index, onAnimationEnd)
             })
         }
     }
 
     private val _executor get() = ContextCompat.getMainExecutor(requireContext())
     private val _viewModel: HomeViewModel by viewModel()
-    private val _rubikCubeBuilder = RubikCubeBuilder()
     private lateinit var _requestPermissionToStartCamera: ActivityResultLauncher<String>
+    private val _lastSideScanned get() = _viewModel.scannedRubikCube.value?.sides?.lastOrNull()
 }

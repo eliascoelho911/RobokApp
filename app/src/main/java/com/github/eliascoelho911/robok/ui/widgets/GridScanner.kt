@@ -117,13 +117,14 @@ class GridScanner @JvmOverloads constructor(
         fade.startFadeAnimation()
     }
 
-    fun removeItemColor(index: Int) {
+    fun removeItemColor(index: Int, onAnimationEnd: () -> Unit) {
         val drawable = getDrawable(context, R.drawable.outline_rounded_cell_grid)
 
         val child = _gridView.getChildAt(index) as ImageView
         child.scaleOutAnimation(onAnimationEnd = {
             child.setImageDrawable(drawable)
             child.isVisible = true
+            onAnimationEnd.invoke()
         })
     }
 

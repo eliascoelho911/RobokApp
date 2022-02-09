@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <attr name="colorBackground" format="color"/>
-    <attr name="colorBackgroundVariant" format="color"/>
+    <attr name="colorBackground" format="color" />
+    <attr name="colorBackgroundVariant" format="color" />
 
     <declare-styleable name="GridScanner">
-        <attr name="rows" format="integer"/>
-        <attr name="columns" format="integer"/>
+        <attr name="rows" format="integer" />
+        <attr name="columns" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="RubikCubePreview">
+        <attr name="boxItemSize" format="dimension" />
+        <attr name="boxItemRadius" format="dimension" />
     </declare-styleable>
 </resources>

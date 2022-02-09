@@ -6,66 +6,54 @@ import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
 import com.github.eliascoelho911.robok.R
 import com.github.eliascoelho911.robok.analyzers.similarityFrom
-import com.github.eliascoelho911.robok.domain.RubikCube.Companion.NumberOfCells
-import com.github.eliascoelho911.robok.domain.RubikCube.Companion.NumberOfColumnsOnTheSide
-import com.github.eliascoelho911.robok.domain.RubikCube.Companion.NumberOfRowsOnTheSide
-import com.github.eliascoelho911.robok.domain.RubikCubeColor.WHITE
+import com.github.eliascoelho911.robok.util.Matrix
 
+class RubikCube(sides: Set<RubikCubeSide>) {
+    private val _sides = sides.toMutableSet()
+    val sides: Set<RubikCubeSide> get() = _sides
 
-class RubikCube(val sides: List<RubikCubeSide> = List(NumberOfSides) { RubikCubeSide() }) {
-    companion object {
-        const val NumberOfSides = 6
-        const val NumberOfColumnsOnTheSide = 3
-        const val NumberOfRowsOnTheSide = 3
-        const val NumberOfCells = NumberOfColumnsOnTheSide * NumberOfRowsOnTheSide
+    fun addSide(side: RubikCubeSide) {
+        _sides.add(side)
     }
 }
 
-class RubikCubeSide(colors: List<RubikCubeColor> = List(NumberOfCells) { WHITE }) {
-    private val _colors by lazy { colors.toMutableList() }
-    val colors: List<RubikCubeColor> get() = _colors
+class RubikCubeSide(val position: SidePosition, val colors: Matrix<Box>) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
 
-    fun get(x: Int, y: Int): RubikCubeColor {
-        validate(x, y)
+        other as RubikCubeSide
 
-        return get(indexFrom(x, y))
+        return position == other.position
     }
 
-    fun get(index: Int): RubikCubeColor {
-        return colors[index]
+    override fun hashCode(): Int {
+        return position.hashCode()
     }
+}
 
-    fun put(x: Int, y: Int, color: RubikCubeColor) {
-        validate(x, y)
+enum class SidePosition(private val order: Int, val x: Int, val y: Int) {
+    LEFT(order = 0, x = 0, y = 1), FRONT(order = 1, x = 1, y = 1),
+    UP(order = 2, x = 1, y = 0), DOWN(order = 3, x = 1, y = 2),
+    RIGHT(order = 4, x = 2, y = 1), BOTTOM(order = 5, x = 3, y = 1);
 
-        put(indexFrom(x, y), color)
-    }
+    fun next(): SidePosition = values().single { it.order == this.order + 1 }
 
-    fun put(index: Int, color: RubikCubeColor) {
-        _colors[index] = color
-    }
-
-    private fun indexFrom(x: Int, y: Int) = x * NumberOfColumnsOnTheSide + y
-
-    private fun validate(x: Int, y: Int) {
-        if (x >= NumberOfColumnsOnTheSide)
-            throw IndexOutOfBoundsException("x: $x is greater than maximum $NumberOfColumnsOnTheSide")
-
-        if (y >= NumberOfRowsOnTheSide)
-            throw IndexOutOfBoundsException("y: $x is greater than maximum $NumberOfRowsOnTheSide")
+    companion object {
+        fun first() = values().first()
     }
 }
 
 private const val MinSimilarity = 60f
 
 @Suppress("unused")
-enum class RubikCubeColor(@ColorRes id: Int) {
+enum class Box(@ColorRes id: Int) {
     WHITE(R.color.white), BLUE(R.color.blue_a400),
     RED(R.color.red_9D1519), YELLOW(R.color.yellow_a400),
     ORANGE(R.color.orange_EB735A), GREEN(R.color.green_a400);
 
     companion object {
-        fun findBySimilarity(context: Context, color: Color): RubikCubeColor =
+        fun findBySimilarity(context: Context, color: Color): Box =
             values().mapNotNull { rubikCubeColor ->
                 val similarity = color.similarityFrom(rubikCubeColor.androidColor(context))
                 (similarity to rubikCubeColor).takeIf { it.first < MinSimilarity }
@@ -75,17 +63,4 @@ enum class RubikCubeColor(@ColorRes id: Int) {
     val androidColor: (context: Context) -> Color = {
         Color.valueOf(ContextCompat.getColor(it, id))
     }
-}
-
-class RubikCubeBuilder {
-    private val _sides = mutableListOf<RubikCubeSide>()
-
-    fun withSide(colors: List<RubikCubeColor>): RubikCubeBuilder {
-        _sides.add(RubikCubeSide(colors))
-        return this
-    }
-
-    val lengthOfSides: Int get() = _sides.size
-
-    fun build() = RubikCube(_sides)
 }

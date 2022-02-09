@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="icon_button_size">48dp</dimen>
+    <dimen name="rubik_color_preview_internal_margin">4dp</dimen>
 </resources>

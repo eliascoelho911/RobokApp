@@ -11,12 +11,14 @@ fun FloatingActionButton.openWithAnimation() {
 
     startAnimation(animation)
     isVisible = true
+    isEnabled = true
 }
 
 fun FloatingActionButton.closeWithAnimation() {
     val animation = AnimationUtils.loadAnimation(context, R.anim.fab_close).apply {
         setOnAnimationEndListener {
             isVisible = false
+            isEnabled = false
         }
     }
 

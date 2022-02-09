@@ -2,7 +2,7 @@ package com.github.eliascoelho911.robok
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import com.github.eliascoelho911.robok.domain.RubikCubeColor
+import com.github.eliascoelho911.robok.domain.Box
 import com.github.eliascoelho911.robok.domain.RubikCubeSide
 import java.io.File
 import java.io.FileInputStream
@@ -25,10 +25,10 @@ val rubikSide: Map<RubikPicture, Bitmap> by lazy {
 }
 
 private val colorMapper = mapOf(
-    "b" to RubikCubeColor.BLUE,
-    "g" to RubikCubeColor.GREEN,
-    "w" to RubikCubeColor.WHITE,
-    "r" to RubikCubeColor.RED,
-    "o" to RubikCubeColor.ORANGE,
-    "y" to RubikCubeColor.YELLOW,
+    "b" to Box.BLUE,
+    "g" to Box.GREEN,
+    "w" to Box.WHITE,
+    "r" to Box.RED,
+    "o" to Box.ORANGE,
+    "y" to Box.YELLOW,
 )
