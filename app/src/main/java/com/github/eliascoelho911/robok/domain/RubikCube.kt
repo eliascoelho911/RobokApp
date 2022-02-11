@@ -17,7 +17,7 @@ class RubikCube(sides: Set<RubikCubeSide>) {
     }
 }
 
-class RubikCubeSide(val position: SidePosition, val colors: Matrix<Box>) {
+class RubikCubeSide(val position: SidePosition, val colors: Matrix<RubikCubeSideColor>) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -47,13 +47,13 @@ enum class SidePosition(private val order: Int, val x: Int, val y: Int) {
 private const val MinSimilarity = 60f
 
 @Suppress("unused")
-enum class Box(@ColorRes id: Int) {
+enum class RubikCubeSideColor(@ColorRes id: Int) {
     WHITE(R.color.white), BLUE(R.color.blue_a400),
     RED(R.color.red_9D1519), YELLOW(R.color.yellow_a400),
     ORANGE(R.color.orange_EB735A), GREEN(R.color.green_a400);
 
     companion object {
-        fun findBySimilarity(context: Context, color: Color): Box =
+        fun findBySimilarity(context: Context, color: Color): RubikCubeSideColor =
             values().mapNotNull { rubikCubeColor ->
                 val similarity = color.similarityFrom(rubikCubeColor.androidColor(context))
                 (similarity to rubikCubeColor).takeIf { it.first < MinSimilarity }

@@ -9,7 +9,6 @@ import android.view.View
 import androidx.annotation.AttrRes
 import com.github.eliascoelho911.robok.R
 import com.github.eliascoelho911.robok.constants.RubikCubeConstants.LineHeight
-import com.github.eliascoelho911.robok.domain.Box
 import com.github.eliascoelho911.robok.domain.RubikCube
 import com.github.eliascoelho911.robok.domain.RubikCubeSide
 import kotlin.math.min

@@ -7,7 +7,7 @@ import org.junit.Before
 import org.junit.Test
 
 class RubikCubeSideTest {
-    private val colors = mockk<List<Box>>(relaxed = true)
+    private val colors = mockk<List<RubikCubeSideColor>>(relaxed = true)
     private val side = RubikCubeSide(colors)
 
     @Before

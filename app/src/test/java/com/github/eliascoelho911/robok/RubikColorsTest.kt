@@ -1,7 +1,7 @@
 package com.github.eliascoelho911.robok
 
 import com.github.eliascoelho911.robok.analyzers.getColorsOfGrid
-import com.github.eliascoelho911.robok.domain.Box
+import com.github.eliascoelho911.robok.domain.RubikCubeSideColor
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -18,7 +18,7 @@ class RubikColorsTest : BaseTest() {
             bitmap.getColorsOfGrid(3, 3).forEachIndexed { index, color ->
                 assertEquals("index: $index, file: ${side.path}",
                     side.rubikCubeSide.get(index),
-                    Box.findBySimilarity(getInstrumentation().context, color))
+                    RubikCubeSideColor.findBySimilarity(getInstrumentation().context, color))
             }
         }
     }
