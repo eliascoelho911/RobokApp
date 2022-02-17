@@ -5,7 +5,7 @@ import android.graphics.Color
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
 import com.github.eliascoelho911.robok.R
-import com.github.eliascoelho911.robok.analyzers.similarityFrom
+import com.github.eliascoelho911.robok.util.similarityFrom
 import com.github.eliascoelho911.robok.util.Matrix
 
 class RubikCube(sides: Set<RubikCubeSide>) {

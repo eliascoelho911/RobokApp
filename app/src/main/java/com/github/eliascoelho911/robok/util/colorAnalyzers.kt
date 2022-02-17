@@ -1,4 +1,4 @@
-package com.github.eliascoelho911.robok.analyzers
+package com.github.eliascoelho911.robok.util
 
 import android.graphics.Color
 import android.graphics.ColorSpace

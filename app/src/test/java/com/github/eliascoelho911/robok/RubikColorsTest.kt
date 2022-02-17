@@ -1,6 +1,6 @@
 package com.github.eliascoelho911.robok
 
-import com.github.eliascoelho911.robok.analyzers.getColorsOfGrid
+import com.github.eliascoelho911.robok.util.getColorsOfGrid
 import com.github.eliascoelho911.robok.domain.RubikCubeSideColor
 import org.junit.Assert.assertEquals
 import org.junit.Test

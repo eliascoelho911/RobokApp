@@ -12,7 +12,7 @@ import androidx.activity.result.contract.ActivityResultContracts.RequestPermissi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.github.eliascoelho911.robok.R
-import com.github.eliascoelho911.robok.constants.RubikCubeConstants
+import com.github.eliascoelho911.robok.domain.constants.RubikCubeConstants
 import com.github.eliascoelho911.robok.domain.RubikCubeSideColor
 import com.github.eliascoelho911.robok.domain.RubikCubeSide
 import com.github.eliascoelho911.robok.domain.SidePosition

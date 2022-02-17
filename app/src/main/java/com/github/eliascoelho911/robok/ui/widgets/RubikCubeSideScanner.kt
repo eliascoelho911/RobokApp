@@ -16,14 +16,15 @@ import androidx.camera.core.ImageProxy
 import androidx.camera.core.Preview
 import androidx.camera.core.UseCaseGroup
 import androidx.camera.lifecycle.ProcessCameraProvider
-import androidx.camera.view.PreviewView
 import androidx.core.view.isVisible
 import androidx.lifecycle.LifecycleOwner
-import com.github.eliascoelho911.robok.analyzers.getColorsOfGrid
-import com.github.eliascoelho911.robok.constants.RubikCubeConstants.LineHeight
+import com.github.eliascoelho911.robok.R
+import com.github.eliascoelho911.robok.util.getColorsOfGrid
+import com.github.eliascoelho911.robok.domain.constants.RubikCubeConstants.LineHeight
 import com.github.eliascoelho911.robok.util.converters.toBitmap
 import com.github.eliascoelho911.robok.util.rotate
 import java.util.concurrent.Executor
+import kotlinx.android.synthetic.main.rubik_cube_scanner.view.camera_preview
 
 class RubikCubeSideScanner @JvmOverloads constructor(
     context: Context,
@@ -31,13 +32,12 @@ class RubikCubeSideScanner @JvmOverloads constructor(
     @AttrRes defStyleAttr: Int = 0,
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-        addView(_previewView)
+    init {
+        inflate(context, R.layout.rubik_cube_scanner, this)
     }
 
     fun startCamera(lifecycleOwner: LifecycleOwner, executor: Executor) {
-        _previewView.isVisible = true
+        camera_preview.isVisible = true
         _cameraProviderFuture.addListener({
             bindCamera(lifecycleOwner)
         }, executor)
@@ -75,7 +75,7 @@ class RubikCubeSideScanner @JvmOverloads constructor(
         val useCaseGroup = UseCaseGroup.Builder()
             .addUseCase(_preview)
             .addUseCase(_imageCapture)
-            .setViewPort(_previewView.viewPort!!)
+            .setViewPort(camera_preview.viewPort!!)
             .build()
 
         with(cameraProvider) {
@@ -91,7 +91,7 @@ class RubikCubeSideScanner @JvmOverloads constructor(
     private val _preview by lazy {
         Preview.Builder()
             .build()
-            .apply { setSurfaceProvider(_previewView.surfaceProvider) }
+            .apply { setSurfaceProvider(camera_preview.surfaceProvider) }
     }
     private val _imageCapture: ImageCapture by lazy {
         ImageCapture.Builder()
@@ -100,5 +100,4 @@ class RubikCubeSideScanner @JvmOverloads constructor(
             .setTargetRotation(ROTATION_0)
             .build()
     }
-    private val _previewView: PreviewView = PreviewView(context, attrs, defStyleAttr)
 }
