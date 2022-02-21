@@ -3,4 +3,5 @@
     <dimen name="icon_button_size">48dp</dimen>
     <dimen name="rubik_color_preview_internal_margin">4dp</dimen>
     <dimen name="box_highlight_size">280dp</dimen>
+    <dimen name="rubik_cube_side_preview_cell_stroke_width">3dp</dimen>
 </resources>

@@ -25,7 +25,8 @@ import com.github.eliascoelho911.robok.util.getColorsOfGrid
 import com.github.eliascoelho911.robok.util.showToast
 import com.github.eliascoelho911.robok.util.toMatrix
 import kotlinx.android.synthetic.main.home_fragment.capture
-import kotlinx.android.synthetic.main.home_fragment.rubik_cube_side_scanner
+import kotlinx.android.synthetic.main.home_fragment.camera
+import kotlinx.android.synthetic.main.home_fragment.rubik_cube_side_preview
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeFragment : Fragment() {
@@ -56,7 +57,7 @@ class HomeFragment : Fragment() {
 
     private fun scannedRubikCubeObserver() {
         viewModel.scannedRubikCubeSides.observe(viewLifecycleOwner) {
-
+            lastSideScanned?.let(rubik_cube_side_preview::show)
             if (it.size == RubikCubeConstants.NumberOfSides)
                 capture.closeWithAnimation()
         }
@@ -64,12 +65,12 @@ class HomeFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        rubik_cube_side_scanner.closeCamera()
+        camera.closeCamera()
     }
 
     private fun startCamera(permissionIsGranted: Boolean) {
         if (permissionIsGranted) {
-            rubik_cube_side_scanner.startCamera(viewLifecycleOwner, executor)
+            camera.startCamera(viewLifecycleOwner, executor)
             capture.openWithAnimation()
         }
     }
@@ -82,7 +83,7 @@ class HomeFragment : Fragment() {
 
     private fun onClickCaptureListener() {
         capture.isClickable = false
-        rubik_cube_side_scanner.lookForTheGridColors()
+        camera.lookForTheGridColors()
     }
 
     private fun CameraWithBoxHighlight.lookForTheGridColors() {

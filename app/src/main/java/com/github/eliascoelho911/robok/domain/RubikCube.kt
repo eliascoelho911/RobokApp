@@ -32,10 +32,10 @@ class RubikCubeSide(val position: SidePosition, val colors: Matrix<RubikCubeSide
     }
 }
 
-enum class SidePosition(private val order: Int, val x: Int, val y: Int) {
-    LEFT(order = 0, x = 0, y = 1), FRONT(order = 1, x = 1, y = 1),
-    UP(order = 2, x = 1, y = 0), DOWN(order = 3, x = 1, y = 2),
-    RIGHT(order = 4, x = 2, y = 1), BOTTOM(order = 5, x = 3, y = 1);
+enum class SidePosition(private val order: Int) {
+    LEFT(order = 0), FRONT(order = 1),
+    UP(order = 2), DOWN(order = 3),
+    RIGHT(order = 4), BOTTOM(order = 5);
 
     fun next(): SidePosition = values().single { it.order == this.order + 1 }
 
@@ -47,10 +47,10 @@ enum class SidePosition(private val order: Int, val x: Int, val y: Int) {
 private const val MinSimilarity = 60f
 
 @Suppress("unused")
-enum class RubikCubeSideColor(@ColorRes id: Int) {
+enum class RubikCubeSideColor(@ColorRes val colorId: Int) {
     WHITE(R.color.white), BLUE(R.color.blue_a400),
     RED(R.color.red_9D1519), YELLOW(R.color.yellow_a400),
-    ORANGE(R.color.orange_EB735A), GREEN(R.color.green_a400);
+    ORANGE(R.color.orange_E99D4B), GREEN(R.color.green_a400);
 
     companion object {
         fun findBySimilarity(context: Context, color: Color): RubikCubeSideColor =
@@ -61,6 +61,6 @@ enum class RubikCubeSideColor(@ColorRes id: Int) {
     }
 
     val androidColor: (context: Context) -> Color = {
-        Color.valueOf(ContextCompat.getColor(it, id))
+        Color.valueOf(ContextCompat.getColor(it, colorId))
     }
 }

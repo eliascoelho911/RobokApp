@@ -8,11 +8,6 @@
         <attr name="columns" format="integer" />
     </declare-styleable>
 
-    <declare-styleable name="RubikCubePreview">
-        <attr name="boxItemSize" format="dimension" />
-        <attr name="boxItemRadius" format="dimension" />
-    </declare-styleable>
-
     <declare-styleable name="BoxHighlight">
         <attr name="internalBoxWidth" format="dimension" />
         <attr name="internalBoxHeight" format="dimension" />

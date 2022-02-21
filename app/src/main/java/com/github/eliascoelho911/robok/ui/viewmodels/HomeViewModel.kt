@@ -7,10 +7,10 @@ import com.github.eliascoelho911.robok.domain.RubikCubeSide
 import com.github.eliascoelho911.robok.util.updateValue
 
 class HomeViewModel : ViewModel() {
-    private val _scannedRubikCubeSides = MutableLiveData<List<RubikCubeSide>>()
+    private val _scannedRubikCubeSides = MutableLiveData<List<RubikCubeSide>>(emptyList())
     val scannedRubikCubeSides: LiveData<List<RubikCubeSide>> get() = _scannedRubikCubeSides
 
     fun addScannedSide(side: RubikCubeSide) {
-        _scannedRubikCubeSides.updateValue { toMutableList().add(side) }
+        _scannedRubikCubeSides.updateValue { this?.toMutableList()?.apply { add(side) } }
     }
 }

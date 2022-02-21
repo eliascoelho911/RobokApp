@@ -7,13 +7,22 @@
         android:layout_height="match_parent">
 
     <com.github.eliascoelho911.robok.ui.widgets.CameraWithBoxHighlight
-            android:id="@+id/rubik_cube_side_scanner"
+            android:id="@+id/camera"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.github.eliascoelho911.robok.ui.widgets.RubikCubeSidePreview
+            android:id="@+id/rubik_cube_side_preview"
+            android:layout_width="@dimen/box_highlight_size"
+            android:layout_height="@dimen/box_highlight_size"
+            app:layout_constraintTop_toTopOf="@id/camera"
+            app:layout_constraintStart_toStartOf="@id/camera"
+            app:layout_constraintBottom_toBottomOf="@id/camera"
+            app:layout_constraintEnd_toEndOf="@id/camera" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/capture"
@@ -29,14 +38,5 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
-
-    <ImageView
-            android:id="@+id/test"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
