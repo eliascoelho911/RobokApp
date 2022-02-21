@@ -27,9 +27,9 @@ class BoxHighlight @JvmOverloads constructor(
             0, 0
         ).apply {
             try {
-                _internalBoxWidth =
+                internalBoxWidth =
                     getDimensionPixelSize(R.styleable.BoxHighlight_internalBoxWidth, 0)
-                _internalBoxHeight =
+                internalBoxHeight =
                     getDimensionPixelSize(R.styleable.BoxHighlight_internalBoxHeight, 0)
             } finally {
                 recycle()
@@ -46,14 +46,14 @@ class BoxHighlight @JvmOverloads constructor(
 
     private fun Canvas.drawHorizontalRects() {
         val centerY = height / 2
-        val height = centerY - (_internalBoxHeight / 2)
+        val height = centerY - (internalBoxHeight / 2)
 
         drawTopRect(height)
         drawBottomRect(height)
     }
 
     private fun Canvas.drawTopRect(height: Int) {
-        drawRect(0f, 0f, width.toFloat(), height.toFloat(), _colorPaint)
+        drawRect(0f, 0f, width.toFloat(), height.toFloat(), colorPaint)
     }
 
     private fun Canvas.drawBottomRect(height: Int) {
@@ -62,7 +62,7 @@ class BoxHighlight @JvmOverloads constructor(
             top,
             width.toFloat(),
             this.height.toFloat(),
-            _colorPaint)
+            colorPaint)
     }
 
     private fun Canvas.drawVerticalRects() {
@@ -73,26 +73,26 @@ class BoxHighlight @JvmOverloads constructor(
     private fun Canvas.drawRightRect() {
         val centerX = width / 2
         val centerY = height / 2
-        val startY = (centerY - (_internalBoxHeight / 2)).toFloat()
-        val left = (centerX + _internalBoxHeight / 2).toFloat()
-        drawRect(left, startY, this.width.toFloat(), startY + _internalBoxHeight, _colorPaint)
+        val startY = (centerY - (internalBoxHeight / 2)).toFloat()
+        val left = (centerX + internalBoxHeight / 2).toFloat()
+        drawRect(left, startY, this.width.toFloat(), startY + internalBoxHeight, colorPaint)
     }
 
     private fun Canvas.drawLeftRect() {
         val centerX = width / 2
         val centerY = height / 2
-        val startY = (centerY - (_internalBoxHeight / 2)).toFloat()
-        val width = (centerX - (_internalBoxWidth / 2)).toFloat()
-        drawRect(0f, startY, width, startY + _internalBoxHeight.toFloat(), _colorPaint)
+        val startY = (centerY - (internalBoxHeight / 2)).toFloat()
+        val width = (centerX - (internalBoxWidth / 2)).toFloat()
+        drawRect(0f, startY, width, startY + internalBoxHeight.toFloat(), colorPaint)
     }
 
-    private var _internalBoxWidth: Int = 0
-    private var _internalBoxHeight: Int = 0
+    private var internalBoxWidth: Int = 0
+    private var internalBoxHeight: Int = 0
 
     @ColorInt
-    private var _color: Int = Color.BLACK
-    private val _colorPaint
+    private var color: Int = Color.BLACK
+    private val colorPaint
         get() = Paint().apply {
-            color = _color
+            color = color
         }
 }

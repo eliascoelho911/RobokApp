@@ -2,9 +2,8 @@ package com.github.eliascoelho911.robok.ui.widgets
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Color
+import android.graphics.Bitmap
 import android.util.AttributeSet
-import android.util.Size
 import android.view.Surface.ROTATION_0
 import android.widget.FrameLayout
 import androidx.annotation.AttrRes
@@ -19,45 +18,46 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.view.isVisible
 import androidx.lifecycle.LifecycleOwner
 import com.github.eliascoelho911.robok.R
-import com.github.eliascoelho911.robok.util.getColorsOfGrid
-import com.github.eliascoelho911.robok.domain.constants.RubikCubeConstants.LineHeight
 import com.github.eliascoelho911.robok.util.converters.toBitmap
 import com.github.eliascoelho911.robok.util.rotate
 import java.util.concurrent.Executor
-import kotlinx.android.synthetic.main.rubik_cube_scanner.view.camera_preview
+import kotlinx.android.synthetic.main.camera_with_box_highlight.view.camera_preview
+import kotlinx.android.synthetic.main.camera_with_box_highlight.view.crop_area
 
-class RubikCubeSideScanner @JvmOverloads constructor(
+private const val CameraRotation = ROTATION_0
+
+class CameraWithBoxHighlight @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     @AttrRes defStyleAttr: Int = 0,
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
     init {
-        inflate(context, R.layout.rubik_cube_scanner, this)
+        inflate(context, R.layout.camera_with_box_highlight, this)
     }
 
     fun startCamera(lifecycleOwner: LifecycleOwner, executor: Executor) {
         camera_preview.isVisible = true
-        _cameraProviderFuture.addListener({
+        cameraProviderFuture.addListener({
             bindCamera(lifecycleOwner)
         }, executor)
     }
 
     fun closeCamera() {
-        _cameraProviderFuture.get().unbindAll()
+        cameraProviderFuture.get().unbindAll()
     }
 
-    fun lookForTheGridColors(
+    fun takePicture(
         executor: Executor,
-        onFound: (colors: List<Color>) -> Unit,
+        onFound: (Bitmap) -> Unit,
         onFailure: (Throwable) -> Unit,
     ) {
-        _imageCapture.takePicture(executor, object : ImageCapture.OnImageCapturedCallback() {
+        imageCapture.takePicture(executor, object : ImageCapture.OnImageCapturedCallback() {
             @SuppressLint("UnsafeOptInUsageError")
             override fun onCaptureSuccess(image: ImageProxy) {
                 super.onCaptureSuccess(image)
-                val bitmap = image.image?.toBitmap()?.rotate(90f) ?: return
-                onFound.invoke(bitmap.getColorsOfGrid(LineHeight, LineHeight))
+                val bitmap = image.image?.toBitmap()?.adjustRotation()?.cropHighlight() ?: return
+                onFound(bitmap)
                 image.close()
             }
 
@@ -68,14 +68,31 @@ class RubikCubeSideScanner @JvmOverloads constructor(
         })
     }
 
+    private fun Bitmap.adjustRotation(): Bitmap = rotate(90f)
+
+    private fun Bitmap.cropHighlight(): Bitmap {
+        val heightOriginal = camera_preview.height
+        val widthOriginal = camera_preview.width
+        val heightFrame = crop_area.height
+        val widthFrame = crop_area.width
+        val leftFrame = crop_area.left
+        val topFrame = crop_area.top
+        val heightReal = height
+        val widthReal = width
+        val widthFinal = widthFrame * widthReal / widthOriginal
+        val heightFinal = heightFrame * heightReal / heightOriginal
+        val leftFinal = leftFrame * widthReal / widthOriginal
+        val topFinal = topFrame * heightReal / heightOriginal
+        return Bitmap.createBitmap(this, leftFinal, topFinal, widthFinal, heightFinal)
+    }
+
     private fun bindCamera(lifecycleOwner: LifecycleOwner) {
-        val cameraProvider = _cameraProviderFuture.get()
+        val cameraProvider = cameraProviderFuture.get()
         cameraProvider.unbindAll()
 
         val useCaseGroup = UseCaseGroup.Builder()
-            .addUseCase(_preview)
-            .addUseCase(_imageCapture)
-            .setViewPort(camera_preview.viewPort!!)
+            .addUseCase(preview)
+            .addUseCase(imageCapture)
             .build()
 
         with(cameraProvider) {
@@ -87,17 +104,16 @@ class RubikCubeSideScanner @JvmOverloads constructor(
         }
     }
 
-    private val _cameraProviderFuture by lazy { ProcessCameraProvider.getInstance(context) }
-    private val _preview by lazy {
+    private val cameraProviderFuture by lazy { ProcessCameraProvider.getInstance(context) }
+    private val preview by lazy {
         Preview.Builder()
             .build()
             .apply { setSurfaceProvider(camera_preview.surfaceProvider) }
     }
-    private val _imageCapture: ImageCapture by lazy {
+    private val imageCapture: ImageCapture by lazy {
         ImageCapture.Builder()
             .setCaptureMode(CAPTURE_MODE_MINIMIZE_LATENCY)
-            .setTargetResolution(Size(1000, 1000))
-            .setTargetRotation(ROTATION_0)
+            .setTargetRotation(CameraRotation)
             .build()
     }
 }

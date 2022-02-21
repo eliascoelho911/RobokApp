@@ -8,7 +8,7 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.annotation.AttrRes
 import com.github.eliascoelho911.robok.R
-import com.github.eliascoelho911.robok.domain.constants.RubikCubeConstants.LineHeight
+import com.github.eliascoelho911.robok.domain.constants.RubikCubeConstants.SideLineHeight
 import com.github.eliascoelho911.robok.domain.RubikCube
 import com.github.eliascoelho911.robok.domain.RubikCubeSide
 import kotlin.math.min
@@ -43,8 +43,8 @@ class RubikCubePreview @JvmOverloads constructor(
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val desiredWidth = SidesOnHorizontal * boxItemSize * LineHeight
-        val desiredHeight = SidesOnVertical * boxItemSize * LineHeight
+        val desiredWidth = SidesOnHorizontal * boxItemSize * SideLineHeight
+        val desiredHeight = SidesOnVertical * boxItemSize * SideLineHeight
         val widthMode = MeasureSpec.getMode(widthMeasureSpec)
         val widthSize = MeasureSpec.getSize(widthMeasureSpec)
         val heightMode = MeasureSpec.getMode(heightMeasureSpec)
@@ -83,7 +83,7 @@ class RubikCubePreview @JvmOverloads constructor(
     }
 
     private fun initAttrs(attrs: AttributeSet?) {
-        _internalMargin = resources.getDimensionPixelOffset(R.dimen.rubik_color_preview_internal_margin)
+        internalMargin = resources.getDimensionPixelOffset(R.dimen.rubik_color_preview_internal_margin)
         context.theme.obtainStyledAttributes(
             attrs,
             R.styleable.RubikCubePreview,
@@ -100,7 +100,7 @@ class RubikCubePreview @JvmOverloads constructor(
 
     private fun Canvas.drawSides() {
         rubikCube?.let { rubikCube ->
-            val sizeOfSide = boxItemSize * LineHeight
+            val sizeOfSide = boxItemSize * SideLineHeight
             rubikCube.sides.forEach { side ->
                 val x = side.position.x * sizeOfSide
                 val y = side.position.y * sizeOfSide
@@ -115,24 +115,24 @@ class RubikCubePreview @JvmOverloads constructor(
         side: RubikCubeSide,
     ) {
         side.colors.forEach { position, box ->
-            val left = parentX + (boxItemSize * position.x) + _internalMargin
-            val right = left + boxItemSize - _internalMargin
-            val top = parentY + (boxItemSize * position.y) + _internalMargin
-            val bottom = top + boxItemSize - _internalMargin
+            val left = parentX + (boxItemSize * position.x) + internalMargin
+            val right = left + boxItemSize - internalMargin
+            val top = parentY + (boxItemSize * position.y) + internalMargin
+            val bottom = top + boxItemSize - internalMargin
             drawRoundRect(left.toFloat(),
                 top.toFloat(),
                 right.toFloat(),
                 bottom.toFloat(),
                 boxItemRadius.toFloat(),
                 boxItemRadius.toFloat(),
-                _boxPaint(box.androidColor(context)))
+                boxPaint(box.androidColor(context)))
         }
     }
 
-    private val _boxPaint: (Color) -> Paint = {
+    private val boxPaint: (Color) -> Paint = {
         Paint().apply {
             color = it.toArgb()
         }
     }
-    private var _internalMargin: Int = 0
+    private var internalMargin: Int = 0
 }

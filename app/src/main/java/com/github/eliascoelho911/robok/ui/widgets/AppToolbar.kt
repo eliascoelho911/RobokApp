@@ -27,15 +27,15 @@ class AppToolbar @JvmOverloads constructor(
             updateConnectionStatusIconView()
         }
 
-    private val _statusDrawable: Drawable
+    private val statusDrawable: Drawable
         get() {
             return if (connectionStatus == DISCONNECTED)
-                getDrawable(context, R.drawable.ic_usb_off_24dp)!!.apply { setTint(_redColor) }
+                getDrawable(context, R.drawable.ic_usb_off_24dp)!!.apply { setTint(redColor) }
             else
-                getDrawable(context, R.drawable.ic_usb_24dp)!!.apply { setTint(_greenColor) }
+                getDrawable(context, R.drawable.ic_usb_24dp)!!.apply { setTint(greenColor) }
         }
 
-    private val _loadingAnimation by lazy {
+    private val loadingAnimation by lazy {
         RotateAnimation(0f,
             360f,
             Animation.RELATIVE_TO_SELF,
@@ -49,11 +49,11 @@ class AppToolbar @JvmOverloads constructor(
         }
     }
 
-    private val _redColor by lazy {
+    private val redColor by lazy {
         context.getColor(R.color.red_a700)
     }
 
-    private val _greenColor by lazy {
+    private val greenColor by lazy {
         context.getColor(R.color.green_a400)
     }
 
@@ -71,7 +71,7 @@ class AppToolbar @JvmOverloads constructor(
     }
 
     private fun startLoadingAnimation() {
-        refresh.startAnimation(_loadingAnimation)
+        refresh.startAnimation(loadingAnimation)
     }
 
     private fun stopLoadingAnimation() {
@@ -79,7 +79,7 @@ class AppToolbar @JvmOverloads constructor(
     }
 
     private fun updateConnectionStatusIconView() {
-        connection_status.setCompoundDrawablesWithIntrinsicBounds(null, null, _statusDrawable, null)
+        connection_status.setCompoundDrawablesWithIntrinsicBounds(null, null, statusDrawable, null)
     }
 }
 

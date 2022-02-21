@@ -1,27 +1,31 @@
 package com.github.eliascoelho911.robok.ui.screens
 
 import android.Manifest.permission.CAMERA
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.github.eliascoelho911.robok.R
-import com.github.eliascoelho911.robok.domain.constants.RubikCubeConstants
-import com.github.eliascoelho911.robok.domain.RubikCubeSideColor
 import com.github.eliascoelho911.robok.domain.RubikCubeSide
+import com.github.eliascoelho911.robok.domain.RubikCubeSideColor
 import com.github.eliascoelho911.robok.domain.SidePosition
+import com.github.eliascoelho911.robok.domain.constants.RubikCubeConstants
+import com.github.eliascoelho911.robok.domain.constants.RubikCubeConstants.SideLineHeight
 import com.github.eliascoelho911.robok.ui.animation.closeWithAnimation
 import com.github.eliascoelho911.robok.ui.animation.openWithAnimation
 import com.github.eliascoelho911.robok.ui.viewmodels.HomeViewModel
+import com.github.eliascoelho911.robok.ui.widgets.CameraWithBoxHighlight
+import com.github.eliascoelho911.robok.util.getColorsOfGrid
+import com.github.eliascoelho911.robok.util.showToast
 import com.github.eliascoelho911.robok.util.toMatrix
 import kotlinx.android.synthetic.main.home_fragment.capture
-import kotlinx.android.synthetic.main.home_fragment.grid_scanner
+import kotlinx.android.synthetic.main.home_fragment.rubik_cube_side_scanner
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeFragment : Fragment() {
@@ -34,14 +38,14 @@ class HomeFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        _requestPermissionToStartCamera = registerForActivityResult(RequestPermission()) {
+        requestPermissionToStartCamera = registerForActivityResult(RequestPermission()) {
             startCamera(it)
         }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        _requestPermissionToStartCamera.launch(CAMERA)
+        requestPermissionToStartCamera.launch(CAMERA)
         clickListeners()
         observers()
     }
@@ -51,20 +55,21 @@ class HomeFragment : Fragment() {
     }
 
     private fun scannedRubikCubeObserver() {
-        _viewModel.scannedRubikCube.observe(viewLifecycleOwner) {
-            if (it.sides.size == RubikCubeConstants.NumberOfSides)
+        viewModel.scannedRubikCubeSides.observe(viewLifecycleOwner) {
+
+            if (it.size == RubikCubeConstants.NumberOfSides)
                 capture.closeWithAnimation()
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        grid_scanner.closeCamera()
+        rubik_cube_side_scanner.closeCamera()
     }
 
     private fun startCamera(permissionIsGranted: Boolean) {
         if (permissionIsGranted) {
-            grid_scanner.startCamera(viewLifecycleOwner, _executor)
+            rubik_cube_side_scanner.startCamera(viewLifecycleOwner, executor)
             capture.openWithAnimation()
         }
     }
@@ -77,30 +82,42 @@ class HomeFragment : Fragment() {
 
     private fun onClickCaptureListener() {
         capture.isClickable = false
-        grid_scanner.lookForTheGridColors(_executor, onFound = { colors ->
-            colors.toRubikCubeSideColor().createAndAddScannedSize()
+        rubik_cube_side_scanner.lookForTheGridColors()
+    }
+
+    private fun CameraWithBoxHighlight.lookForTheGridColors() {
+        takePicture(executor, onFound = { bitmap ->
+            bitmap.scanSide()
         }, onFailure = {
-            Toast.makeText(requireContext(),
-                getString(R.string.error_capture_cube_face),
-                Toast.LENGTH_SHORT).show()
+            showScanCubeSideError()
         })
     }
 
-    private fun List<RubikCubeSideColor>.createAndAddScannedSize() {
+    private fun showScanCubeSideError() {
+        requireContext().showToast(getString(R.string.error_capture_cube_side))
+    }
+
+    private fun Bitmap.scanSide() {
+        getColorsOfGrid(SideLineHeight, SideLineHeight)
+            .toRubikCubeSideColor()
+            .createAndSaveScannedSide()
+    }
+
+    private fun List<RubikCubeSideColor>.createAndSaveScannedSide() {
         val matrix = toMatrix(
-            width = RubikCubeConstants.LineHeight,
-            height = RubikCubeConstants.LineHeight
+            width = SideLineHeight,
+            height = SideLineHeight
         )
-        val position = _lastSideScanned?.position?.next() ?: SidePosition.first()
-        _viewModel.addScannedSide(RubikCubeSide(position, matrix))
+        val position = lastSideScanned?.position?.next() ?: SidePosition.first()
+        viewModel.addScannedSide(RubikCubeSide(position, matrix))
     }
 
     private fun List<Color>.toRubikCubeSideColor() = map {
         RubikCubeSideColor.findBySimilarity(requireContext(), it)
     }
 
-    private val _executor get() = ContextCompat.getMainExecutor(requireContext())
-    private val _viewModel: HomeViewModel by viewModel()
-    private lateinit var _requestPermissionToStartCamera: ActivityResultLauncher<String>
-    private val _lastSideScanned get() = _viewModel.scannedRubikCube.value?.sides?.lastOrNull()
+    private val executor get() = ContextCompat.getMainExecutor(requireContext())
+    private val viewModel: HomeViewModel by viewModel()
+    private lateinit var requestPermissionToStartCamera: ActivityResultLauncher<String>
+    private val lastSideScanned get() = viewModel.scannedRubikCubeSides.value?.lastOrNull()
 }
