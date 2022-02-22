@@ -20,10 +20,8 @@ import com.github.eliascoelho911.robok.domain.SidePosition
 import com.github.eliascoelho911.robok.domain.constants.RubikCubeConstants.SideLineHeight
 import com.github.eliascoelho911.robok.ui.animation.fadeIn
 import com.github.eliascoelho911.robok.ui.animation.fadeOut
-import com.github.eliascoelho911.robok.ui.states.State
-import com.github.eliascoelho911.robok.ui.states.State.ENABLE
 import com.github.eliascoelho911.robok.ui.viewmodels.HomeViewModel
-import com.github.eliascoelho911.robok.ui.widgets.CameraPreview
+import com.github.eliascoelho911.robok.util.Matrix
 import com.github.eliascoelho911.robok.util.getColorsOfGrid
 import com.github.eliascoelho911.robok.util.showToast
 import com.github.eliascoelho911.robok.util.toMatrix
@@ -56,55 +54,24 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         requestPermissionToStartCamera.launch(CAMERA)
         clickListeners()
-        setupUIState()
         bindData()
     }
-
 
     override fun onDestroy() {
         super.onDestroy()
         camera.closeCamera()
     }
 
-    private fun setupUIState() {
-        viewModel.previewUIState.observe(viewLifecycleOwner, ::setupPreviewUIState)
-        viewModel.captureUIState.observe(viewLifecycleOwner, ::setupCaptureUIState)
+    private fun startCamera(permissionIsGranted: Boolean) {
+        if (permissionIsGranted) {
+            camera.startCamera(viewLifecycleOwner, executor)
+            startCaptureUI()
+        }
     }
 
     private fun bindData() {
         viewModel.lastSideScanned.observe(viewLifecycleOwner) {
             rubik_cube_side_preview.rubikCubeSide = it
-        }
-    }
-
-    private fun setupPreviewUIState(state: State) {
-        if (state == ENABLE) {
-            fade.fadeIn()
-            rubik_cube_side_preview.show()
-            crop_area.visibility = INVISIBLE
-            fab_ok.show()
-            fab_retry.show()
-        } else {
-            fade.fadeOut()
-            rubik_cube_side_preview.hide()
-            crop_area.isVisible = true
-            fab_ok.hide()
-            fab_retry.hide()
-        }
-    }
-
-    private fun setupCaptureUIState(state: State) {
-        if (state == ENABLE) {
-            fab_capture.show()
-        } else {
-            fab_capture.hide()
-        }
-    }
-
-    private fun startCamera(permissionIsGranted: Boolean) {
-        if (permissionIsGranted) {
-            camera.startCamera(viewLifecycleOwner, executor)
-            fab_capture.show()
         }
     }
 
@@ -117,25 +84,64 @@ class HomeFragment : Fragment() {
     private fun FloatingActionButton.setOnClickCaptureListener() {
         setOnClickListener {
             camera.takePicture(executor, onFound = { bitmap ->
-                bitmap.cropCubeSide().scanSide()
-                viewModel.startPreviewUIState()
+                runCatching {
+                    createSide(bitmap)
+                }.onSuccess {
+                    viewModel.setLastSideScanned(it)
+                    startPreviewUI()
+                }.onFailure {
+                    showScanCubeSideError()
+                }
             }, onFailure = {
                 showScanCubeSideError()
-                viewModel.startCaptureUIState()
+                startCaptureUI()
             })
         }
     }
 
     private fun FloatingActionButton.setOnClickRetryListener() {
         setOnClickListener {
-            viewModel.startCaptureUIState()
+            startCaptureUI()
         }
     }
 
     private fun FloatingActionButton.setOnClickConfirmListener() {
         setOnClickListener {
-            viewModel.startCaptureUIState()
+            viewModel.lastSideScanned.value?.let(viewModel::addSide)
+            startCaptureUI()
         }
+    }
+
+    private fun startCaptureUI() {
+        hideSideScannedPreview()
+        fab_capture.show()
+    }
+
+    private fun startPreviewUI() {
+        showSideScannedPreview()
+        fab_capture.hide()
+    }
+
+    private fun hideSideScannedPreview() {
+        fade.fadeOut()
+        rubik_cube_side_preview.hide()
+        crop_area.isVisible = true
+        fab_ok.hide()
+        fab_retry.hide()
+    }
+
+    private fun showSideScannedPreview() {
+        fade.fadeIn()
+        rubik_cube_side_preview.show()
+        crop_area.visibility = INVISIBLE
+        fab_ok.show()
+        fab_retry.show()
+    }
+
+    private fun createSide(bitmap: Bitmap): RubikCubeSide {
+        val sideColors = bitmap.cropCubeSide().scanSide()
+        val position = viewModel.lastSideScanned.value?.position?.next() ?: SidePosition.first()
+        return RubikCubeSide(position, sideColors)
     }
 
     private fun Bitmap.cropCubeSide(): Bitmap {
@@ -146,32 +152,19 @@ class HomeFragment : Fragment() {
         return Bitmap.createBitmap(this, leftFinal, topFinal, widthFinal, heightFinal)
     }
 
-
-    private fun showScanCubeSideError() {
-        requireContext().showToast(getString(R.string.error_capture_cube_side))
-    }
-
-    private fun Bitmap.scanSide() {
-        getColorsOfGrid(SideLineHeight, SideLineHeight)
-            .toRubikCubeSideColor()
-            .createAndSaveScannedSide()
-    }
-
-    private fun List<RubikCubeSideColor>.createAndSaveScannedSide() {
-        val matrix = toMatrix(
+    private fun Bitmap.scanSide(): Matrix<RubikCubeSideColor> {
+        return getColorsOfGrid(SideLineHeight, SideLineHeight).toRubikCubeSideColor().toMatrix(
             width = SideLineHeight,
             height = SideLineHeight
         )
-        val position = viewModel.lastSideScanned.value?.position?.next() ?: SidePosition.first()
-        runCatching {
-            viewModel.addScannedSide(RubikCubeSide(position, matrix))
-        }.onFailure {
-            showScanCubeSideError()
-        }
     }
 
     private fun List<Color>.toRubikCubeSideColor() = map {
         RubikCubeSideColor.findBySimilarity(requireContext(), it)
+    }
+
+    private fun showScanCubeSideError() {
+        requireContext().showToast(getString(R.string.error_capture_cube_side))
     }
 
     private val executor get() = ContextCompat.getMainExecutor(requireContext())
