@@ -6,8 +6,9 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.INVISIBLE
 import android.view.ViewGroup
-import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
 import androidx.core.content.ContextCompat
@@ -18,8 +19,10 @@ import com.github.eliascoelho911.robok.domain.RubikCubeSide
 import com.github.eliascoelho911.robok.domain.RubikCubeSideColor
 import com.github.eliascoelho911.robok.domain.SidePosition
 import com.github.eliascoelho911.robok.domain.constants.RubikCubeConstants.SideLineHeight
-import com.github.eliascoelho911.robok.ui.animation.AnimationDurations.short
-import com.github.eliascoelho911.robok.ui.animation.openWithAnimation
+import com.github.eliascoelho911.robok.ui.animation.fadeIn
+import com.github.eliascoelho911.robok.ui.animation.fadeOut
+import com.github.eliascoelho911.robok.ui.states.State
+import com.github.eliascoelho911.robok.ui.states.State.ENABLE
 import com.github.eliascoelho911.robok.ui.viewmodels.HomeViewModel
 import com.github.eliascoelho911.robok.ui.widgets.CameraPreview
 import com.github.eliascoelho911.robok.util.getColorsOfGrid
@@ -53,42 +56,53 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         requestPermissionToStartCamera.launch(CAMERA)
         clickListeners()
-        observers()
+        setupUIState()
+        bindData()
     }
+
 
     override fun onDestroy() {
         super.onDestroy()
         camera.closeCamera()
     }
 
-    private fun observers() {
-        lastSideScannedObserver()
+    private fun setupUIState() {
+        viewModel.previewUIState.observe(viewLifecycleOwner, ::setupPreviewUIState)
+        viewModel.captureUIState.observe(viewLifecycleOwner, ::setupCaptureUIState)
     }
 
-    private fun lastSideScannedObserver() {
-        viewModel.lastSideScanned.observe(viewLifecycleOwner) {
-            it.showPreview()
-            fab_capture.hide()
+    private fun bindData() {
+        viewModel.lastSideScanned.observe(viewLifecycleOwner, rubik_cube_side_preview::show)
+    }
+
+    private fun setupPreviewUIState(state: State) {
+        if (state == ENABLE) {
+            fade.fadeIn()
+            rubik_cube_side_preview.isVisible = true
+            crop_area.visibility = INVISIBLE
             fab_ok.show()
             fab_retry.show()
+        } else {
+            fade.fadeOut()
+            rubik_cube_side_preview.isVisible = false
+            crop_area.isVisible = true
+            fab_ok.hide()
+            fab_retry.hide()
         }
     }
 
-    private fun RubikCubeSide.showPreview() {
-        rubik_cube_side_preview.show(this)
-        fade.animate()
-            .alphaBy(0f)
-            .alpha(1f)
-            .setInterpolator(AccelerateDecelerateInterpolator())
-            .setDuration(short)
-            .start()
-        fade.isVisible = true
+    private fun setupCaptureUIState(state: State) {
+        if (state == ENABLE) {
+            fab_capture.show()
+        } else {
+            fab_capture.hide()
+        }
     }
 
     private fun startCamera(permissionIsGranted: Boolean) {
         if (permissionIsGranted) {
             camera.startCamera(viewLifecycleOwner, executor)
-            fab_capture.openWithAnimation()
+            fab_capture.show()
         }
     }
 
@@ -99,31 +113,24 @@ class HomeFragment : Fragment() {
     }
 
     private fun onClickCaptureListener() {
-        fab_capture.isClickable = false
         camera.lookForTheGridColors()
     }
 
     private fun CameraPreview.lookForTheGridColors() {
         takePicture(executor, onFound = { bitmap ->
             bitmap.cropCubeSide().scanSide()
+            viewModel.startPreviewUIState()
         }, onFailure = {
             showScanCubeSideError()
+            viewModel.startCaptureUIState()
         })
     }
 
     private fun Bitmap.cropCubeSide(): Bitmap {
-        val heightOriginal = camera.height
-        val widthOriginal = camera.width
-        val heightFrame = crop_area.height
-        val widthFrame = crop_area.width
-        val leftFrame = crop_area.left
-        val topFrame = crop_area.top
-        val heightReal = height
-        val widthReal = width
-        val widthFinal = widthFrame * widthReal / widthOriginal
-        val heightFinal = heightFrame * heightReal / heightOriginal
-        val leftFinal = leftFrame * widthReal / widthOriginal
-        val topFinal = topFrame * heightReal / heightOriginal
+        val widthFinal = crop_area.width * width / camera.width
+        val heightFinal = crop_area.height * height / camera.height
+        val leftFinal = crop_area.left * width / camera.width
+        val topFinal = crop_area.top * height / camera.height
         return Bitmap.createBitmap(this, leftFinal, topFinal, widthFinal, heightFinal)
     }
 
