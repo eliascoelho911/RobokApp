@@ -5,6 +5,8 @@
     <corners android:radius="8dp" />
 
     <stroke
-            android:color="@color/white"
-            android:width="2dp" />
+            android:color="?attr/colorSecondary"
+            android:dashWidth="12dp"
+            android:width="2dp"
+            android:dashGap="3dp" />
 </shape>

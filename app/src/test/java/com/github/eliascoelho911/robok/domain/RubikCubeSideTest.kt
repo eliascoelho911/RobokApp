@@ -1,5 +1,7 @@
 package com.github.eliascoelho911.robok.domain
 
+import com.github.eliascoelho911.robok.util.Matrix
+import com.github.eliascoelho911.robok.util.Position
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -7,8 +9,8 @@ import org.junit.Before
 import org.junit.Test
 
 class RubikCubeSideTest {
-    private val colors = mockk<List<RubikCubeSideColor>>(relaxed = true)
-    private val side = RubikCubeSide(colors)
+    private val colors = mockk<Matrix<RubikCubeSideColor>>(relaxed = true)
+    private val side = RubikCubeSide(mockk(), colors)
 
     @Before
     fun setup() {
@@ -17,7 +19,7 @@ class RubikCubeSideTest {
 
     @Test
     fun testPegaCorCorreta() {
-        side.get(0, 0)
+        side.colors[Position(0, 0)]
         verify { colors[0] }
 
         side.get(0, 2)

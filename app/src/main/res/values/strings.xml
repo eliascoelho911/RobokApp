@@ -7,4 +7,6 @@
     <string name="speech_capture">Capturar</string>
     <string name="error_capture_cube_side">Erro ao capturar a face do cubo</string>
     <string name="success_take_picture_cube_side">Imagem capturada com sucesso</string>
+    <string name="speech_retry">Tentar novamente</string>
+    <string name="speech_ok">Continuar</string>
 </resources>
