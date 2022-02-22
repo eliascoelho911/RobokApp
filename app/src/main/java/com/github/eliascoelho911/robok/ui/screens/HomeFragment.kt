@@ -6,7 +6,6 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.GONE
 import android.view.View.INVISIBLE
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
@@ -28,6 +27,7 @@ import com.github.eliascoelho911.robok.ui.widgets.CameraPreview
 import com.github.eliascoelho911.robok.util.getColorsOfGrid
 import com.github.eliascoelho911.robok.util.showToast
 import com.github.eliascoelho911.robok.util.toMatrix
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.home_fragment.camera
 import kotlinx.android.synthetic.main.home_fragment.crop_area
 import kotlinx.android.synthetic.main.home_fragment.fab_capture
@@ -72,19 +72,21 @@ class HomeFragment : Fragment() {
     }
 
     private fun bindData() {
-        viewModel.lastSideScanned.observe(viewLifecycleOwner, rubik_cube_side_preview::show)
+        viewModel.lastSideScanned.observe(viewLifecycleOwner) {
+            rubik_cube_side_preview.rubikCubeSide = it
+        }
     }
 
     private fun setupPreviewUIState(state: State) {
         if (state == ENABLE) {
             fade.fadeIn()
-            rubik_cube_side_preview.isVisible = true
+            rubik_cube_side_preview.show()
             crop_area.visibility = INVISIBLE
             fab_ok.show()
             fab_retry.show()
         } else {
             fade.fadeOut()
-            rubik_cube_side_preview.isVisible = false
+            rubik_cube_side_preview.hide()
             crop_area.isVisible = true
             fab_ok.hide()
             fab_retry.hide()
@@ -107,23 +109,33 @@ class HomeFragment : Fragment() {
     }
 
     private fun clickListeners() {
-        fab_capture.setOnClickListener {
-            onClickCaptureListener()
+        fab_capture.setOnClickCaptureListener()
+        fab_retry.setOnClickRetryListener()
+        fab_ok.setOnClickConfirmListener()
+    }
+
+    private fun FloatingActionButton.setOnClickCaptureListener() {
+        setOnClickListener {
+            camera.takePicture(executor, onFound = { bitmap ->
+                bitmap.cropCubeSide().scanSide()
+                viewModel.startPreviewUIState()
+            }, onFailure = {
+                showScanCubeSideError()
+                viewModel.startCaptureUIState()
+            })
         }
     }
 
-    private fun onClickCaptureListener() {
-        camera.lookForTheGridColors()
+    private fun FloatingActionButton.setOnClickRetryListener() {
+        setOnClickListener {
+            viewModel.startCaptureUIState()
+        }
     }
 
-    private fun CameraPreview.lookForTheGridColors() {
-        takePicture(executor, onFound = { bitmap ->
-            bitmap.cropCubeSide().scanSide()
-            viewModel.startPreviewUIState()
-        }, onFailure = {
-            showScanCubeSideError()
+    private fun FloatingActionButton.setOnClickConfirmListener() {
+        setOnClickListener {
             viewModel.startCaptureUIState()
-        })
+        }
     }
 
     private fun Bitmap.cropCubeSide(): Bitmap {
