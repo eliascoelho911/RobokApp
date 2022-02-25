@@ -7,7 +7,7 @@
 
     <fragment
             android:id="@+id/homeFragment"
-            android:name="com.github.eliascoelho911.robok.ui.screens.HomeFragment"
+            android:name="com.github.eliascoelho911.robok.ui.screens.CaptureFragment"
             android:label="@string/home_screen_name"
-            tools:layout="@layout/home_fragment" />
+            tools:layout="@layout/capture_fragment" />
 </navigation>
