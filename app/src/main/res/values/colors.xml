@@ -11,5 +11,6 @@
     <color name="red_9D1519">#9D1519</color>
     <color name="black">#FF000000</color>
     <color name="black_50">#80000000</color>
+    <color name="white_20">#33FFFFFF</color>
     <color name="white">#FFFFFFFF</color>
 </resources>

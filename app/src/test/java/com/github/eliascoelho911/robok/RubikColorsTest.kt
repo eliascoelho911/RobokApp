@@ -15,7 +15,7 @@ class RubikColorsTest : BaseTest() {
     @Test
     fun testPegaAsCoresDoCuboCorretamente() {
         rubikSide.forEach { (side, bitmap) ->
-            bitmap.getColorsOfGrid(3, 3).forEachIndexed { index, color ->
+            bitmap.getColorsOfGrid(3).forEachIndexed { index, color ->
                 assertEquals("index: $index, file: ${side.path}",
                     side.rubikCubeSide.get(index),
                     RubikCubeSideColor.findBySimilarity(getInstrumentation().context, color))

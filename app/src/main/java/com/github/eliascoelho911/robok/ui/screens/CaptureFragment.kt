@@ -25,9 +25,8 @@ class CaptureFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestPermissionToStartCamera = registerForActivityResult(RequestPermission()) {
-            startCamera(it)
-        }
+        requestPermissionToStartCamera = registerForActivityResult(RequestPermission(),
+            ::startCameraIfPermissionGranted)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -40,7 +39,7 @@ class CaptureFragment : Fragment() {
         rubik_cube_side_scanner.finish()
     }
 
-    private fun startCamera(permissionIsGranted: Boolean) {
+    private fun startCameraIfPermissionGranted(permissionIsGranted: Boolean) {
         if (permissionIsGranted) {
             rubik_cube_side_scanner.start(viewLifecycleOwner, executor, onSideCaptured = {
             }, onError = { showScanCubeSideError() })
