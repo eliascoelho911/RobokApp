@@ -43,7 +43,6 @@ class HomeFragment : Fragment() {
     private fun startCamera(permissionIsGranted: Boolean) {
         if (permissionIsGranted) {
             rubik_cube_side_scanner.start(viewLifecycleOwner, executor, onSideCaptured = {
-
             }, onError = { showScanCubeSideError() })
         }
     }

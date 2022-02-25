@@ -1,10 +1,11 @@
 package com.github.eliascoelho911.robok.domain
 
 import android.graphics.Color
+import androidx.annotation.ColorInt
 import com.github.eliascoelho911.robok.util.Matrix
 
 class RubikCube(val sides: Set<Side>) {
-    class Side(val position: SidePosition, val colors: Matrix<Color>) {
+    class Side(val position: SidePosition, @ColorInt val colors: List<Int>) {
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
             if (javaClass != other?.javaClass) return false

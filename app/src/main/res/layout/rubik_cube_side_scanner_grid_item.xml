@@ -9,6 +9,6 @@
     <View
             android:layout_width="16dp"
             android:layout_height="16dp"
-            android:layout_gravity="center"
+            android:layout_margin="@dimen/rubik_cube_side_scanner_grid_item_stroke_width"
             tools:background="@color/blue_a400" />
 </FrameLayout>

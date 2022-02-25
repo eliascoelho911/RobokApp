@@ -19,7 +19,7 @@
             android:layout_columnWeight="1"
             android:layout_height="0dp"
             android:layout_width="0dp"
-            android:layout_marginStart="@dimen/margin_rubik_cube_scanner_grid_item"/>
+            android:layout_marginStart="@dimen/rubik_cube_side_scanner_grid_internal_margin"/>
 
     <include
             layout="@layout/rubik_cube_side_scanner_grid_item"
@@ -27,7 +27,7 @@
             android:layout_columnWeight="1"
             android:layout_height="0dp"
             android:layout_width="0dp"
-            android:layout_marginStart="@dimen/margin_rubik_cube_scanner_grid_item"/>
+            android:layout_marginStart="@dimen/rubik_cube_side_scanner_grid_internal_margin"/>
 
     <include
             layout="@layout/rubik_cube_side_scanner_grid_item"
@@ -35,7 +35,7 @@
             android:layout_columnWeight="1"
             android:layout_height="0dp"
             android:layout_width="0dp"
-            android:layout_marginTop="@dimen/margin_rubik_cube_scanner_grid_item"/>
+            android:layout_marginTop="@dimen/rubik_cube_side_scanner_grid_internal_margin"/>
 
     <include
             layout="@layout/rubik_cube_side_scanner_grid_item"
@@ -43,8 +43,8 @@
             android:layout_columnWeight="1"
             android:layout_height="0dp"
             android:layout_width="0dp"
-            android:layout_marginTop="@dimen/margin_rubik_cube_scanner_grid_item"
-            android:layout_marginStart="@dimen/margin_rubik_cube_scanner_grid_item"/>
+            android:layout_marginTop="@dimen/rubik_cube_side_scanner_grid_internal_margin"
+            android:layout_marginStart="@dimen/rubik_cube_side_scanner_grid_internal_margin"/>
 
     <include
             layout="@layout/rubik_cube_side_scanner_grid_item"
@@ -52,8 +52,8 @@
             android:layout_columnWeight="1"
             android:layout_height="0dp"
             android:layout_width="0dp"
-            android:layout_marginTop="@dimen/margin_rubik_cube_scanner_grid_item"
-            android:layout_marginStart="@dimen/margin_rubik_cube_scanner_grid_item"/>
+            android:layout_marginTop="@dimen/rubik_cube_side_scanner_grid_internal_margin"
+            android:layout_marginStart="@dimen/rubik_cube_side_scanner_grid_internal_margin"/>
 
     <include
             layout="@layout/rubik_cube_side_scanner_grid_item"
@@ -61,7 +61,7 @@
             android:layout_columnWeight="1"
             android:layout_height="0dp"
             android:layout_width="0dp"
-            android:layout_marginTop="@dimen/margin_rubik_cube_scanner_grid_item"/>
+            android:layout_marginTop="@dimen/rubik_cube_side_scanner_grid_internal_margin"/>
 
     <include
             layout="@layout/rubik_cube_side_scanner_grid_item"
@@ -69,8 +69,8 @@
             android:layout_columnWeight="1"
             android:layout_height="0dp"
             android:layout_width="0dp"
-            android:layout_marginTop="@dimen/margin_rubik_cube_scanner_grid_item"
-            android:layout_marginStart="@dimen/margin_rubik_cube_scanner_grid_item"/>
+            android:layout_marginTop="@dimen/rubik_cube_side_scanner_grid_internal_margin"
+            android:layout_marginStart="@dimen/rubik_cube_side_scanner_grid_internal_margin"/>
 
     <include
             layout="@layout/rubik_cube_side_scanner_grid_item"
@@ -78,7 +78,7 @@
             android:layout_columnWeight="1"
             android:layout_height="0dp"
             android:layout_width="0dp"
-            android:layout_marginTop="@dimen/margin_rubik_cube_scanner_grid_item"
-            android:layout_marginStart="@dimen/margin_rubik_cube_scanner_grid_item"/>
+            android:layout_marginTop="@dimen/rubik_cube_side_scanner_grid_internal_margin"
+            android:layout_marginStart="@dimen/rubik_cube_side_scanner_grid_internal_margin"/>
 
 </GridLayout>
