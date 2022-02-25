@@ -4,4 +4,5 @@
     <dimen name="rubik_color_preview_internal_margin">4dp</dimen>
     <dimen name="box_highlight_size">280dp</dimen>
     <dimen name="rubik_cube_side_preview_cell_stroke_width">3dp</dimen>
+    <dimen name="margin_rubik_cube_scanner_grid_item">2dp</dimen>
 </resources>

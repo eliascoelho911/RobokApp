@@ -8,7 +8,7 @@ import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
 
-class RubikCubeSideTest {
+class SideTest {
     private val colors = mockk<Matrix<RubikCubeSideColor>>(relaxed = true)
     private val side = RubikCubeSide(mockk(), colors)
 

@@ -2,14 +2,4 @@
 <resources>
     <attr name="colorBackground" format="color" />
     <attr name="colorBackgroundVariant" format="color" />
-
-    <declare-styleable name="GridScanner">
-        <attr name="rows" format="integer" />
-        <attr name="columns" format="integer" />
-    </declare-styleable>
-
-    <declare-styleable name="BoxHighlight">
-        <attr name="internalBoxWidth" format="dimension" />
-        <attr name="internalBoxHeight" format="dimension" />
-    </declare-styleable>
 </resources>

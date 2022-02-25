@@ -19,4 +19,10 @@
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">?attr/colorOnBackground</item>
     </style>
+
+    <style name="Theme.Robok.TextStyle.Body" parent="TextAppearance.AppCompat">
+        <item name="android:fontFamily">@font/ubuntu_regular</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">?attr/colorOnBackground</item>
+    </style>
 </resources>
