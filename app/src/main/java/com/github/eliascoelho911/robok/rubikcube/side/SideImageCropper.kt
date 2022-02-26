@@ -1,4 +1,4 @@
-package com.github.eliascoelho911.robok.camera
+package com.github.eliascoelho911.robok.rubikcube.side
 
 import android.graphics.Bitmap
 import android.graphics.Rect

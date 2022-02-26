@@ -21,9 +21,9 @@ import androidx.core.view.children
 import androidx.core.view.forEachIndexed
 import androidx.lifecycle.LifecycleOwner
 import com.github.eliascoelho911.robok.R
-import com.github.eliascoelho911.robok.camera.SideColorsAnalyzer
-import com.github.eliascoelho911.robok.domain.RubikCube
-import com.github.eliascoelho911.robok.domain.RubikCube.Side
+import com.github.eliascoelho911.robok.rubikcube.RubikCube
+import com.github.eliascoelho911.robok.rubikcube.side.Side
+import com.github.eliascoelho911.robok.rubikcube.side.SideColorsAnalyzer
 import com.github.eliascoelho911.robok.util.converters.toBitmap
 import com.github.eliascoelho911.robok.util.getRect
 import com.google.android.material.floatingactionbutton.FloatingActionButton

@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment
 import com.github.eliascoelho911.robok.R
 import com.github.eliascoelho911.robok.ui.viewmodels.CaptureViewModel
 import com.github.eliascoelho911.robok.util.showToast
-import kotlinx.android.synthetic.main.capture_fragment.side_scanner
+import kotlinx.android.synthetic.main.capture_fragment.side_scanner_view
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CaptureFragment : Fragment() {
@@ -36,19 +36,19 @@ class CaptureFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        side_scanner.finish()
+        side_scanner_view.finish()
     }
 
     private fun startCameraIfPermissionGranted(permissionIsGranted: Boolean) {
         if (permissionIsGranted) {
-            side_scanner.start(viewLifecycleOwner, executor, onSideCaptured = {
+            side_scanner_view.start(viewLifecycleOwner, executor, onSideCaptured = {
 
-            }, onError = { showScanCubeSideError() })
+            }, onError = { showScanError() })
         }
     }
 
 
-    private fun showScanCubeSideError() {
+    private fun showScanError() {
         requireContext().showToast(getString(R.string.error_capture_cube_side))
     }
 

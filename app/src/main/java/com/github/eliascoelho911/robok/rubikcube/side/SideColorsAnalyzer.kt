@@ -1,10 +1,10 @@
-package com.github.eliascoelho911.robok.camera
+package com.github.eliascoelho911.robok.rubikcube.side
 
 import android.annotation.SuppressLint
 import android.graphics.Rect
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
-import com.github.eliascoelho911.robok.domain.constants.RubikCubeConstants.SideLineHeight
+import com.github.eliascoelho911.robok.rubikcube.RubikCubeConstants.SideLineHeight
 import com.github.eliascoelho911.robok.util.converters.toBitmap
 import com.github.eliascoelho911.robok.util.getColorsOfGrid
 
