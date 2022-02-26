@@ -10,7 +10,6 @@ import android.widget.GridLayout
 import androidx.annotation.AttrRes
 import androidx.camera.core.CameraSelector.DEFAULT_BACK_CAMERA
 import androidx.camera.core.ImageAnalysis
-import androidx.camera.core.ImageAnalysis.OUTPUT_IMAGE_FORMAT_RGBA_8888
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY
 import androidx.camera.core.ImageCaptureException
@@ -27,21 +26,20 @@ import com.github.eliascoelho911.robok.domain.RubikCube
 import com.github.eliascoelho911.robok.domain.RubikCube.Side
 import com.github.eliascoelho911.robok.util.converters.toBitmap
 import com.github.eliascoelho911.robok.util.getRect
-import com.google.android.material.card.MaterialCardView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.concurrent.Executor
-import kotlinx.android.synthetic.main.rubik_cube_side_scanner.view.crop_area
-import kotlinx.android.synthetic.main.rubik_cube_side_scanner.view.fab_capture
-import kotlinx.android.synthetic.main.rubik_cube_side_scanner.view.preview_view
+import kotlinx.android.synthetic.main.side_scanner.view.crop_area
+import kotlinx.android.synthetic.main.side_scanner.view.fab_capture
+import kotlinx.android.synthetic.main.side_scanner.view.preview_view
 
-class RubikCubeSideScanner @JvmOverloads constructor(
+class SideScannerView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     @AttrRes defStyleAttr: Int = 0,
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
     init {
-        inflate(context, R.layout.rubik_cube_side_scanner, this)
+        inflate(context, R.layout.side_scanner, this)
     }
 
     fun start(

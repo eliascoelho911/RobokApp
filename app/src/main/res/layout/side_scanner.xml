@@ -16,7 +16,7 @@
 
     <include
             android:id="@+id/crop_area"
-            layout="@layout/rubik_cube_side_scanner_grid"
+            layout="@layout/side_scanner_grid"
             android:layout_width="250dp"
             android:layout_height="250dp"
             app:layout_constraintTop_toTopOf="parent"

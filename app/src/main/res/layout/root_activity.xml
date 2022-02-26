@@ -16,7 +16,7 @@
             app:defaultNavHost="true"
             app:navGraph="@navigation/nav_graph" />
 
-    <com.github.eliascoelho911.robok.ui.widgets.AppToolbar
+    <com.github.eliascoelho911.robok.ui.widgets.AppToolbarView
             android:id="@+id/app_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -14,7 +14,7 @@ import com.github.eliascoelho911.robok.ui.widgets.ConnectionStatus.DISCONNECTED
 import com.github.eliascoelho911.robok.util.getInteger
 import kotlinx.android.synthetic.main.app_toolbar.view.*
 
-class AppToolbar @JvmOverloads constructor(
+class AppToolbarView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     @AttrRes defStyleAttr: Int = 0,
