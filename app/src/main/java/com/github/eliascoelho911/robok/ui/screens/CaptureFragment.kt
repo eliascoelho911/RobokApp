@@ -47,7 +47,6 @@ class CaptureFragment : Fragment() {
         }
     }
 
-
     private fun showScanError() {
         requireContext().showToast(getString(R.string.error_capture_cube_side))
     }

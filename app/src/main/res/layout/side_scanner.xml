@@ -17,8 +17,10 @@
     <include
             android:id="@+id/crop_area"
             layout="@layout/side_scanner_grid"
-            android:layout_width="250dp"
-            android:layout_height="250dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="36dp"
+            app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

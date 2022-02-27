@@ -84,7 +84,7 @@ class SideScannerView @JvmOverloads constructor(
     private fun takePicture(
         executor: Executor,
         onCaptured: (Bitmap) -> Unit,
-        onFailure: (Throwable) -> Unit,
+        onError: (Throwable) -> Unit,
     ) {
         imageCapture.takePicture(executor, object : ImageCapture.OnImageCapturedCallback() {
             @SuppressLint("UnsafeOptInUsageError")
@@ -98,7 +98,7 @@ class SideScannerView @JvmOverloads constructor(
 
             override fun onError(exception: ImageCaptureException) {
                 super.onError(exception)
-                onFailure.invoke(exception)
+                onError.invoke(exception)
             }
         })
     }
