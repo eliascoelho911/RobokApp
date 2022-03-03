@@ -7,9 +7,20 @@
         xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <View
-            android:layout_width="16dp"
-            android:layout_height="16dp"
+            android:id="@+id/color_preview"
+            android:layout_width="@dimen/size_scanner_grid_item_size"
+            android:layout_height="@dimen/size_scanner_grid_item_size"
             android:layout_gravity="center"
             android:foreground="@color/white_20"
             tools:background="@color/blue_a400" />
+
+    <com.google.android.material.card.MaterialCardView
+            android:id="@+id/color_fill"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            app:cardCornerRadius="2dp"
+            app:strokeWidth="2dp"
+            app:strokeColor="@color/black_50"/>
 </FrameLayout>

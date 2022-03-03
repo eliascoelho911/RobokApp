@@ -2,8 +2,11 @@ package com.github.eliascoelho911.robok.rubikcube
 
 import com.github.eliascoelho911.robok.rubikcube.side.Side
 
-class RubikCube(val sides: Set<Side>) {
-    enum class SidePosition {
-        LEFT, FRONT, UP, DOWN, RIGHT, BOTTOM;
+class RubikCube(sides: Set<Side>) {
+    private val _sides = sides.toMutableSet()
+    val sides: Set<Side> get() = _sides
+
+    fun add(side: Side) {
+        _sides.add(side)
     }
 }

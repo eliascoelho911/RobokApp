@@ -9,4 +9,10 @@
     <string name="success_take_picture_cube_side">Imagem capturada com sucesso</string>
     <string name="speech_retry">Tentar novamente</string>
     <string name="speech_ok">Continuar</string>
+
+    <string name="scan_hint_front">Escaneie qualquer face</string>
+    <string name="scan_hint_next_right">Escaneie a face à direita</string>
+    <string name="scan_hint_next_up">Escaneie a face acima </string>
+    <string name="scan_hint_two_down">Escaneie a face duas posições abaixo</string>
+    <string name="scan_hint_multiplier">%1$sx</string>
 </resources>

@@ -43,12 +43,8 @@ class CaptureFragment : Fragment() {
         if (permissionIsGranted) {
             side_scanner_view.start(viewLifecycleOwner, executor, onSideCaptured = {
 
-            }, onError = { showScanError() })
+            })
         }
-    }
-
-    private fun showScanError() {
-        requireContext().showToast(getString(R.string.error_capture_cube_side))
     }
 
     private val executor get() = ContextCompat.getMainExecutor(requireContext())
