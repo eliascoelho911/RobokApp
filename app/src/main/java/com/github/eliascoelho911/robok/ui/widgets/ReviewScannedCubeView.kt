@@ -6,7 +6,6 @@ import android.widget.FrameLayout
 import androidx.annotation.AttrRes
 import com.github.eliascoelho911.robok.R
 import com.github.eliascoelho911.robok.rubikcube.RubikCube
-import kotlinx.android.synthetic.main.review_scanned_cube.view.preview_cube
 
 class ReviewScannedCubeView @JvmOverloads constructor(
     context: Context,
@@ -18,7 +17,6 @@ class ReviewScannedCubeView @JvmOverloads constructor(
     }
 
     fun show(rubikCube: RubikCube) {
-    }
 
-    private val previewCubeView by lazy { preview_cube }
+    }
 }
