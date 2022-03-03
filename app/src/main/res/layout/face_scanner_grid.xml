@@ -7,78 +7,78 @@
         android:columnCount="3">
 
     <include
-            layout="@layout/side_scanner_grid_item"
+            layout="@layout/face_scanner_grid_item"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
             android:layout_height="0dp"
             android:layout_width="0dp" />
 
     <include
-            layout="@layout/side_scanner_grid_item"
+            layout="@layout/face_scanner_grid_item"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
             android:layout_height="0dp"
             android:layout_width="0dp"
-            android:layout_marginStart="@dimen/side_scanner_grid_internal_margin"/>
+            android:layout_marginStart="@dimen/face_scanner_grid_internal_margin"/>
 
     <include
-            layout="@layout/side_scanner_grid_item"
+            layout="@layout/face_scanner_grid_item"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
             android:layout_height="0dp"
             android:layout_width="0dp"
-            android:layout_marginStart="@dimen/side_scanner_grid_internal_margin"/>
+            android:layout_marginStart="@dimen/face_scanner_grid_internal_margin"/>
 
     <include
-            layout="@layout/side_scanner_grid_item"
+            layout="@layout/face_scanner_grid_item"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
             android:layout_height="0dp"
             android:layout_width="0dp"
-            android:layout_marginTop="@dimen/side_scanner_grid_internal_margin"/>
+            android:layout_marginTop="@dimen/face_scanner_grid_internal_margin"/>
 
     <include
-            layout="@layout/side_scanner_grid_item"
+            layout="@layout/face_scanner_grid_item"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
             android:layout_height="0dp"
             android:layout_width="0dp"
-            android:layout_marginTop="@dimen/side_scanner_grid_internal_margin"
-            android:layout_marginStart="@dimen/side_scanner_grid_internal_margin"/>
+            android:layout_marginTop="@dimen/face_scanner_grid_internal_margin"
+            android:layout_marginStart="@dimen/face_scanner_grid_internal_margin"/>
 
     <include
-            layout="@layout/side_scanner_grid_item"
+            layout="@layout/face_scanner_grid_item"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
             android:layout_height="0dp"
             android:layout_width="0dp"
-            android:layout_marginTop="@dimen/side_scanner_grid_internal_margin"
-            android:layout_marginStart="@dimen/side_scanner_grid_internal_margin"/>
+            android:layout_marginTop="@dimen/face_scanner_grid_internal_margin"
+            android:layout_marginStart="@dimen/face_scanner_grid_internal_margin"/>
 
     <include
-            layout="@layout/side_scanner_grid_item"
+            layout="@layout/face_scanner_grid_item"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
             android:layout_height="0dp"
             android:layout_width="0dp"
-            android:layout_marginTop="@dimen/side_scanner_grid_internal_margin"/>
+            android:layout_marginTop="@dimen/face_scanner_grid_internal_margin"/>
 
     <include
-            layout="@layout/side_scanner_grid_item"
+            layout="@layout/face_scanner_grid_item"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
             android:layout_height="0dp"
             android:layout_width="0dp"
-            android:layout_marginTop="@dimen/side_scanner_grid_internal_margin"
-            android:layout_marginStart="@dimen/side_scanner_grid_internal_margin"/>
+            android:layout_marginTop="@dimen/face_scanner_grid_internal_margin"
+            android:layout_marginStart="@dimen/face_scanner_grid_internal_margin"/>
 
     <include
-            layout="@layout/side_scanner_grid_item"
+            layout="@layout/face_scanner_grid_item"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
             android:layout_height="0dp"
             android:layout_width="0dp"
-            android:layout_marginTop="@dimen/side_scanner_grid_internal_margin"
-            android:layout_marginStart="@dimen/side_scanner_grid_internal_margin"/>
+            android:layout_marginTop="@dimen/face_scanner_grid_internal_margin"
+            android:layout_marginStart="@dimen/face_scanner_grid_internal_margin"/>
 
 </GridLayout>

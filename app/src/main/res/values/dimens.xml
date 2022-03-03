@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="icon_button_size">48dp</dimen>
-    <dimen name="side_scanner_grid_item_stroke_width">2dp</dimen>
-    <dimen name="side_scanner_grid_internal_margin">2dp</dimen>
+    <dimen name="face_scanner_grid_item_stroke_width">2dp</dimen>
+    <dimen name="face_scanner_grid_internal_margin">2dp</dimen>
     <dimen name="size_scanner_grid_item_size">16dp</dimen>
 </resources>

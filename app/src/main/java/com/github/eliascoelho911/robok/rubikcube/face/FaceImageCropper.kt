@@ -1,10 +1,10 @@
-package com.github.eliascoelho911.robok.rubikcube.side
+package com.github.eliascoelho911.robok.rubikcube.face
 
 import android.graphics.Bitmap
 import android.graphics.Rect
 import com.github.eliascoelho911.robok.util.rotate
 
-object SideImageCropper {
+object FaceImageCropper {
     fun crop(
         originalImageCaptured: Bitmap,
         cropFrame: Rect,
@@ -13,7 +13,7 @@ object SideImageCropper {
         return originalImageCaptured
             .adjustRotation()
             .cropPreview(previewFrame)
-            .cropSide(cropFrame, previewFrame)
+            .cropFace(cropFrame, previewFrame)
     }
 
     private fun Bitmap.cropPreview(previewFrame: Rect): Bitmap {
@@ -23,11 +23,11 @@ object SideImageCropper {
         return Bitmap.createBitmap(this, leftFinal, 0, widthFinal, heightFinal).also { recycle() }
     }
 
-    private fun Bitmap.cropSide(sideFrame: Rect, previewFrame: Rect): Bitmap {
-        val widthFinal = sideFrame.width() * height / previewFrame.height()
-        val heightFinal = sideFrame.height() * height / previewFrame.height()
-        val leftFinal = sideFrame.left * height / previewFrame.height()
-        val topFinal = sideFrame.top * height / previewFrame.height()
+    private fun Bitmap.cropFace(faceFrame: Rect, previewFrame: Rect): Bitmap {
+        val widthFinal = faceFrame.width() * height / previewFrame.height()
+        val heightFinal = faceFrame.height() * height / previewFrame.height()
+        val leftFinal = faceFrame.left * height / previewFrame.height()
+        val topFinal = faceFrame.top * height / previewFrame.height()
         return Bitmap.createBitmap(this, leftFinal, topFinal, widthFinal, heightFinal).also { recycle() }
     }
 

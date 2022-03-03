@@ -4,8 +4,8 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-    <com.github.eliascoelho911.robok.ui.widgets.SideScannerView
-            android:id="@+id/side_scanner_view"
+    <com.github.eliascoelho911.robok.ui.widgets.FaceScannerView
+            android:id="@+id/face_scanner_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 </FrameLayout>

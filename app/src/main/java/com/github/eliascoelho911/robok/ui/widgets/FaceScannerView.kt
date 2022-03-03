@@ -21,50 +21,49 @@ import androidx.core.view.forEachIndexed
 import androidx.core.view.isVisible
 import androidx.lifecycle.LifecycleOwner
 import com.github.eliascoelho911.robok.R
-import com.github.eliascoelho911.robok.rubikcube.RubikCubeConstants.NumberOfSides
-import com.github.eliascoelho911.robok.rubikcube.side.Side
-import com.github.eliascoelho911.robok.rubikcube.side.SideColorsAnalyzer
-import com.github.eliascoelho911.robok.rubikcube.side.SidePosition
-import com.github.eliascoelho911.robok.rubikcube.side.SidePosition.BOTTOM
-import com.github.eliascoelho911.robok.rubikcube.side.SidePosition.DOWN
-import com.github.eliascoelho911.robok.rubikcube.side.SidePosition.FRONT
-import com.github.eliascoelho911.robok.rubikcube.side.SidePosition.LEFT
-import com.github.eliascoelho911.robok.rubikcube.side.SidePosition.RIGHT
-import com.github.eliascoelho911.robok.rubikcube.side.SidePosition.TOP
+import com.github.eliascoelho911.robok.rubikcube.RubikCube
+import com.github.eliascoelho911.robok.rubikcube.face.Face
+import com.github.eliascoelho911.robok.rubikcube.face.Face.Position.BOTTOM
+import com.github.eliascoelho911.robok.rubikcube.face.Face.Position.DOWN
+import com.github.eliascoelho911.robok.rubikcube.face.Face.Position.FRONT
+import com.github.eliascoelho911.robok.rubikcube.face.Face.Position.LEFT
+import com.github.eliascoelho911.robok.rubikcube.face.Face.Position.RIGHT
+import com.github.eliascoelho911.robok.rubikcube.face.Face.Position.TOP
+import com.github.eliascoelho911.robok.rubikcube.face.FaceColorsAnalyzer
 import com.github.eliascoelho911.robok.util.getRect
 import com.github.eliascoelho911.robok.util.setOnAnimationEndListener
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.concurrent.Executor
-import kotlinx.android.synthetic.main.side_scanner.view.crop_area
-import kotlinx.android.synthetic.main.side_scanner.view.fab_capture
-import kotlinx.android.synthetic.main.side_scanner.view.hint_container
-import kotlinx.android.synthetic.main.side_scanner.view.img_hint
-import kotlinx.android.synthetic.main.side_scanner.view.preview_view
-import kotlinx.android.synthetic.main.side_scanner.view.txt_hint
-import kotlinx.android.synthetic.main.side_scanner.view.txt_hint_multiplier
+import kotlinx.android.synthetic.main.face_scanner.view.crop_area
+import kotlinx.android.synthetic.main.face_scanner.view.fab_capture
+import kotlinx.android.synthetic.main.face_scanner.view.hint_container
+import kotlinx.android.synthetic.main.face_scanner.view.img_hint
+import kotlinx.android.synthetic.main.face_scanner.view.preview_view
+import kotlinx.android.synthetic.main.face_scanner.view.txt_hint
+import kotlinx.android.synthetic.main.face_scanner.view.txt_hint_multiplier
 
-class SideScannerView @JvmOverloads constructor(
+class FaceScannerView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     @AttrRes defStyleAttr: Int = 0,
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
     init {
-        inflate(context, R.layout.side_scanner, this)
+        inflate(context, R.layout.face_scanner, this)
     }
 
     fun start(
         lifecycleOwner: LifecycleOwner,
         executor: Executor,
-        onSideCaptured: (Side) -> Unit,
+        onFaceCaptured: (Face) -> Unit,
         onFinish: () -> Unit,
     ) {
         cameraProviderFuture.addListener({
             bindCamera(lifecycleOwner, executor)
         }, executor)
 
-        fab_capture.setOnClickCaptureListener(onSideCaptured, onFinish = onFinish)
+        fab_capture.setOnClickCaptureListener(onFaceCaptured, onFinish = onFinish)
 
         showHintMessage()
     }
@@ -77,7 +76,7 @@ class SideScannerView @JvmOverloads constructor(
         val cameraProvider = cameraProviderFuture.get()
         cameraProvider.unbindAll()
 
-        imageAnalysis.setAnalyzer(executor, sideColorsAnalyzer)
+        imageAnalysis.setAnalyzer(executor, faceColorsAnalyzer)
 
         val useCaseGroup = UseCaseGroup.Builder()
             .addUseCase(preview)
@@ -96,15 +95,15 @@ class SideScannerView @JvmOverloads constructor(
     }
 
     private fun FloatingActionButton.setOnClickCaptureListener(
-        onSideCaptured: (Side) -> Unit,
+        onFaceCaptured: (Face) -> Unit,
         onFinish: () -> Unit,
     ) {
         setOnClickListener {
             isClickable = false
 
-            if (numberOfSidesScanned++ < NumberOfSides) {
+            if (numberOfFacesScanned++ < RubikCube.NumberOfFaces) {
 
-                if (numberOfSidesScanned + 1 == NumberOfSides) {
+                if (numberOfFacesScanned + 1 == RubikCube.NumberOfFaces) {
                     fab_capture.hide()
                     onFinish()
                 }
@@ -115,7 +114,7 @@ class SideScannerView @JvmOverloads constructor(
                 showHint(onAnimationEnd = {
                     isClickable = true
                 })
-                onSideCaptured.invoke(Side(scanOrder.current.sidePosition, lastColorsScanned))
+                onFaceCaptured.invoke(Face(scanOrder.current.facePosition, lastColorsScanned))
             }
         }
     }
@@ -163,7 +162,7 @@ class SideScannerView @JvmOverloads constructor(
     private fun loadAnimation(anim: Int) = AnimationUtils.loadAnimation(context, anim)
 
     private var lastColorsScanned: List<Int> = emptyList()
-    private var numberOfSidesScanned: Int = 0
+    private var numberOfFacesScanned: Int = 0
     private val cameraProviderFuture by lazy { ProcessCameraProvider.getInstance(context) }
     private val preview by lazy {
         Preview.Builder()
@@ -178,8 +177,8 @@ class SideScannerView @JvmOverloads constructor(
     private val imageAnalysis by lazy {
         ImageAnalysis.Builder().build()
     }
-    private val sideColorsAnalyzer by lazy {
-        SideColorsAnalyzer(cropViewRect, previewViewRect, onSuccess = { colors ->
+    private val faceColorsAnalyzer by lazy {
+        FaceColorsAnalyzer(cropViewRect, previewViewRect, onSuccess = { colors ->
             showColorsOnPreview(colors)
             lastColorsScanned = colors
         })
@@ -194,11 +193,7 @@ class SideScannerView @JvmOverloads constructor(
             ScanOrderItem(BOTTOM, hintArrowRightAnim, R.string.scan_hint_next_right, ARROW_RIGHT),
             ScanOrderItem(LEFT, hintArrowRightAnim, R.string.scan_hint_next_right, ARROW_RIGHT),
             ScanOrderItem(TOP, hintArrowUpAnim, R.string.scan_hint_next_up),
-            ScanOrderItem(DOWN,
-                hintArrowDownAnim,
-                R.string.scan_hint_two_down,
-                ARROW_DOWN,
-                multiplier = 2))
+            ScanOrderItem(DOWN, hintArrowDownAnim, R.string.scan_hint_two_down, ARROW_DOWN, 2))
     }
     private val cropView by lazy { crop_area as GridLayout }
     private val previewView by lazy { preview_view }
@@ -230,7 +225,7 @@ private const val ARROW_UP = 0f
 private const val ARROW_DOWN = 180f
 
 private data class ScanOrderItem(
-    val sidePosition: SidePosition,
+    val facePosition: Face.Position,
     val hintAnimation: Animation?,
     @StringRes val messageRes: Int,
     val arrowDegrees: Float = ARROW_UP,
