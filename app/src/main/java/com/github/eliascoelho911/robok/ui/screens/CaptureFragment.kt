@@ -43,6 +43,8 @@ class CaptureFragment : Fragment() {
         if (permissionIsGranted) {
             side_scanner_view.start(viewLifecycleOwner, executor, onSideCaptured = {
 
+            }, onFinish = {
+
             })
         }
     }
