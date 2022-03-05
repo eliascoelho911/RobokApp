@@ -21,7 +21,6 @@ import androidx.core.view.forEachIndexed
 import androidx.core.view.isVisible
 import androidx.lifecycle.LifecycleOwner
 import com.github.eliascoelho911.robok.R
-import com.github.eliascoelho911.robok.rubikcube.RubikCube
 import com.github.eliascoelho911.robok.rubikcube.face.Face
 import com.github.eliascoelho911.robok.rubikcube.face.Face.Position.BOTTOM
 import com.github.eliascoelho911.robok.rubikcube.face.Face.Position.DOWN
@@ -56,14 +55,14 @@ class FaceScannerView @JvmOverloads constructor(
     fun start(
         lifecycleOwner: LifecycleOwner,
         executor: Executor,
-        onFaceCaptured: (Face) -> Unit,
-        onFinish: () -> Unit,
+        onFaceCaptured: (Face) -> Unit = {},
+        onFinish: () -> Unit = {},
     ) {
         cameraProviderFuture.addListener({
             bindCamera(lifecycleOwner, executor)
         }, executor)
 
-        fab_capture.setOnClickCaptureListener(onFaceCaptured, onFinish = onFinish)
+        fab_capture.setOnClickCaptureListener(onFaceCaptured, onFinish)
 
         showHintMessage()
     }
@@ -101,21 +100,19 @@ class FaceScannerView @JvmOverloads constructor(
         setOnClickListener {
             isClickable = false
 
-            if (numberOfFacesScanned++ < RubikCube.NumberOfFaces) {
-
-                if (numberOfFacesScanned + 1 == RubikCube.NumberOfFaces) {
-                    fab_capture.hide()
-                    onFinish()
-                }
-
-                if (scanOrder.hasNext) scanOrder.next()
-
-                showColorsScanned()
-                showHint(onAnimationEnd = {
-                    isClickable = true
-                })
-                onFaceCaptured.invoke(Face(scanOrder.current.facePosition, lastColorsScanned))
+            if (scanOrder.hasNext) {
+                scanOrder.next()
+            } else {
+                fab_capture.hide()
+                onFinish()
             }
+
+            showColorsScanned()
+            showHint(onAnimationEnd = {
+                isClickable = true
+            })
+
+            onFaceCaptured.invoke(Face(scanOrder.current.facePosition, lastColorsScanned))
         }
     }
 
@@ -145,7 +142,7 @@ class FaceScannerView @JvmOverloads constructor(
                 hintAnimation.setOnAnimationEndListener(onAnimationEnd)
                 startAnimation(hintAnimation)
             }
-        }
+        } ?: onAnimationEnd()
     }
 
     private fun showHintMessage() {
@@ -162,7 +159,6 @@ class FaceScannerView @JvmOverloads constructor(
     private fun loadAnimation(anim: Int) = AnimationUtils.loadAnimation(context, anim)
 
     private var lastColorsScanned: List<Int> = emptyList()
-    private var numberOfFacesScanned: Int = 0
     private val cameraProviderFuture by lazy { ProcessCameraProvider.getInstance(context) }
     private val preview by lazy {
         Preview.Builder()
@@ -188,11 +184,11 @@ class FaceScannerView @JvmOverloads constructor(
     private val hintArrowDownAnim by lazy { loadAnimation(R.anim.hint_arrow_down) }
     private val hintArrowRightAnim by lazy { loadAnimation(R.anim.hint_arrow_right) }
     private val scanOrder by lazy {
-        ScanOrder(ScanOrderItem(FRONT, null, R.string.scan_hint_front),
-            ScanOrderItem(RIGHT, hintArrowRightAnim, R.string.scan_hint_next_right, ARROW_RIGHT),
-            ScanOrderItem(BOTTOM, hintArrowRightAnim, R.string.scan_hint_next_right, ARROW_RIGHT),
-            ScanOrderItem(LEFT, hintArrowRightAnim, R.string.scan_hint_next_right, ARROW_RIGHT),
-            ScanOrderItem(TOP, hintArrowUpAnim, R.string.scan_hint_next_up),
+        ScanOrder(ScanOrderItem(FRONT, hintAnimation = null, R.string.scan_hint_front),
+            ScanOrderItem(RIGHT, hintArrowRightAnim, R.string.scan_hint_next_right),
+            ScanOrderItem(BOTTOM, hintArrowRightAnim, R.string.scan_hint_next_right),
+            ScanOrderItem(LEFT, hintArrowRightAnim, R.string.scan_hint_next_right),
+            ScanOrderItem(TOP, hintArrowUpAnim, R.string.scan_hint_next_up, ARROW_UP),
             ScanOrderItem(DOWN, hintArrowDownAnim, R.string.scan_hint_two_down, ARROW_DOWN, 2))
     }
     private val cropView by lazy { crop_area as GridLayout }
@@ -228,6 +224,6 @@ private data class ScanOrderItem(
     val facePosition: Face.Position,
     val hintAnimation: Animation?,
     @StringRes val messageRes: Int,
-    val arrowDegrees: Float = ARROW_UP,
+    val arrowDegrees: Float = ARROW_RIGHT,
     val multiplier: Int = 1,
 )
