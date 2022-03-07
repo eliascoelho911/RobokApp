@@ -11,15 +11,16 @@ import com.github.eliascoelho911.robok.util.ColorUtil.similarityBetweenColors
 
 private const val SimilarityLimit = 20
 
-class RubikCube private constructor(private val faces: Set<Face>) {
+class RubikCube private constructor(faces: Set<Face>) {
     val kociembaValue: String by lazy {
-        faces.flatMap { it.colors }.map { color ->
-            colorIndex.single { it.value == color }.index
+        allColors.map { color ->
+            colorsIndex.single { it.value == color }.index
         }.joinToString(separator = "")
     }
+    val distinctColors by lazy { allColors.distinct() }
 
-    val colors = faces.flatMap { it.colors }.distinct()
-    private val colorIndex = colors.withIndex()
+    private val allColors = faces.flatMap { it.colors }
+    private val colorsIndex = distinctColors.withIndex()
 
     companion object {
         const val NumberOfFaces = 6

@@ -20,7 +20,7 @@ class ReviewScannedCubeView @JvmOverloads constructor(
     fun show(rubikCube: RubikCube) {
         with(rubikCube) {
             previewCubeView.setCubeModel(kociembaValue)
-            previewCubeView.setCubeColors(colors.toIntArray())
+            previewCubeView.setCubeColors(distinctColors.toIntArray())
         }
     }
 
