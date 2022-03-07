@@ -4,5 +4,6 @@ import androidx.lifecycle.ViewModel
 import com.github.eliascoelho911.robok.rubikcube.RubikCube
 
 class CaptureViewModel : ViewModel() {
-    val scannedRubikCube = RubikCube(emptySet())
+    val scannedRubikCubeBuilder = RubikCube.Builder()
+    val scannedRubikCube get() = scannedRubikCubeBuilder.build()
 }

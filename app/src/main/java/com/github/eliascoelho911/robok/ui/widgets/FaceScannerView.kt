@@ -100,6 +100,8 @@ class FaceScannerView @JvmOverloads constructor(
         setOnClickListener {
             isClickable = false
 
+            onFaceCaptured.invoke(Face(scanOrder.current.facePosition, lastColorsScanned))
+
             if (scanOrder.hasNext) {
                 scanOrder.next()
             } else {
@@ -111,8 +113,6 @@ class FaceScannerView @JvmOverloads constructor(
             showHint(onAnimationEnd = {
                 isClickable = true
             })
-
-            onFaceCaptured.invoke(Face(scanOrder.current.facePosition, lastColorsScanned))
         }
     }
 

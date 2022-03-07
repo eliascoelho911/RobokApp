@@ -6,7 +6,14 @@ import androidx.annotation.ColorInt
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-fun createColorFrom(@ColorInt int: Int) = Color.valueOf(int)
+object ColorUtil {
+    fun createColorFrom(@ColorInt int: Int) = Color.valueOf(int)
+
+    fun similarityBetweenColors(
+        @ColorInt firstColor: Int,
+        @ColorInt secondColor: Int,
+    ) = createColorFrom(firstColor).similarityFrom(createColorFrom(secondColor))
+}
 
 fun Color.similarityFrom(other: Color): Float {
     val referenceCL = ColorSpace.connect(colorSpace, ColorSpace.get(ColorSpace.Named.CIE_LAB))

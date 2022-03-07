@@ -2,13 +2,11 @@ package com.github.eliascoelho911.robok.ui.widgets
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.View
 import android.widget.FrameLayout
-import android.widget.LinearLayout
 import androidx.annotation.AttrRes
 import com.github.eliascoelho911.robok.R
 import com.github.eliascoelho911.robok.rubikcube.RubikCube
-import kotlinx.android.synthetic.main.review_scanned_cube.view.colors_container
+import kotlinx.android.synthetic.main.review_scanned_cube.view.preview_cube_view
 
 class ReviewScannedCubeView @JvmOverloads constructor(
     context: Context,
@@ -20,15 +18,11 @@ class ReviewScannedCubeView @JvmOverloads constructor(
     }
 
     fun show(rubikCube: RubikCube) {
-        rubikCube.facesWithStandardizesColors.flatMap { it.colors }.distinct().forEach { color ->
-            val view = View(context).apply {
-                layoutParams = LinearLayout.LayoutParams(48, 48)
-                id = View.generateViewId()
-                setBackgroundColor(color)
-            }
-            colorsContainerView.addView(view)
+        with(rubikCube) {
+            previewCubeView.setCubeModel(kociembaValue)
+            previewCubeView.setCubeColors(colors.toIntArray())
         }
     }
 
-    private val colorsContainerView by lazy { colors_container }
+    private val previewCubeView by lazy { preview_cube_view }
 }

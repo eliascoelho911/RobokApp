@@ -2,7 +2,6 @@ package com.github.eliascoelho911.robok.ui.screens
 
 import android.Manifest.permission.CAMERA
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,21 +37,26 @@ class CaptureFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        face_scanner_view.finish()
+        faceScannerView.finish()
     }
 
     private fun startCameraIfPermissionGranted(permissionIsGranted: Boolean) {
         if (permissionIsGranted) {
-            face_scanner_view.start(viewLifecycleOwner, executor, onFaceCaptured = {
-                viewModel.scannedRubikCube.add(it)
+            faceScannerView.start(viewLifecycleOwner, executor, onFaceCaptured = {
+                viewModel.scannedRubikCubeBuilder.withFace(it)
             }, onFinish = {
-                reviewScannedCubeView.isVisible = true
-                reviewScannedCubeView.show(viewModel.scannedRubikCube)
+                showReviewScannedCubeView()
             })
         }
     }
 
+    private fun showReviewScannedCubeView() {
+        reviewScannedCubeView.isVisible = true
+        reviewScannedCubeView.show(viewModel.scannedRubikCube)
+    }
+
     private val reviewScannedCubeView by lazy { review_scanned_cube_view }
+    private val faceScannerView by lazy { face_scanner_view }
     private val executor get() = ContextCompat.getMainExecutor(requireContext())
     private val viewModel: CaptureViewModel by viewModel()
     private lateinit var requestPermissionToStartCamera: ActivityResultLauncher<String>

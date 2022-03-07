@@ -22,6 +22,7 @@ val rubikCube: RubikCube by lazy {
             val colors = BitmapFactory.decodeStream(FileInputStream(file))
                 .getColorsOfGrid(FaceLineHeight, FaceLineHeight)
             add(Face(positionOrder[index], colors))
+            println("${positionOrder[index]}($colors)")
         }
     }
 }
