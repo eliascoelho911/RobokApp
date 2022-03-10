@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.github.eliascoelho911.robok.R
+import com.github.eliascoelho911.robok.rubikcube.face.FaceSorter
 import com.github.eliascoelho911.robok.ui.viewmodels.CaptureViewModel
 import kotlinx.android.synthetic.main.capture_fragment.face_scanner_view
 import kotlinx.android.synthetic.main.capture_fragment.review_scanned_cube_view
@@ -52,7 +53,10 @@ class CaptureFragment : Fragment() {
 
     private fun showReviewScannedCubeView() {
         reviewScannedCubeView.isVisible = true
-        reviewScannedCubeView.show(viewModel.scannedRubikCube)
+        viewModel.scannedRubikCubeBuilder.run {
+            withSorter(FaceSorter.AnimCube)
+            reviewScannedCubeView.show(build())
+        }
     }
 
     private val reviewScannedCubeView by lazy { review_scanned_cube_view }

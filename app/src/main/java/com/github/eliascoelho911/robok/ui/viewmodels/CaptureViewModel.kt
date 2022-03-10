@@ -5,5 +5,4 @@ import com.github.eliascoelho911.robok.rubikcube.RubikCube
 
 class CaptureViewModel : ViewModel() {
     val scannedRubikCubeBuilder = RubikCube.Builder()
-    val scannedRubikCube get() = scannedRubikCubeBuilder.build()
 }

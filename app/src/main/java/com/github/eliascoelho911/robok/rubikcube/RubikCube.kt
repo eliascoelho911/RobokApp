@@ -1,17 +1,23 @@
 package com.github.eliascoelho911.robok.rubikcube
 
 import com.github.eliascoelho911.robok.rubikcube.face.Face
-import com.github.eliascoelho911.robok.rubikcube.face.Face.Position.BOTTOM
+import com.github.eliascoelho911.robok.rubikcube.face.Face.Position.BACK
 import com.github.eliascoelho911.robok.rubikcube.face.Face.Position.DOWN
 import com.github.eliascoelho911.robok.rubikcube.face.Face.Position.FRONT
 import com.github.eliascoelho911.robok.rubikcube.face.Face.Position.LEFT
 import com.github.eliascoelho911.robok.rubikcube.face.Face.Position.RIGHT
-import com.github.eliascoelho911.robok.rubikcube.face.Face.Position.TOP
+import com.github.eliascoelho911.robok.rubikcube.face.Face.Position.UP
+import com.github.eliascoelho911.robok.rubikcube.face.FaceSorter
 import com.github.eliascoelho911.robok.util.ColorUtil.similarityBetweenColors
 
 private const val SimilarityLimit = 20
 
-class RubikCube private constructor(faces: Set<Face>) {
+/*
+Todo:
+ Toda essa complexidade que criei nessa classe é necessária?
+ Por exemplo: o face poderia ser uma classe contendo o modelo e a posição
+ */
+class RubikCube private constructor(faces: List<Face>, sorter: FaceSorter) {
     val kociembaValue: String by lazy {
         allColors.map { color ->
             colorsIndex.single { it.value == color }.index
@@ -19,7 +25,7 @@ class RubikCube private constructor(faces: Set<Face>) {
     }
     val distinctColors by lazy { allColors.distinct() }
 
-    private val allColors = faces.flatMap { it.colors }
+    private val allColors = sorter.sort(faces).flatMap { it.colors }
     private val colorsIndex = distinctColors.withIndex()
 
     companion object {
@@ -30,22 +36,27 @@ class RubikCube private constructor(faces: Set<Face>) {
 
     class Builder {
         private val originalFaces = mutableSetOf<Face>()
+        private lateinit var sorter: FaceSorter
 
         fun withFace(face: Face) = apply {
             if (originalFaces.size + 1 > NumberOfFaces) throw IllegalArgumentException("limit of faces is $NumberOfFaces")
             originalFaces.add(face)
         }
 
-        fun build(): RubikCube = RubikCube(originalFaces.standardizesColors())
+        fun withSorter(sorter: FaceSorter) = apply {
+            this.sorter = sorter
+        }
 
-        private fun Set<Face>.standardizesColors(): Set<Face> {
+        fun build(): RubikCube = RubikCube(originalFaces.standardizesColors(), sorter)
+
+        private fun Set<Face>.standardizesColors(): List<Face> {
             val allColors = flatMap { it.colors }
             val colorMapper = createColorMapper(allColors)
-            return map { it.standardizesColors(colorMapper) }.toSet()
+            return map { it.standardizesColors(colorMapper) }
         }
 
         private fun Face.standardizesColors(colorMapper: Map<Int, Int>): Face =
-            Face(position, colors.map { colorMapper[it] ?: it })
+            Face(colors.map { colorMapper[it] ?: it }, position)
 
         private fun createColorMapper(colors: List<Int>): Map<Int, Int> {
             val referenceColors = findReferenceColors(colors)
@@ -77,68 +88,4 @@ class RubikCube private constructor(faces: Set<Face>) {
             it to similarityBetweenColors(it, color)
         }.minByOrNull { it.second }!!.first
     }
-}
-
-val testRubikCube by lazy {
-    RubikCube.Builder()
-        .withFace(Face(FRONT,
-            listOf(-16741681,
-                -27604,
-                -924965,
-                -8173,
-                -8525545,
-                -1618623,
-                -1631721,
-                -16743734,
-                -7739125)))
-        .withFace(Face(RIGHT,
-            listOf(-227024,
-                -2303018,
-                -1101519,
-                -16743738,
-                -1891552,
-                -159954,
-                -142063,
-                -16677686,
-                -16545326)))
-        .withFace(Face(LEFT,
-            listOf(-9314047,
-                -7937016,
-                -28646,
-                -2107699,
-                -2171180,
-                -778212,
-                -1044206,
-                -1960688,
-                -16741935)))
-        .withFace(Face(BOTTOM,
-            listOf(-16748348,
-                -1257202,
-                -2895154,
-                -3356475,
-                -32228,
-                -30176,
-                -996081,
-                -3355195,
-                -2960948)))
-        .withFace(Face(TOP,
-            listOf(-73198,
-                -16741164,
-                -8131064,
-                -664560,
-                -16745009,
-                -5838827,
-                -140785,
-                -915445,
-                -93389)))
-        .withFace(Face(DOWN,
-            listOf(-2283990,
-                -10299358,
-                -11020260,
-                -10630123,
-                -1651442,
-                -163018,
-                -3618616,
-                -2373363,
-                -29359))).build()
 }

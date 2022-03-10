@@ -3,12 +3,12 @@ package com.github.eliascoelho911.robok.rubikcube
 import android.graphics.BitmapFactory
 import com.github.eliascoelho911.robok.rubikcube.RubikCube.Companion.FaceLineHeight
 import com.github.eliascoelho911.robok.rubikcube.face.Face
-import com.github.eliascoelho911.robok.rubikcube.face.Face.Position.BOTTOM
+import com.github.eliascoelho911.robok.rubikcube.face.Face.Position.BACK
 import com.github.eliascoelho911.robok.rubikcube.face.Face.Position.DOWN
 import com.github.eliascoelho911.robok.rubikcube.face.Face.Position.FRONT
 import com.github.eliascoelho911.robok.rubikcube.face.Face.Position.LEFT
 import com.github.eliascoelho911.robok.rubikcube.face.Face.Position.RIGHT
-import com.github.eliascoelho911.robok.rubikcube.face.Face.Position.TOP
+import com.github.eliascoelho911.robok.rubikcube.face.Face.Position.UP
 import com.github.eliascoelho911.robok.util.getColorsOfGrid
 import java.io.File
 import java.io.FileInputStream
@@ -27,4 +27,4 @@ val rubikCube: RubikCube by lazy {
     }
 }
 
-private val positionOrder = listOf(FRONT, RIGHT, LEFT, BOTTOM, TOP, DOWN)
+private val positionOrder = listOf(FRONT, RIGHT, LEFT, BACK, UP, DOWN)

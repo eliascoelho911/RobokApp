@@ -22,12 +22,12 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.LifecycleOwner
 import com.github.eliascoelho911.robok.R
 import com.github.eliascoelho911.robok.rubikcube.face.Face
-import com.github.eliascoelho911.robok.rubikcube.face.Face.Position.BOTTOM
+import com.github.eliascoelho911.robok.rubikcube.face.Face.Position.BACK
 import com.github.eliascoelho911.robok.rubikcube.face.Face.Position.DOWN
 import com.github.eliascoelho911.robok.rubikcube.face.Face.Position.FRONT
 import com.github.eliascoelho911.robok.rubikcube.face.Face.Position.LEFT
 import com.github.eliascoelho911.robok.rubikcube.face.Face.Position.RIGHT
-import com.github.eliascoelho911.robok.rubikcube.face.Face.Position.TOP
+import com.github.eliascoelho911.robok.rubikcube.face.Face.Position.UP
 import com.github.eliascoelho911.robok.rubikcube.face.FaceColorsAnalyzer
 import com.github.eliascoelho911.robok.util.getRect
 import com.github.eliascoelho911.robok.util.setOnAnimationEndListener
@@ -100,7 +100,7 @@ class FaceScannerView @JvmOverloads constructor(
         setOnClickListener {
             isClickable = false
 
-            onFaceCaptured.invoke(Face(scanOrder.current.facePosition, lastColorsScanned))
+            onFaceCaptured.invoke(Face(lastColorsScanned, scanOrder.current.facePosition))
 
             if (scanOrder.hasNext) {
                 scanOrder.next()
@@ -186,9 +186,9 @@ class FaceScannerView @JvmOverloads constructor(
     private val scanOrder by lazy {
         ScanOrder(ScanOrderItem(FRONT, hintAnimation = null, R.string.scan_hint_front),
             ScanOrderItem(RIGHT, hintArrowRightAnim, R.string.scan_hint_next_right),
-            ScanOrderItem(BOTTOM, hintArrowRightAnim, R.string.scan_hint_next_right),
+            ScanOrderItem(BACK, hintArrowRightAnim, R.string.scan_hint_next_right),
             ScanOrderItem(LEFT, hintArrowRightAnim, R.string.scan_hint_next_right),
-            ScanOrderItem(TOP, hintArrowUpAnim, R.string.scan_hint_next_up, ARROW_UP),
+            ScanOrderItem(UP, hintArrowUpAnim, R.string.scan_hint_next_up, ARROW_UP),
             ScanOrderItem(DOWN, hintArrowDownAnim, R.string.scan_hint_two_down, ARROW_DOWN, 2))
     }
     private val cropView by lazy { crop_area as GridLayout }
