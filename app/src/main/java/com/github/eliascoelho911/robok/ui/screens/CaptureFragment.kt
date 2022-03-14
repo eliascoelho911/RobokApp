@@ -11,7 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.github.eliascoelho911.robok.R
-import com.github.eliascoelho911.robok.rubikcube.face.FaceSorter
+import com.github.eliascoelho911.robok.rubikcube.AnimCubeModelCreator
 import com.github.eliascoelho911.robok.ui.viewmodels.CaptureViewModel
 import kotlinx.android.synthetic.main.capture_fragment.face_scanner_view
 import kotlinx.android.synthetic.main.capture_fragment.review_scanned_cube_view
@@ -29,6 +29,7 @@ class CaptureFragment : Fragment() {
         super.onCreate(savedInstanceState)
         requestPermissionToStartCamera = registerForActivityResult(RequestPermission(),
             ::startCameraIfPermissionGranted)
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -52,10 +53,13 @@ class CaptureFragment : Fragment() {
     }
 
     private fun showReviewScannedCubeView() {
-        reviewScannedCubeView.isVisible = true
-        viewModel.scannedRubikCubeBuilder.run {
-            withSorter(FaceSorter.AnimCube)
-            reviewScannedCubeView.show(build())
+        viewModel.scannedRubikCubeBuilder.build().let { rubikCube ->
+            rubikCube.modelCreator = AnimCubeModelCreator
+
+            reviewScannedCubeView.apply {
+                isVisible = true
+                show(rubikCube)
+            }
         }
     }
 

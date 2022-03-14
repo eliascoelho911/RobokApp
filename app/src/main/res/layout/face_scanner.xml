@@ -74,7 +74,7 @@
             android:layout_width="0dp"
             android:layout_margin="16dp"
             android:layout_height="wrap_content"
-            tools:text="@string/scan_hint_front"
+            tools:text="@string/scan_hint_any_face"
             android:textColor="?attr/colorSecondary"
             app:layout_constraintBottom_toTopOf="@id/crop_area"
             app:layout_constraintStart_toStartOf="parent"

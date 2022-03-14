@@ -2,13 +2,12 @@ package com.github.eliascoelho911.robok.rubikcube.face
 
 import androidx.annotation.ColorInt
 import com.github.eliascoelho911.robok.rubikcube.RubikCube.Companion.NumberOfFacelets
-import com.github.eliascoelho911.robok.rubikcube.face.FaceletsSorter.AnimCubeSorters
 
 class Face(
-    @ColorInt colors: List<Int>,
     val position: Position,
+    @ColorInt val colors: List<Int>,
 ) {
-    val colors = position.sorter.sort(colors)
+    constructor(position: Position, @ColorInt vararg colors: Int) : this(position, colors.toList())
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -21,12 +20,6 @@ class Face(
 
     override fun hashCode(): Int {
         return centerColor(colors).hashCode()
-    }
-
-    enum class Position(val sorter: FaceletsSorter) {
-        FRONT(AnimCubeSorters.DefaultFace), RIGHT(AnimCubeSorters.DefaultFace),
-        BACK(AnimCubeSorters.DefaultFace), LEFT(AnimCubeSorters.DefaultFace),
-        UP(AnimCubeSorters.DefaultFace), DOWN(AnimCubeSorters.DefaultFace);
     }
 }
 
