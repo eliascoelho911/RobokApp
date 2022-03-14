@@ -23,7 +23,7 @@ abstract class ModelCreator {
         }
     }
 
-    private fun createColorMapper(distinctColors: List<Int>): Map<Int, String> =
+    protected open fun createColorMapper(distinctColors: List<Int>): Map<Int, String> =
         distinctColors.withIndex().associate { it.value to it.index.toString() }
 
     private fun reorderFaces(faces: List<Face>): List<Face> {
@@ -34,33 +34,33 @@ abstract class ModelCreator {
     }
 }
 
-object DefaultModelCreator : ModelCreator() {
+class DefaultModelCreator : ModelCreator() {
     override val faceOrder: List<Position> = listOf(UP, DOWN, FRONT, BACK, LEFT, RIGHT)
 
     override fun reorderFacelets(faces: List<Face>): List<Face> = faces
 }
 
-object AnimCubeModelCreator : ModelCreator() {
+open class AnimCubeModelCreator : ModelCreator() {
     override val faceOrder: List<Position> = listOf(UP, DOWN, FRONT, BACK, LEFT, RIGHT)
 
-    private val OrderOfFaceletsUp = listOf(6, 7, 8, 3, 4, 5, 0, 1, 2)
-    private val OrderOfFaceletsDown = listOf(0, 3, 6, 1, 4, 7, 2, 5, 8)
-    private val OrderOfFaceletsFront = listOf(0, 3, 6, 1, 4, 7, 2, 5, 8)
-    private val OrderOfFaceletsBack = listOf(0, 3, 6, 1, 4, 7, 2, 5, 8)
-    private val OrderOfFaceletsLeft = listOf(2, 1, 0, 5, 4, 3, 8, 7, 6)
-    private val OrderOfFaceletsRight = listOf(0, 3, 6, 1, 4, 7, 2, 5, 8)
-    private val OrderOfFaceletsMap = mapOf(
-        UP to OrderOfFaceletsUp,
-        DOWN to OrderOfFaceletsDown,
-        FRONT to OrderOfFaceletsFront,
-        BACK to OrderOfFaceletsBack,
-        LEFT to OrderOfFaceletsLeft,
-        RIGHT to OrderOfFaceletsRight)
+    private val orderOfFaceletsUp = listOf(6, 7, 8, 3, 4, 5, 0, 1, 2)
+    private val orderOfFaceletsDown = listOf(0, 3, 6, 1, 4, 7, 2, 5, 8)
+    private val orderOfFaceletsFront = listOf(0, 3, 6, 1, 4, 7, 2, 5, 8)
+    private val orderOfFaceletsBack = listOf(0, 3, 6, 1, 4, 7, 2, 5, 8)
+    private val orderOfFaceletsLeft = listOf(2, 1, 0, 5, 4, 3, 8, 7, 6)
+    private val orderOfFaceletsRight = listOf(0, 3, 6, 1, 4, 7, 2, 5, 8)
+    private val orderOfFaceletsMap = mapOf(
+        UP to orderOfFaceletsUp,
+        DOWN to orderOfFaceletsDown,
+        FRONT to orderOfFaceletsFront,
+        BACK to orderOfFaceletsBack,
+        LEFT to orderOfFaceletsLeft,
+        RIGHT to orderOfFaceletsRight)
 
     override fun reorderFacelets(faces: List<Face>): List<Face> {
         return faces.map { face ->
             face.colors.mapIndexed { index, color ->
-                OrderOfFaceletsMap[face.position]!![index] to color
+                orderOfFaceletsMap[face.position]!![index] to color
             }.sortedBy { it.first }.map { it.second }.let { Face(face.position, it) }
         }
     }

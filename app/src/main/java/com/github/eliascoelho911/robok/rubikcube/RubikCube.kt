@@ -12,7 +12,7 @@ class RubikCube(private val faces: List<Face>) {
     val model: Model by lazy {
         modelCreator.create(faces)
     }
-    var modelCreator: ModelCreator = DefaultModelCreator
+    var modelCreator: ModelCreator = DefaultModelCreator()
 
     companion object {
         const val NumberOfFaces = 6

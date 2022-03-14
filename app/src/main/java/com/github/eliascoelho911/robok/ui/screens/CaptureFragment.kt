@@ -54,7 +54,7 @@ class CaptureFragment : Fragment() {
 
     private fun showReviewScannedCubeView() {
         viewModel.scannedRubikCubeBuilder.build().let { rubikCube ->
-            rubikCube.modelCreator = AnimCubeModelCreator
+            rubikCube.modelCreator = AnimCubeModelCreator()
 
             reviewScannedCubeView.apply {
                 isVisible = true
