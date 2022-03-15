@@ -12,7 +12,8 @@ import androidx.core.content.ContextCompat.getDrawable
 import com.github.eliascoelho911.robok.R
 import com.github.eliascoelho911.robok.ui.widgets.ConnectionStatus.DISCONNECTED
 import com.github.eliascoelho911.robok.util.getInteger
-import kotlinx.android.synthetic.main.app_toolbar.view.*
+import kotlinx.android.synthetic.main.app_toolbar.view.connection_status
+import kotlinx.android.synthetic.main.app_toolbar.view.refresh
 
 class AppToolbarView @JvmOverloads constructor(
     context: Context,
@@ -48,13 +49,15 @@ class AppToolbarView @JvmOverloads constructor(
             repeatMode = Animation.RESTART
         }
     }
-
     private val redColor by lazy {
         context.getColor(R.color.red_a700)
     }
 
     private val greenColor by lazy {
         context.getColor(R.color.green_a400)
+    }
+    private val refreshView by lazy {
+        refresh
     }
 
     init {
@@ -64,18 +67,18 @@ class AppToolbarView @JvmOverloads constructor(
     }
 
     private fun clickListeners() {
-        refresh.setOnClickListener {
+        refreshView.setOnClickListener {
             startLoadingAnimation()
             onClickRefreshButton.invoke()
         }
     }
 
     private fun startLoadingAnimation() {
-        refresh.startAnimation(loadingAnimation)
+        refreshView.startAnimation(loadingAnimation)
     }
 
     private fun stopLoadingAnimation() {
-        refresh.clearAnimation()
+        refreshView.clearAnimation()
     }
 
     private fun updateConnectionStatusIconView() {
