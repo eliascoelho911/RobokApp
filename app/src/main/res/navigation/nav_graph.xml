@@ -3,11 +3,22 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/nav_graph"
-        app:startDestination="@id/homeFragment">
+        app:startDestination="@id/captureFragment">
 
     <fragment
-            android:id="@+id/homeFragment"
+            android:id="@+id/captureFragment"
             android:name="com.github.eliascoelho911.robok.ui.screens.CaptureFragment"
-            android:label="@string/home_screen_name"
-            tools:layout="@layout/capture_fragment" />
+            tools:layout="@layout/capture_fragment" >
+        <action
+                android:id="@+id/action_captureFragment_to_validateScannedCubeFragment"
+                app:destination="@id/validateScannedCubeFragment" />
+    </fragment>
+    <fragment
+            android:id="@+id/validateScannedCubeFragment"
+            android:name="com.github.eliascoelho911.robok.ui.screens.ValidateScannedCubeFragment"
+            tools:layout="@layout/validate_scanned_cube_fragment">
+        <argument
+                android:name="rubikCube"
+                app:argType="com.github.eliascoelho911.robok.rubikcube.RubikCube" />
+    </fragment>
 </navigation>

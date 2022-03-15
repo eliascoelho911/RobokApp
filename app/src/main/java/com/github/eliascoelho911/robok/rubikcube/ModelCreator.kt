@@ -10,13 +10,14 @@ import com.github.eliascoelho911.robok.rubikcube.face.Position.RIGHT
 import com.github.eliascoelho911.robok.rubikcube.face.Position.UP
 
 abstract class ModelCreator {
-    abstract val faceOrder: List<Position>
-    abstract fun reorderFacelets(faces: List<Face>): List<Face>
+    protected abstract val faceOrder: List<Position>
+    protected abstract fun reorderFacelets(faces: List<Face>): List<Face>
 
-    fun create(faces: List<Face>): Model {
+    fun create(rubikCube: RubikCube): Model {
+        val faces = rubikCube.faces
         val orderedFaces = reorderFaces(faces)
         val orderedFacelets = reorderFacelets(orderedFaces)
-        val distinctColors = faces.flatMap { it.colors }.distinct()
+        val distinctColors = rubikCube.distinctColors
         val colorMapper = createColorMapper(distinctColors)
         return orderedFacelets.joinToString(separator = "") { face ->
             face.colors.map { colorMapper[it] }.joinToString(separator = "")

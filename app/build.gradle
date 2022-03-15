@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-android-extensions'
+    id 'androidx.navigation.safeargs.kotlin'
 }
 
 android {
@@ -43,7 +44,6 @@ android {
 }
 
 dependencies {
-    def nav_version = "2.4.1"
     def lifecycle_version = '2.4.1'
     def koin_version = '3.1.5'
     def camerax_version = "1.1.0-beta02"

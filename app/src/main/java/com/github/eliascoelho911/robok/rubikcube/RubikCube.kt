@@ -1,24 +1,25 @@
 package com.github.eliascoelho911.robok.rubikcube
 
+import android.os.Parcelable
 import com.github.eliascoelho911.robok.rubikcube.face.Face
 import com.github.eliascoelho911.robok.util.ColorUtil.similarityBetweenColors
+import kotlinx.android.parcel.Parcelize
 
 private const val SimilarityLimit = 20
 
 typealias Model = String
 
-class RubikCube(private val faces: List<Face>) {
+@Parcelize
+class RubikCube(val faces: List<Face>): Parcelable {
     val distinctColors by lazy { faces.flatMap { it.colors }.distinct() }
-    val model: Model by lazy {
-        modelCreator.create(faces)
-    }
-    var modelCreator: ModelCreator = DefaultModelCreator()
 
     companion object {
         const val NumberOfFaces = 6
         const val FaceLineHeight = 3
         const val NumberOfFacelets = FaceLineHeight * FaceLineHeight
     }
+
+    fun createModelWith(modelCreator: ModelCreator) = modelCreator.create(this)
 
     class Builder {
         private val originalFaces = mutableListOf<Face>()
