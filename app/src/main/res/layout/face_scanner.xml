@@ -55,7 +55,6 @@
 
     </FrameLayout>
 
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_capture"
             android:layout_width="wrap_content"
@@ -81,5 +80,19 @@
             app:layout_constraintEnd_toEndOf="parent"
             style="@style/Theme.Robok.TextStyle.H6"
             android:textAlignment="center" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_reset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_round_replay_24"
+            android:tooltipText="@string/re_scan"
+            app:tint="@color/white"
+            app:backgroundTint="@color/blue_a400"
+            android:layout_margin="24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:contentDescription="@string/re_scan" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

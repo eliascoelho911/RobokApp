@@ -35,7 +35,7 @@ abstract class ModelCreator {
     }
 }
 
-class DefaultModelCreator : ModelCreator() {
+object DefaultModelCreator : ModelCreator() {
     override val faceOrder: List<Position> = listOf(UP, DOWN, FRONT, BACK, LEFT, RIGHT)
 
     override fun reorderFacelets(faces: List<Face>): List<Face> = faces

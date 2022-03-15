@@ -10,8 +10,15 @@ private const val SimilarityLimit = 20
 typealias Model = String
 
 @Parcelize
-class RubikCube(val faces: List<Face>): Parcelable {
-    val distinctColors by lazy { faces.flatMap { it.colors }.distinct() }
+class RubikCube(val faces: List<Face>) : Parcelable {
+    private val allColors = faces.flatMap { it.colors }
+    val distinctColors by lazy { allColors.distinct() }
+    val isValid: Boolean
+        get() {
+            val allColorsWithCorrectQuantity =
+                allColors.groupBy { it }.all { it.value.size == NumberOfFacelets }
+            return distinctColors.size == NumberOfFaces && allColorsWithCorrectQuantity
+        }
 
     companion object {
         const val NumberOfFaces = 6
@@ -19,7 +26,8 @@ class RubikCube(val faces: List<Face>): Parcelable {
         const val NumberOfFacelets = FaceLineHeight * FaceLineHeight
     }
 
-    fun createModelWith(modelCreator: ModelCreator) = modelCreator.create(this)
+    fun createModelWith(modelCreator: ModelCreator = DefaultModelCreator) =
+        modelCreator.create(this)
 
     class Builder {
         private val originalFaces = mutableListOf<Face>()

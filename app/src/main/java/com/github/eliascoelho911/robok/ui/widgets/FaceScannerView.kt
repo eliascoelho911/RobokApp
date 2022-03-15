@@ -37,6 +37,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.concurrent.Executor
 import kotlinx.android.synthetic.main.face_scanner.view.crop_area
 import kotlinx.android.synthetic.main.face_scanner.view.fab_capture
+import kotlinx.android.synthetic.main.face_scanner.view.fab_reset
 import kotlinx.android.synthetic.main.face_scanner.view.hint_container
 import kotlinx.android.synthetic.main.face_scanner.view.img_hint
 import kotlinx.android.synthetic.main.face_scanner.view.preview_view
@@ -57,13 +58,15 @@ class FaceScannerView @JvmOverloads constructor(
         lifecycleOwner: LifecycleOwner,
         executor: Executor,
         onFaceCaptured: (Face) -> Unit = {},
+        onReset: () -> Unit = {},
         onFinish: () -> Unit = {},
     ) {
         cameraProviderFuture.addListener({
             bindCamera(lifecycleOwner, executor)
         }, executor)
 
-        fab_capture.setOnClickCaptureListener(onFaceCaptured, onFinish)
+        captureFabView.setOnClickCaptureListener(onFaceCaptured, onFinish)
+        resetFabView.setOnClickResetListener(onReset)
 
         showHintMessage()
     }
@@ -100,20 +103,30 @@ class FaceScannerView @JvmOverloads constructor(
     ) {
         setOnClickListener {
             isClickable = false
+            resetFabView.isClickable = false
 
             onFaceCaptured.invoke(Face(scanOrder.current.position, lastColorsScanned))
 
             if (scanOrder.hasNext) {
                 scanOrder.next()
             } else {
-                fab_capture.hide()
+                captureFabView.hide()
                 onFinish()
             }
 
             showColorsScanned()
             showHint(onAnimationEnd = {
                 isClickable = true
+                resetFabView.isClickable = true
             })
+        }
+    }
+
+    private fun FloatingActionButton.setOnClickResetListener(onReset: () -> Unit) {
+        setOnClickListener {
+            scanOrder.restart()
+            showHintMessage()
+            onReset()
         }
     }
 
@@ -196,12 +209,18 @@ class FaceScannerView @JvmOverloads constructor(
     private val hintMultiplierTextView by lazy { txt_hint_multiplier }
     private val arrowHintView by lazy { img_hint }
     private val hintContainerView by lazy { hint_container }
+    private val resetFabView by lazy { fab_reset }
+    private val captureFabView by lazy { fab_capture }
     private val cropViewRect: Rect get() = cropView.getRect()
     private val previewViewRect: Rect get() = previewView.getRect()
 }
 
 private class ScanOrder(vararg scanOrderItem: ScanOrderItem) {
     private var currentIndex = 0
+        set(value) {
+            field = value
+            _current = list[currentIndex]
+        }
     private val list = scanOrderItem.toList()
     private var _current = list[currentIndex]
     val current get() = _current
@@ -209,9 +228,13 @@ private class ScanOrder(vararg scanOrderItem: ScanOrderItem) {
     val hasNext get() = currentIndex < list.lastIndex
 
     fun next(): ScanOrderItem {
-        _current = list[++currentIndex]
+        ++currentIndex
 
         return current
+    }
+
+    fun restart() {
+        currentIndex = 0
     }
 }
 

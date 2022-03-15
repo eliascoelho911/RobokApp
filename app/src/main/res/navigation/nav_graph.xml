@@ -11,7 +11,9 @@
             tools:layout="@layout/capture_fragment" >
         <action
                 android:id="@+id/action_captureFragment_to_validateScannedCubeFragment"
-                app:destination="@id/validateScannedCubeFragment" />
+                app:destination="@id/validateScannedCubeFragment"
+                app:popUpTo="@id/nav_graph"
+                app:popUpToInclusive="true" />
     </fragment>
     <fragment
             android:id="@+id/validateScannedCubeFragment"
@@ -20,5 +22,10 @@
         <argument
                 android:name="rubikCube"
                 app:argType="com.github.eliascoelho911.robok.rubikcube.RubikCube" />
+        <action
+                android:id="@+id/action_validateScannedCubeFragment_to_captureFragment"
+                app:destination="@id/captureFragment"
+                app:popUpTo="@id/validateScannedCubeFragment"
+                app:popUpToInclusive="true" />
     </fragment>
 </navigation>

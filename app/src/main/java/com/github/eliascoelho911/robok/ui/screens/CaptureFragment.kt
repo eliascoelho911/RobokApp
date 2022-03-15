@@ -55,6 +55,8 @@ class CaptureFragment : Fragment() {
                 viewModel.scannedRubikCubeBuilder.build().let {
                     navigateToValidateScannedCubeFragment(it)
                 }
+            }, onReset = {
+                viewModel.scannedRubikCubeBuilder = RubikCube.Builder()
             })
         }
     }

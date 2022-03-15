@@ -13,4 +13,8 @@
     <string name="scan_hint_next_down">Escaneie a face abaixo </string>
     <string name="scan_hint_two_down">Escaneie a face duas posições abaixo</string>
     <string name="scan_hint_multiplier">%1$sx</string>
+    <string name="confirm">Confirmar</string>
+    <string name="re_scan">Analizar novamente</string>
+    <string name="rubik_cube_valid">Validado com sucesso!</string>
+    <string name="rubik_cube_invalid">O modelo escaneado é inválido</string>
 </resources>

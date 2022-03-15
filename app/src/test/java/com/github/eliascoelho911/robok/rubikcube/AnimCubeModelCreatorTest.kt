@@ -27,9 +27,7 @@ class AnimCubeModelCreatorTest {
             Face(LEFT, RED, GREEN, RED, WHITE, MAGENTA, RED, YELLOW, BLUE, WHITE),
             Face(UP, BLUE, RED, MAGENTA, YELLOW, YELLOW, MAGENTA, YELLOW, BLUE, RED),
             Face(DOWN, BLUE, MAGENTA, MAGENTA, MAGENTA, WHITE, WHITE, RED, RED, GREEN)
-        )).apply {
-            modelCreator = this@AnimCubeModelCreatorTest.modelCreator
-        }
+        ))
     }
     private val colorToModelMapper by lazy {
         mapOf(
@@ -75,7 +73,7 @@ class AnimCubeModelCreatorTest {
             val startIndex = i * NumberOfFacelets
             val endIndex = startIndex + NumberOfFacelets
             val expected = model.substring(startIndex, endIndex)
-            val result = rubikCube.model.substring(startIndex, endIndex)
+            val result = rubikCube.createModelWith(modelCreator).substring(startIndex, endIndex)
 
             block(expected, result)
         }
