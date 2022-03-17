@@ -15,11 +15,14 @@ class FaceColorsAnalyzer(
 ) : ImageAnalysis.Analyzer {
     @SuppressLint("UnsafeOptInUsageError")
     override fun analyze(image: ImageProxy) {
-        image.image?.toBitmap()?.let { bitmap ->
-            val faceImage = FaceImageCropper.crop(bitmap, cropFrame, previewFrame)
-            image.close()
-            val colors = faceImage.getColorsOfGrid(FaceLineHeight, FaceLineHeight)
-            onSuccess(colors)
+        runCatching {
+            image.image?.toBitmap()?.let { bitmap ->
+                val faceImage = FaceImageCropper.crop(bitmap, cropFrame, previewFrame)
+                image.close()
+                faceImage.getColorsOfGrid(FaceLineHeight, FaceLineHeight)
+            }
+        }.onSuccess {
+            it?.run { onSuccess(this) }
         }
     }
 }

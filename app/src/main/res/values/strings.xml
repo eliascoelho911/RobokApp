@@ -8,10 +8,11 @@
     <string name="speech_ok">Continuar</string>
 
     <string name="scan_hint_any_face">Escaneie qualquer face</string>
-    <string name="scan_hint_next_right">Escaneie a face à direita</string>
-    <string name="scan_hint_next_up">Escaneie a face acima </string>
-    <string name="scan_hint_next_down">Escaneie a face abaixo </string>
-    <string name="scan_hint_two_down">Escaneie a face duas posições abaixo</string>
+    <string name="scan_hint_one_move">Escaneie a face %s</string>
+    <string name="scan_hint_various_moves">Escaneie a face %1$d posições %2$s</string>
+    <string name="scan_hint_right">à direita</string>
+    <string name="scan_hint_up">acima</string>
+    <string name="scan_hint_down">abaixo</string>
     <string name="scan_hint_multiplier">%1$sx</string>
     <string name="confirm">Confirmar</string>
     <string name="re_scan">Analizar novamente</string>

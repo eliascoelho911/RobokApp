@@ -8,21 +8,27 @@ import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.github.eliascoelho911.robok.R
 import com.github.eliascoelho911.robok.rubikcube.RubikCube
+import com.github.eliascoelho911.robok.ui.managers.FaceScanOrderManager
 import com.github.eliascoelho911.robok.ui.screens.CaptureFragmentDirections.Companion.actionCaptureFragmentToValidateScannedCubeFragment
 import com.github.eliascoelho911.robok.ui.viewmodels.CaptureViewModel
+import kotlinx.android.synthetic.main.capture_fragment.fab_capture
+import kotlinx.android.synthetic.main.capture_fragment.fab_reset
 import kotlinx.android.synthetic.main.capture_fragment.face_scanner_view
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CaptureFragment : Fragment() {
 
     private val faceScannerView by lazy { face_scanner_view }
+    private val captureButton by lazy { fab_capture }
+    private val resetButton by lazy { fab_reset }
     private val executor get() = ContextCompat.getMainExecutor(requireContext())
     private val viewModel: CaptureViewModel by viewModel()
-    private lateinit var requestPermissionToStartCamera: ActivityResultLauncher<String>
+    private lateinit var requestPermissionToStartScanner: ActivityResultLauncher<String>
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,14 +38,15 @@ class CaptureFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestPermissionToStartCamera = registerForActivityResult(RequestPermission(),
-            ::startCameraIfPermissionGranted)
-
+        requestPermissionToStartScanner = registerForActivityResult(RequestPermission(),
+            ::startScannerIfPermissionGranted)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        requestPermissionToStartCamera.launch(CAMERA)
+        requestPermissionToStartScanner.launch(CAMERA)
+        setupClickListeners()
+        setupObservers()
     }
 
     override fun onDestroy() {
@@ -47,18 +54,75 @@ class CaptureFragment : Fragment() {
         faceScannerView.finish()
     }
 
-    private fun startCameraIfPermissionGranted(permissionIsGranted: Boolean) {
-        if (permissionIsGranted) {
-            faceScannerView.start(viewLifecycleOwner, executor, onFaceCaptured = {
-                viewModel.scannedRubikCubeBuilder.withFace(it)
-            }, onFinish = {
-                viewModel.scannedRubikCubeBuilder.build().let {
-                    navigateToValidateScannedCubeFragment(it)
-                }
-            }, onReset = {
-                viewModel.scannedRubikCubeBuilder = RubikCube.Builder()
-            })
+    private fun setupObservers() {
+        viewModel.currentFaceToScan.observe(viewLifecycleOwner) {
+            showHintToScanFace(it)
         }
+        viewModel.scannedRubikCube.observe(viewLifecycleOwner) {
+            navigateToValidateScannedCubeFragment(it)
+        }
+    }
+
+    private fun setupClickListeners() {
+        captureButton.setOnClickListener {
+            scanColorsAndCreateFace()
+        }
+        resetButton.setOnClickListener {
+            viewModel.resetScan()
+        }
+    }
+
+    private fun showHintToScanFace(item: FaceScanOrderManager.Item) {
+        deactivateButtons()
+        with(item) {
+            faceScannerView.showHintToScanFace(movesToDestination,
+                directionToDestination,
+                onAnimationEnd = {
+                    activateButtons()
+                }
+            )
+        }
+    }
+
+    private fun deactivateButtons() {
+        captureButton.isClickable = false
+        resetButton.isClickable = false
+    }
+
+    private fun activateButtons() {
+        captureButton.isClickable = true
+        resetButton.isClickable = true
+    }
+
+    private fun scanColorsAndCreateFace() {
+        faceScannerView.scanColorsOfFace().let { colors ->
+            viewModel.finishesScanningTheCurrentFace(colors)
+        }
+    }
+
+    private fun startScannerIfPermissionGranted(permissionIsGranted: Boolean) {
+        if (permissionIsGranted) {
+            faceScannerView.start(viewLifecycleOwner, executor)
+            showButtons()
+        } else {
+            hideButtons()
+        }
+    }
+
+    private fun showButtons() {
+        captureButton.apply {
+            show()
+            isVisible = true
+        }
+        resetButton.apply {
+            show()
+            isVisible = true
+        }
+    }
+
+    private fun hideButtons() {
+        captureButton.hide()
+        resetButton.hide()
     }
 
     private fun navigateToValidateScannedCubeFragment(rubikCube: RubikCube) {
