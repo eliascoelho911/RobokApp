@@ -63,7 +63,7 @@ class ValidateScannedCubeFragment : Fragment() {
     private fun showRubikCubePreview() {
         previewCubeView.apply {
             setCubeModel(rubikCube.createModelWith(modelCreator))
-            setCubeColors(rubikCube.distinctColors.toIntArray())
+            setCubeColors(rubikCube.distinctColors.values.toIntArray())
         }
     }
 }

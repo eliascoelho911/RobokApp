@@ -18,12 +18,12 @@ class Face(
 
         other as Face
 
-        return centerColor(colors) == centerColor(other.colors)
+        return centerColor() == other.centerColor()
     }
 
     override fun hashCode(): Int {
-        return centerColor(colors).hashCode()
+        return centerColor().hashCode()
     }
-}
 
-private fun centerColor(colors: List<Int>) = colors[(NumberOfFacelets - 1) / 2]
+    fun centerColor() = colors[(NumberOfFacelets - 1) / 2]
+}

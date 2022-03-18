@@ -11,21 +11,21 @@ import com.github.eliascoelho911.robok.rubikcube.face.Position.UP
 
 abstract class ModelCreator {
     protected abstract val faceOrder: List<Position>
-    protected abstract fun reorderFacelets(faces: List<Face>): List<Face>
 
     fun create(rubikCube: RubikCube): Model {
         val faces = rubikCube.faces
         val orderedFaces = reorderFaces(faces)
         val orderedFacelets = reorderFacelets(orderedFaces)
-        val distinctColors = rubikCube.distinctColors
-        val colorMapper = createColorMapper(distinctColors)
+        val colorMapper = createColorMapper(rubikCube.distinctColors)
         return orderedFacelets.joinToString(separator = "") { face ->
             face.colors.map { colorMapper[it] }.joinToString(separator = "")
         }
     }
 
-    protected open fun createColorMapper(distinctColors: List<Int>): Map<Int, String> =
-        distinctColors.withIndex().associate { it.value to it.index.toString() }
+    protected open fun reorderFacelets(faces: List<Face>): List<Face> = faces
+
+    protected open fun createColorMapper(distinctColors: Map<Position, Int>): Map<Int, String> =
+        distinctColors.values.withIndex().associate { it.value to it.index.toString() }
 
     private fun reorderFaces(faces: List<Face>): List<Face> {
         val faceOrderWithIndex = faceOrder.withIndex()
@@ -37,8 +37,6 @@ abstract class ModelCreator {
 
 object DefaultModelCreator : ModelCreator() {
     override val faceOrder: List<Position> = listOf(UP, DOWN, FRONT, BACK, LEFT, RIGHT)
-
-    override fun reorderFacelets(faces: List<Face>): List<Face> = faces
 }
 
 open class AnimCubeModelCreator : ModelCreator() {
@@ -64,5 +62,14 @@ open class AnimCubeModelCreator : ModelCreator() {
                 orderOfFaceletsMap[face.position]!![index] to color
             }.sortedBy { it.first }.map { it.second }.let { Face(face.position, it) }
         }
+    }
+}
+
+object Min2PhaseModelCreator : ModelCreator() {
+    override val faceOrder: List<Position> = listOf(UP, RIGHT, FRONT, DOWN, LEFT, BACK)
+
+    override fun createColorMapper(distinctColors: Map<Position, Int>): Map<Int, String> {
+        val positionToValue = Position.values().associateWith { it.name.first().toString() }
+        return distinctColors.map { it.value to positionToValue[it.key]!! }.toMap()
     }
 }

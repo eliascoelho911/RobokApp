@@ -12,7 +12,7 @@ typealias Model = String
 @Parcelize
 class RubikCube(val faces: List<Face>) : Parcelable {
     private val allColors = faces.flatMap { it.colors }
-    val distinctColors by lazy { allColors.distinct() }
+    val distinctColors by lazy { faces.associate { it.position to it.centerColor() } }
     val isValid: Boolean
         get() {
             val allColorsWithCorrectQuantity =
