@@ -10,22 +10,22 @@
             android:name="com.github.eliascoelho911.robok.ui.screens.CaptureFragment"
             tools:layout="@layout/capture_fragment" >
         <action
-                android:id="@+id/action_captureFragment_to_validateScannedCubeFragment"
-                app:destination="@id/validateScannedCubeFragment"
+                android:id="@+id/action_captureFragment_to_rubikCubeSolve"
+                app:destination="@id/rubikCubeSolveFragment"
                 app:popUpTo="@id/nav_graph"
                 app:popUpToInclusive="true" />
     </fragment>
     <fragment
-            android:id="@+id/validateScannedCubeFragment"
-            android:name="com.github.eliascoelho911.robok.ui.screens.ValidateScannedCubeFragment"
-            tools:layout="@layout/validate_scanned_cube_fragment">
+            android:id="@+id/rubikCubeSolveFragment"
+            android:name="com.github.eliascoelho911.robok.ui.screens.RubikCubeSolveFragment"
+            tools:layout="@layout/rubik_cube_solve_fragment">
         <argument
                 android:name="rubikCube"
                 app:argType="com.github.eliascoelho911.robok.rubikcube.RubikCube" />
         <action
-                android:id="@+id/action_validateScannedCubeFragment_to_captureFragment"
+                android:id="@+id/action_rubikCubeSolveFragment_to_captureFragment"
                 app:destination="@id/captureFragment"
-                app:popUpTo="@id/validateScannedCubeFragment"
+                app:popUpTo="@id/rubikCubeSolveFragment"
                 app:popUpToInclusive="true" />
     </fragment>
 </navigation>

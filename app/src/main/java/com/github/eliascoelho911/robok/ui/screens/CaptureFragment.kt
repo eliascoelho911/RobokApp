@@ -14,7 +14,7 @@ import androidx.navigation.fragment.findNavController
 import com.github.eliascoelho911.robok.R
 import com.github.eliascoelho911.robok.rubikcube.RubikCube
 import com.github.eliascoelho911.robok.ui.managers.FaceScanOrderManager
-import com.github.eliascoelho911.robok.ui.screens.CaptureFragmentDirections.Companion.actionCaptureFragmentToValidateScannedCubeFragment
+import com.github.eliascoelho911.robok.ui.screens.CaptureFragmentDirections.Companion.actionCaptureFragmentToRubikCubeSolve
 import com.github.eliascoelho911.robok.ui.viewmodels.CaptureViewModel
 import kotlinx.android.synthetic.main.capture_fragment.fab_capture
 import kotlinx.android.synthetic.main.capture_fragment.fab_reset
@@ -59,7 +59,7 @@ class CaptureFragment : Fragment() {
             showHintToScanFace(it)
         }
         viewModel.scannedRubikCube.observe(viewLifecycleOwner) {
-            navigateToValidateScannedCubeFragment(it)
+            navigateToRubikCubeSolve(it)
         }
     }
 
@@ -125,8 +125,8 @@ class CaptureFragment : Fragment() {
         resetButton.hide()
     }
 
-    private fun navigateToValidateScannedCubeFragment(rubikCube: RubikCube) {
-        actionCaptureFragmentToValidateScannedCubeFragment(rubikCube).let {
+    private fun navigateToRubikCubeSolve(rubikCube: RubikCube) {
+        actionCaptureFragmentToRubikCubeSolve(rubikCube).let {
             findNavController().navigate(it)
         }
     }

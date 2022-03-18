@@ -18,4 +18,5 @@
     <string name="re_scan">Analizar novamente</string>
     <string name="rubik_cube_valid">Validado com sucesso!</string>
     <string name="rubik_cube_invalid">O modelo escaneado é inválido</string>
+    <string name="solving_rubik_cube">Calculando a solução...</string>
 </resources>
