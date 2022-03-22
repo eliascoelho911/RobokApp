@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.github.eliascoelho911.robok.R
 import com.github.eliascoelho911.robok.rubikcube.RubikCube
-import com.github.eliascoelho911.robok.ui.managers.FaceScanOrderManager
+import com.github.eliascoelho911.robok.rubikcube.face.FaceScanOrder
 import com.github.eliascoelho911.robok.ui.screens.CaptureFragmentDirections.Companion.actionCaptureFragmentToRubikCubeSolve
 import com.github.eliascoelho911.robok.ui.viewmodels.CaptureViewModel
 import kotlinx.android.synthetic.main.capture_fragment.fab_capture
@@ -72,7 +72,7 @@ class CaptureFragment : Fragment() {
         }
     }
 
-    private fun showHintToScanFace(item: FaceScanOrderManager.Item) {
+    private fun showHintToScanFace(item: FaceScanOrder.Item) {
         deactivateButtons()
         with(item) {
             faceScannerView.showHintToScanFace(movesToDestination,

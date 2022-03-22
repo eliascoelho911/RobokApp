@@ -1,11 +1,10 @@
-package com.github.eliascoelho911.robok.ui.managers
+package com.github.eliascoelho911.robok.rubikcube.face
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.github.eliascoelho911.robok.rubikcube.face.Position
 import com.github.eliascoelho911.robok.ui.widgets.Direction
 
-class FaceScanOrderManager(vararg orderToScan: Item) {
+class FaceScanOrder(vararg orderToScan: Item) {
     private var currentIndex = 0
         set(value) {
             field = value
@@ -31,8 +30,8 @@ class FaceScanOrderManager(vararg orderToScan: Item) {
     )
 
     companion object {
-        val WithDefaultOrder: FaceScanOrderManager
-            get() = FaceScanOrderManager(
+        val WithDefaultOrder: FaceScanOrder
+            get() = FaceScanOrder(
                 Item(Position.UP,
                     movesToDestination = 0,
                     directionToDestination = null),
