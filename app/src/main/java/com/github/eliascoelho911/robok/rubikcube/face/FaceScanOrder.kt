@@ -28,27 +28,4 @@ class FaceScanOrder(vararg orderToScan: Item) {
         val movesToDestination: Int,
         val directionToDestination: Direction?,
     )
-
-    companion object {
-        val WithDefaultOrder: FaceScanOrder
-            get() = FaceScanOrder(
-                Item(Position.UP,
-                    movesToDestination = 0,
-                    directionToDestination = null),
-                Item(Position.DOWN,
-                    movesToDestination = 2,
-                    directionToDestination = Direction.DOWN),
-                Item(Position.FRONT,
-                    movesToDestination = 1,
-                    directionToDestination = Direction.UP),
-                Item(Position.RIGHT,
-                    movesToDestination = 1,
-                    directionToDestination = Direction.RIGHT),
-                Item(Position.BACK,
-                    movesToDestination = 1,
-                    directionToDestination = Direction.RIGHT),
-                Item(Position.LEFT,
-                    movesToDestination = 1,
-                    directionToDestination = Direction.RIGHT))
-    }
 }

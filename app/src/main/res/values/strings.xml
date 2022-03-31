@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Robok</string>
-    <string name="toolbar_connection_label">Conexão com robô</string>
+    <string name="status_connection_label">Status de conexão com robô</string>
     <string name="speech_toolbar_refresh">Atualizar status de conexão com robô</string>
     <string name="rubiks_cube_scanner_button_label">Escanear</string>
     <string name="speech_capture">Capturar</string>
@@ -19,4 +19,11 @@
     <string name="rubik_cube_valid">Validado com sucesso!</string>
     <string name="rubik_cube_invalid">O modelo escaneado é inválido</string>
     <string name="solving_rubik_cube">Calculando a solução...</string>
+    <string name="connection_status">Status da conexão</string>
+    <string name="connected">Conectado</string>
+    <string name="connect">Conectar</string>
+    <string name="disconnected">Desconectado</string>
+    <string name="robot_disconnected">O robô não está conectado</string>
+    <string name="loading">Carregando</string>
+    <string name="connecting">Conectando...</string>
 </resources>

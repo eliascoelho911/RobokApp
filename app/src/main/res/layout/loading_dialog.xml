@@ -4,6 +4,7 @@
         android:layout_height="wrap_content"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:orientation="horizontal"
+        android:background="?attr/colorBackground"
         android:padding="16dp">
 
     <com.google.android.material.progressindicator.CircularProgressIndicator
@@ -13,10 +14,11 @@
             app:indicatorColor="?attr/colorOnBackground"/>
 
     <TextView
+            android:id="@+id/txt_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="@string/solving_rubik_cube"
+            android:text="@string/loading"
             style="@style/Theme.Robok.TextStyle.Body"
             android:layout_gravity="center"/>
 

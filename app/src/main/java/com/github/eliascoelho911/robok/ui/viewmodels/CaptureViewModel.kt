@@ -8,8 +8,7 @@ import com.github.eliascoelho911.robok.rubikcube.RubikCube
 import com.github.eliascoelho911.robok.rubikcube.face.Face
 import com.github.eliascoelho911.robok.rubikcube.face.FaceScanOrder
 
-class CaptureViewModel : ViewModel() {
-    private val faceScanOrderManager = FaceScanOrder.WithDefaultOrder
+class CaptureViewModel(private val faceScanOrderManager: FaceScanOrder) : ViewModel() {
     private var scannedRubikCubeBuilder = RubikCube.Builder()
     private val _scannedRubikCube = MutableLiveData<RubikCube>()
     val currentFaceToScan = faceScanOrderManager.currentFaceToScan

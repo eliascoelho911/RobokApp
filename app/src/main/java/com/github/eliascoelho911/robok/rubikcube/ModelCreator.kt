@@ -35,7 +35,7 @@ abstract class ModelCreator {
     }
 }
 
-object DefaultModelCreator : ModelCreator() {
+class DefaultModelCreator : ModelCreator() {
     override val faceOrder: List<Position> = listOf(UP, DOWN, FRONT, BACK, LEFT, RIGHT)
 }
 
@@ -65,7 +65,7 @@ open class AnimCubeModelCreator : ModelCreator() {
     }
 }
 
-object Min2PhaseModelCreator : ModelCreator() {
+class Min2PhaseModelCreator : ModelCreator() {
     override val faceOrder: List<Position> = listOf(UP, RIGHT, FRONT, DOWN, LEFT, BACK)
 
     override fun createColorMapper(distinctColors: Map<Position, Int>): Map<Int, String> {

@@ -1,6 +1,5 @@
 package com.github.eliascoelho911.robok.ui.screens
 
-import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,16 +11,21 @@ import androidx.navigation.fragment.navArgs
 import com.github.eliascoelho911.robok.R
 import com.github.eliascoelho911.robok.rubikcube.AnimCubeModelCreator
 import com.github.eliascoelho911.robok.rubikcube.RubikCubeSolver
+import com.github.eliascoelho911.robok.ui.dialogs.LoadingDialog
 import com.github.eliascoelho911.robok.ui.screens.RubikCubeSolveFragmentDirections.Companion.actionRubikCubeSolveFragmentToCaptureFragment
+import com.github.eliascoelho911.robok.ui.viewmodels.RubikCubeSolveViewModel
 import kotlinx.android.synthetic.main.rubik_cube_solve_fragment.fab_confirm
 import kotlinx.android.synthetic.main.rubik_cube_solve_fragment.fab_retry
 import kotlinx.android.synthetic.main.rubik_cube_solve_fragment.preview_cube_view
 import kotlinx.android.synthetic.main.rubik_cube_solve_fragment.text_description
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class RubikCubeSolveFragment : Fragment() {
-
     private val args: RubikCubeSolveFragmentArgs by navArgs()
+    private val viewModel: RubikCubeSolveViewModel by viewModel()
+    private val rubikCubeSolver: RubikCubeSolver by inject()
     private val rubikCube by lazy {
         args.rubikCube
     }
@@ -29,8 +33,7 @@ class RubikCubeSolveFragment : Fragment() {
         AnimCubeModelCreator()
     }
     private val solvingDialog by lazy {
-        Dialog(requireContext()).apply {
-            setContentView(R.layout.solving_rubik_cube_dialog)
+        LoadingDialog(requireContext(), R.string.solving_rubik_cube).apply {
             setCancelable(false)
         }
     }
@@ -50,6 +53,13 @@ class RubikCubeSolveFragment : Fragment() {
         showRubikCubePreview()
         setupAnalysis()
         setupClickListeners()
+        confirmFabIsEnableIfIsConnectedWithRobot()
+    }
+
+    private fun confirmFabIsEnableIfIsConnectedWithRobot() {
+        viewModel.isConnectedWithRobot.observe(viewLifecycleOwner) { isConnected ->
+            confirmFabView.isEnabled = isConnected
+        }
     }
 
     private fun setupAnalysis() {
@@ -72,7 +82,7 @@ class RubikCubeSolveFragment : Fragment() {
             hideButtons()
             solvingDialog.show()
             lifecycleScope.launch {
-                RubikCubeSolver.solve(rubikCube).let {
+                rubikCubeSolver.solve(rubikCube).let {
                     previewCubeView.setMoveSequence(it)
                 }
                 solvingDialog.dismiss()

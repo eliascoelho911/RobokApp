@@ -4,7 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.Rect
 import com.github.eliascoelho911.robok.util.rotate
 
-object FaceImageCropper {
+class FaceImageCropper {
     fun crop(
         originalImageCaptured: Bitmap,
         cropFrame: Rect,

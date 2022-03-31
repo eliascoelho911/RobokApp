@@ -22,7 +22,6 @@ import kotlinx.android.synthetic.main.capture_fragment.face_scanner_view
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CaptureFragment : Fragment() {
-
     private val faceScannerView by lazy { face_scanner_view }
     private val captureButton by lazy { fab_capture }
     private val resetButton by lazy { fab_reset }

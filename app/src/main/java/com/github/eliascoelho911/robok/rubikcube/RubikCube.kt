@@ -26,7 +26,7 @@ class RubikCube(val faces: List<Face>) : Parcelable {
         const val NumberOfFacelets = FaceLineHeight * FaceLineHeight
     }
 
-    fun createModelWith(modelCreator: ModelCreator = DefaultModelCreator) =
+    fun createModelWith(modelCreator: ModelCreator) =
         modelCreator.create(this)
 
     class Builder {

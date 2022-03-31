@@ -11,13 +11,14 @@ import com.github.eliascoelho911.robok.util.getColorsOfGrid
 class FaceColorsAnalyzer(
     private val cropFrame: Rect,
     private val previewFrame: Rect,
+    private val faceImageCropper: FaceImageCropper,
     private val onSuccess: (colors: List<Int>) -> Unit,
 ) : ImageAnalysis.Analyzer {
     @SuppressLint("UnsafeOptInUsageError")
     override fun analyze(image: ImageProxy) {
         runCatching {
             image.image?.toBitmap()?.let { bitmap ->
-                val faceImage = FaceImageCropper.crop(bitmap, cropFrame, previewFrame)
+                val faceImage = faceImageCropper.crop(bitmap, cropFrame, previewFrame)
                 image.close()
                 faceImage.getColorsOfGrid(FaceLineHeight, FaceLineHeight)
             }

@@ -24,6 +24,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.github.eliascoelho911.robok.R
 import com.github.eliascoelho911.robok.rubikcube.face.Face
 import com.github.eliascoelho911.robok.rubikcube.face.FaceColorsAnalyzer
+import com.github.eliascoelho911.robok.rubikcube.face.FaceImageCropper
 import com.github.eliascoelho911.robok.rubikcube.face.Position
 import com.github.eliascoelho911.robok.util.getRect
 import com.github.eliascoelho911.robok.util.setOnAnimationEndListener
@@ -36,12 +37,46 @@ import kotlinx.android.synthetic.main.face_scanner.view.img_hint
 import kotlinx.android.synthetic.main.face_scanner.view.preview_view
 import kotlinx.android.synthetic.main.face_scanner.view.txt_hint
 import kotlinx.android.synthetic.main.face_scanner.view.txt_hint_multiplier
+import org.koin.java.KoinJavaComponent.inject
 
 class FaceScannerView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     @AttrRes defStyleAttr: Int = 0,
 ) : FrameLayout(context, attrs, defStyleAttr) {
+
+    @ColorInt
+    private var lastColorsScanned: List<Int> = emptyList()
+    private val faceImageCropper: FaceImageCropper by inject(FaceImageCropper::class.java)
+    private val cameraProviderFuture by lazy { ProcessCameraProvider.getInstance(context) }
+    private val preview by lazy {
+        Preview.Builder()
+            .build()
+            .apply { setSurfaceProvider(previewView.surfaceProvider) }
+    }
+    private val imageCapture: ImageCapture by lazy {
+        ImageCapture.Builder()
+            .setCaptureMode(CAPTURE_MODE_MINIMIZE_LATENCY)
+            .build()
+    }
+    private val imageAnalysis by lazy {
+        ImageAnalysis.Builder().build()
+    }
+    private val faceColorsAnalyzer by lazy {
+        FaceColorsAnalyzer(cropViewRect, previewViewRect, onSuccess = { colors ->
+            showColorsOnPreview(colors)
+            lastColorsScanned = colors
+        }, faceImageCropper = faceImageCropper)
+    }
+    private val showColorsScannedAnim by lazy { loadAnimation(R.anim.show_colors_scanned) }
+    private val cropView by lazy { crop_area as GridLayout }
+    private val previewView by lazy { preview_view }
+    private val hintTextView by lazy { txt_hint }
+    private val hintMultiplierTextView by lazy { txt_hint_multiplier }
+    private val arrowHintView by lazy { img_hint }
+    private val hintContainerView by lazy { hint_container }
+    private val cropViewRect: Rect get() = cropView.getRect()
+    private val previewViewRect: Rect get() = previewView.getRect()
 
     init {
         inflate(context, R.layout.face_scanner, this)
@@ -163,38 +198,6 @@ class FaceScannerView @JvmOverloads constructor(
     }
 
     private fun loadAnimation(anim: Int) = AnimationUtils.loadAnimation(context, anim)
-
-    @ColorInt
-    private var lastColorsScanned: List<Int> = emptyList()
-    private val cameraProviderFuture by lazy { ProcessCameraProvider.getInstance(context) }
-    private val preview by lazy {
-        Preview.Builder()
-            .build()
-            .apply { setSurfaceProvider(previewView.surfaceProvider) }
-    }
-    private val imageCapture: ImageCapture by lazy {
-        ImageCapture.Builder()
-            .setCaptureMode(CAPTURE_MODE_MINIMIZE_LATENCY)
-            .build()
-    }
-    private val imageAnalysis by lazy {
-        ImageAnalysis.Builder().build()
-    }
-    private val faceColorsAnalyzer by lazy {
-        FaceColorsAnalyzer(cropViewRect, previewViewRect, onSuccess = { colors ->
-            showColorsOnPreview(colors)
-            lastColorsScanned = colors
-        })
-    }
-    private val showColorsScannedAnim by lazy { loadAnimation(R.anim.show_colors_scanned) }
-    private val cropView by lazy { crop_area as GridLayout }
-    private val previewView by lazy { preview_view }
-    private val hintTextView by lazy { txt_hint }
-    private val hintMultiplierTextView by lazy { txt_hint_multiplier }
-    private val arrowHintView by lazy { img_hint }
-    private val hintContainerView by lazy { hint_container }
-    private val cropViewRect: Rect get() = cropView.getRect()
-    private val previewViewRect: Rect get() = previewView.getRect()
 }
 
 private const val ARROW_RIGHT = 90f
