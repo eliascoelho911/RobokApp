@@ -17,7 +17,6 @@ import com.github.eliascoelho911.robok.ui.viewmodels.RubikCubeSolveViewModel
 import kotlinx.android.synthetic.main.rubik_cube_solve_fragment.fab_confirm
 import kotlinx.android.synthetic.main.rubik_cube_solve_fragment.fab_retry
 import kotlinx.android.synthetic.main.rubik_cube_solve_fragment.preview_cube_view
-import kotlinx.android.synthetic.main.rubik_cube_solve_fragment.text_description
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -38,7 +37,6 @@ class RubikCubeSolveFragment : Fragment() {
         }
     }
     private val previewCubeView by lazy { preview_cube_view }
-    private val descriptionTextView by lazy { text_description }
     private val confirmFabView by lazy { fab_confirm }
     private val retryFabView by lazy { fab_retry }
 
@@ -51,24 +49,13 @@ class RubikCubeSolveFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         showRubikCubePreview()
-        setupAnalysis()
         setupClickListeners()
-        confirmFabIsEnableIfIsConnectedWithRobot()
+        setupRuleForConnectionToRobot()
     }
 
-    private fun confirmFabIsEnableIfIsConnectedWithRobot() {
+    private fun setupRuleForConnectionToRobot() {
         viewModel.isConnectedWithRobot.observe(viewLifecycleOwner) { isConnected ->
             confirmFabView.isEnabled = isConnected
-        }
-    }
-
-    private fun setupAnalysis() {
-        if (rubikCube.isValid) {
-            descriptionTextView.text = getString(R.string.rubik_cube_valid)
-            confirmFabView.isEnabled = true
-        } else {
-            descriptionTextView.text = getString(R.string.rubik_cube_invalid)
-            confirmFabView.isEnabled = false
         }
     }
 
@@ -80,14 +67,18 @@ class RubikCubeSolveFragment : Fragment() {
         }
         confirmFabView.setOnClickListener {
             hideButtons()
-            solvingDialog.show()
-            lifecycleScope.launch {
-                rubikCubeSolver.solve(rubikCube).let {
-                    previewCubeView.setMoveSequence(it)
-                }
-                solvingDialog.dismiss()
-                previewCubeView.animateMoveSequence()
+            solveRubikCube()
+        }
+    }
+
+    private fun solveRubikCube() {
+        solvingDialog.show()
+        lifecycleScope.launch {
+            rubikCubeSolver.solve(rubikCube).let {
+                previewCubeView.setMoveSequence(it)
             }
+            solvingDialog.dismiss()
+            previewCubeView.animateMoveSequence()
         }
     }
 

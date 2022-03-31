@@ -5,6 +5,6 @@
     <corners android:radius="2dp" />
 
     <stroke
-            android:color="?attr/colorSecondary"
+            android:color="?attr/colorPrimary"
             android:width="@dimen/face_scanner_grid_item_stroke_width" />
 </shape>

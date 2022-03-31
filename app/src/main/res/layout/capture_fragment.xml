@@ -20,6 +20,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_camera_24dp"
             app:tint="@color/white"
+            app:backgroundTint="?attr/colorPrimary"
             android:contentDescription="@string/speech_capture"
             android:layout_marginBottom="24dp"
             android:tooltipText="@string/speech_capture"

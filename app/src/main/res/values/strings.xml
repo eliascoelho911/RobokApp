@@ -26,4 +26,5 @@
     <string name="robot_disconnected">O robô não está conectado</string>
     <string name="loading">Carregando</string>
     <string name="connecting">Conectando...</string>
+    <string name="connect_robot_to_continue">Connect the robot to continue</string>
 </resources>

@@ -5,6 +5,7 @@
     <color name="green_a400">#FF00E676</color>
     <color name="green_a700">#FF00C853</color>
     <color name="blue_a400">#FF00B0FF</color>
+    <color name="blue_a700">#2962FF</color>
     <color name="yellow_a400">#FFEA00</color>
     <color name="orange_E99D4B">#E99D1D</color>
     <color name="red_a700">#FFFF1744</color>
@@ -13,4 +14,5 @@
     <color name="black_50">#80000000</color>
     <color name="white_20">#33FFFFFF</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="white_B8B8B8">#B8B8B8</color>
 </resources>

@@ -1,6 +1,7 @@
 package com.github.eliascoelho911.robok.ui.screens
 
 import android.Manifest.permission.CAMERA
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -27,6 +28,13 @@ class CaptureFragment : Fragment() {
     private val resetButton by lazy { fab_reset }
     private val executor get() = ContextCompat.getMainExecutor(requireContext())
     private val viewModel: CaptureViewModel by viewModel()
+    private val rubikCubeInvalidAlertDialog get() = AlertDialog.Builder(requireContext())
+        .setMessage(R.string.rubik_cube_invalid)
+        .setPositiveButton(getString(R.string.re_scan).uppercase()) { dialog, _ ->
+            dialog.dismiss()
+        }.setOnDismissListener {
+            viewModel.resetScan()
+        }
     private lateinit var requestPermissionToStartScanner: ActivityResultLauncher<String>
 
     override fun onCreateView(
@@ -125,8 +133,12 @@ class CaptureFragment : Fragment() {
     }
 
     private fun navigateToRubikCubeSolve(rubikCube: RubikCube) {
-        actionCaptureFragmentToRubikCubeSolve(rubikCube).let {
-            findNavController().navigate(it)
+        if (rubikCube.isValid) {
+            actionCaptureFragmentToRubikCubeSolve(rubikCube).let {
+                findNavController().navigate(it)
+            }
+        } else {
+            rubikCubeInvalidAlertDialog.show()
         }
     }
 }
