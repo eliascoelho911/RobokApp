@@ -2,6 +2,7 @@ package com.github.eliascoelho911.robok.ui.screens
 
 import android.os.Bundle
 import android.text.Spannable
+import android.text.Spannable.SPAN_INCLUSIVE_INCLUSIVE
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
@@ -112,16 +113,16 @@ class RubikCubeSolveFragment : Fragment() {
         moves: List<Move>,
     ): SpannableString {
         val movesSpannable = SpannableString(moveSequence)
-        val color = ContextCompat.getColor(requireContext(), R.color.green_a400)
+        val highlightColor = ContextCompat.getColor(requireContext(), R.color.green_a400)
         val nextMove = moves[currentMoveIndex]
         val previousMovesLength = moves.subList(0, currentMoveIndex).sumOf { it.length }
         val spacesLength = currentMoveIndex
-        val start = spacesLength + previousMovesLength
-        val end = start + nextMove.length
-        movesSpannable.setSpan(ForegroundColorSpan(color),
-            start,
-            end,
-            Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+        val highlightStart = spacesLength + previousMovesLength
+        val highlightEnd = highlightStart + nextMove.length
+        movesSpannable.setSpan(ForegroundColorSpan(highlightColor),
+            highlightStart,
+            highlightEnd,
+            SPAN_INCLUSIVE_INCLUSIVE)
         return movesSpannable
     }
 
