@@ -1,6 +1,7 @@
 package com.github.eliascoelho911.robok
 
 import android.app.Application
+import com.github.eliascoelho911.robok.di.helpersModule
 import com.github.eliascoelho911.robok.di.rubikCubeModule
 import com.github.eliascoelho911.robok.di.viewModelModule
 import org.koin.android.ext.koin.androidContext
@@ -11,7 +12,7 @@ class RobokApplication : Application() {
         super.onCreate()
         startKoin {
             androidContext(this@RobokApplication)
-            modules(viewModelModule, rubikCubeModule)
+            modules(viewModelModule, rubikCubeModule, helpersModule)
         }
     }
 }

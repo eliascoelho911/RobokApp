@@ -18,13 +18,15 @@
     <string name="re_scan">Analizar novamente</string>
     <string name="rubik_cube_valid">Validado com sucesso!</string>
     <string name="rubik_cube_invalid">O modelo escaneado é inválido</string>
-    <string name="solving_rubik_cube">Calculando a solução...</string>
+    <string name="solving_rubik_cube">Calculando a solução…</string>
     <string name="connection_status">Status da conexão</string>
     <string name="connected">Conectado</string>
     <string name="connect">Conectar</string>
     <string name="disconnected">Desconectado</string>
     <string name="robot_disconnected">O robô não está conectado</string>
     <string name="loading">Carregando</string>
-    <string name="connecting">Conectando...</string>
+    <string name="connecting">Conectando…</string>
     <string name="connect_robot_to_continue">Connect the robot to continue</string>
+    <string name="moves">Movimento %1$d de %2$d</string>
+    <string name="solved">Resolvido</string>
 </resources>

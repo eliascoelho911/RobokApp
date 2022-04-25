@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <TextView
+            android:id="@+id/moves_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Theme.Robok.TextStyle.Body"
+            tools:text="Movimento 1 de 40"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/progress_bar" />
+
+    <TextView
+            android:id="@+id/current_move_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="R'"
+            style="@style/Theme.Robok.TextStyle.H4"
+            android:textColor="?attr/colorPrimary"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/progress_bar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:trackThickness="12dp"
+            app:trackCornerRadius="4dp"
+            app:trackColor="?attr/colorBackgroundVariant"
+            app:layout_constraintTop_toBottomOf="@id/current_move_txt"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/previous_btn"
+            android:layout_width="@dimen/player_button_size"
+            android:layout_height="@dimen/player_button_size"
+            android:src="@drawable/ic_previous_24"
+            android:layout_marginTop="12dp"
+            android:layout_marginStart="@dimen/margin_horizontal_player_buttons"
+            style="@style/Theme.Robok.ImageButton.Player"
+            app:layout_constraintTop_toBottomOf="@id/progress_bar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/play_btn" />
+
+    <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/play_btn"
+            android:layout_width="@dimen/player_button_size"
+            android:layout_height="@dimen/player_button_size"
+            android:src="@drawable/ic_play_arrow_24"
+            style="@style/Theme.Robok.ImageButton.Player"
+            app:layout_constraintTop_toTopOf="@id/previous_btn"
+            app:layout_constraintStart_toEndOf="@id/previous_btn"
+            app:layout_constraintEnd_toStartOf="@id/next_btn" />
+
+    <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/next_btn"
+            android:layout_width="@dimen/player_button_size"
+            android:layout_height="@dimen/player_button_size"
+            android:src="@drawable/ic_next_24"
+            android:layout_marginEnd="@dimen/margin_horizontal_player_buttons"
+            style="@style/Theme.Robok.ImageButton.Player"
+            app:layout_constraintTop_toTopOf="@id/previous_btn"
+            app:layout_constraintStart_toEndOf="@id/play_btn"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

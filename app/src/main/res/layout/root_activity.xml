@@ -12,17 +12,9 @@
             android:name="androidx.navigation.fragment.NavHostFragment"
             app:defaultNavHost="true"
             app:navGraph="@navigation/nav_graph"
-            app:layout_constraintTop_toBottomOf="@+id/alert_bar"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />
-
-    <com.github.eliascoelho911.robok.ui.widgets.AlertBarView
-            android:id="@+id/alert_bar"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

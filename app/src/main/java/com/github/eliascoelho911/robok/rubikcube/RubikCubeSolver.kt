@@ -7,7 +7,7 @@ import kotlinx.coroutines.withContext
 class RubikCubeSolver(private val modelCreator: Min2PhaseModelCreator) {
     suspend fun solve(rubikCube: RubikCube) = findShorterSolutions(rubikCube)
 
-    private suspend fun findShorterSolutions(rubikCube: RubikCube): List<Move> =
+    private suspend fun findShorterSolutions(rubikCube: RubikCube): Moves =
         withContext(Dispatchers.Default) {
             val model = rubikCube.createModelWith(modelCreator)
             Search().solution(model, 21, 100000000, 10000, 0)
@@ -16,3 +16,4 @@ class RubikCubeSolver(private val modelCreator: Min2PhaseModelCreator) {
 }
 
 typealias Move = String
+typealias Moves = List<Move>

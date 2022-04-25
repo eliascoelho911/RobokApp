@@ -2,6 +2,7 @@ package com.github.eliascoelho911.robok.ui.screens
 
 import android.Manifest.permission.CAMERA
 import android.app.AlertDialog
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +15,9 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.github.eliascoelho911.robok.R
 import com.github.eliascoelho911.robok.rubikcube.RubikCube
+import com.github.eliascoelho911.robok.rubikcube.face.Face
 import com.github.eliascoelho911.robok.rubikcube.face.FaceScanOrder
+import com.github.eliascoelho911.robok.rubikcube.face.Position
 import com.github.eliascoelho911.robok.ui.screens.CaptureFragmentDirections.Companion.actionCaptureFragmentToRubikCubeSolve
 import com.github.eliascoelho911.robok.ui.viewmodels.CaptureViewModel
 import kotlinx.android.synthetic.main.capture_fragment.fab_capture

@@ -31,4 +31,13 @@
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">?attr/colorOnBackground</item>
     </style>
+
+    <style name="Theme.Robok.ImageButton">
+        <item name="android:background">?selectableItemBackgroundBorderless</item>
+    </style>
+
+    <style name="Theme.Robok.ImageButton.Player">
+        <item name="android:scaleType">fitCenter</item>
+        <item name="tint">@color/white</item>
+    </style>
 </resources>

@@ -22,10 +22,5 @@
         <argument
                 android:name="rubikCube"
                 app:argType="com.github.eliascoelho911.robok.rubikcube.RubikCube" />
-        <action
-                android:id="@+id/action_rubikCubeSolveFragment_to_captureFragment"
-                app:destination="@id/captureFragment"
-                app:popUpTo="@id/rubikCubeSolveFragment"
-                app:popUpToInclusive="true" />
     </fragment>
 </navigation>
