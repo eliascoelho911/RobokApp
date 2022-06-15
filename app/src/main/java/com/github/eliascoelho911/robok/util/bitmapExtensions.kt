@@ -23,7 +23,7 @@ fun Bitmap.saveOnStorage(context: Context) {
 
 fun Bitmap.getColorsOfGrid(
     amountRows: Int,
-    amountColumns: Int
+    amountColumns: Int,
 ): List<Int> {
     val itemWidth = width / amountColumns
     val itemHeight = height / amountRows

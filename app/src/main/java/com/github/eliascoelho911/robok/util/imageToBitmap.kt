@@ -1,4 +1,4 @@
-package com.github.eliascoelho911.robok.util.converters
+package com.github.eliascoelho911.robok.util
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory

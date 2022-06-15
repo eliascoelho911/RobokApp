@@ -14,7 +14,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/player_view"/>
+            app:layout_constraintBottom_toTopOf="@id/player_view" />
 
     <com.github.eliascoelho911.robok.ui.widgets.RubikCubeSolvePlayerView
             android:id="@+id/player_view"

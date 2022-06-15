@@ -4,7 +4,9 @@ import cs.min2phase.Search
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class RubikCubeSolver(private val modelCreator: Min2PhaseModelCreator) {
+class RubikCubeSolver {
+    private val modelCreator = Min2PhaseModelCreator()
+
     suspend fun solve(rubikCube: RubikCube) = findShorterSolutions(rubikCube)
 
     private suspend fun findShorterSolutions(rubikCube: RubikCube): Moves =

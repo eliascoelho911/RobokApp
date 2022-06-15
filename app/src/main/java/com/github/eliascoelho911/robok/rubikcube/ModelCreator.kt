@@ -35,10 +35,6 @@ abstract class ModelCreator {
     }
 }
 
-class DefaultModelCreator : ModelCreator() {
-    override val faceOrder: List<Position> = listOf(UP, DOWN, FRONT, BACK, LEFT, RIGHT)
-}
-
 open class AnimCubeModelCreator : ModelCreator() {
     override val faceOrder: List<Position> = listOf(UP, DOWN, FRONT, BACK, LEFT, RIGHT)
 

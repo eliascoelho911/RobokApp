@@ -1,8 +1,7 @@
-package com.github.eliascoelho911.robok.ui.screens
+package com.github.eliascoelho911.robok.ui.screens.capture
 
 import android.Manifest.permission.CAMERA
 import android.app.AlertDialog
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,32 +11,29 @@ import androidx.activity.result.contract.ActivityResultContracts.RequestPermissi
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.github.eliascoelho911.robok.R
 import com.github.eliascoelho911.robok.rubikcube.RubikCube
-import com.github.eliascoelho911.robok.rubikcube.face.Face
-import com.github.eliascoelho911.robok.rubikcube.face.FaceScanOrder
-import com.github.eliascoelho911.robok.rubikcube.face.Position
-import com.github.eliascoelho911.robok.ui.screens.CaptureFragmentDirections.Companion.actionCaptureFragmentToRubikCubeSolve
-import com.github.eliascoelho911.robok.ui.viewmodels.CaptureViewModel
+import com.github.eliascoelho911.robok.ui.screens.capture.CaptureFragmentDirections.Companion.actionCaptureFragmentToRubikCubeSolve
 import kotlinx.android.synthetic.main.capture_fragment.fab_capture
 import kotlinx.android.synthetic.main.capture_fragment.fab_reset
 import kotlinx.android.synthetic.main.capture_fragment.face_scanner_view
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CaptureFragment : Fragment() {
     private val faceScannerView by lazy { face_scanner_view }
     private val captureButton by lazy { fab_capture }
     private val resetButton by lazy { fab_reset }
     private val executor get() = ContextCompat.getMainExecutor(requireContext())
-    private val viewModel: CaptureViewModel by viewModel()
-    private val rubikCubeInvalidAlertDialog get() = AlertDialog.Builder(requireContext())
-        .setMessage(R.string.rubik_cube_invalid)
-        .setPositiveButton(getString(R.string.re_scan).uppercase()) { dialog, _ ->
-            dialog.dismiss()
-        }.setOnDismissListener {
-            viewModel.resetScan()
-        }
+    private val viewModel by viewModels<CaptureViewModel>()
+    private val rubikCubeInvalidAlertDialog
+        get() = AlertDialog.Builder(requireContext())
+            .setMessage(R.string.rubik_cube_invalid)
+            .setPositiveButton(getString(R.string.re_scan).uppercase()) { dialog, _ ->
+                dialog.dismiss()
+            }.setOnDismissListener {
+                viewModel.resetScan()
+            }
     private lateinit var requestPermissionToStartScanner: ActivityResultLauncher<String>
 
     override fun onCreateView(
@@ -82,7 +78,7 @@ class CaptureFragment : Fragment() {
         }
     }
 
-    private fun showHintToScanFace(item: FaceScanOrder.Item) {
+    private fun showHintToScanFace(item: FaceScanOrderManager.Item) {
         deactivateButtons()
         with(item) {
             faceScannerView.showHintToScanFace(movesToDestination,

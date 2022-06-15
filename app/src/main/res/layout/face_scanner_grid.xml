@@ -2,7 +2,6 @@
 <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:rowCount="3"
         android:columnCount="3">
 
@@ -19,7 +18,7 @@
             android:layout_columnWeight="1"
             android:layout_height="0dp"
             android:layout_width="0dp"
-            android:layout_marginStart="@dimen/face_scanner_grid_internal_margin"/>
+            android:layout_marginStart="@dimen/face_scanner_grid_internal_margin" />
 
     <include
             layout="@layout/face_scanner_grid_item"
@@ -27,7 +26,7 @@
             android:layout_columnWeight="1"
             android:layout_height="0dp"
             android:layout_width="0dp"
-            android:layout_marginStart="@dimen/face_scanner_grid_internal_margin"/>
+            android:layout_marginStart="@dimen/face_scanner_grid_internal_margin" />
 
     <include
             layout="@layout/face_scanner_grid_item"
@@ -35,16 +34,7 @@
             android:layout_columnWeight="1"
             android:layout_height="0dp"
             android:layout_width="0dp"
-            android:layout_marginTop="@dimen/face_scanner_grid_internal_margin"/>
-
-    <include
-            layout="@layout/face_scanner_grid_item"
-            android:layout_rowWeight="1"
-            android:layout_columnWeight="1"
-            android:layout_height="0dp"
-            android:layout_width="0dp"
-            android:layout_marginTop="@dimen/face_scanner_grid_internal_margin"
-            android:layout_marginStart="@dimen/face_scanner_grid_internal_margin"/>
+            android:layout_marginTop="@dimen/face_scanner_grid_internal_margin" />
 
     <include
             layout="@layout/face_scanner_grid_item"
@@ -53,15 +43,7 @@
             android:layout_height="0dp"
             android:layout_width="0dp"
             android:layout_marginTop="@dimen/face_scanner_grid_internal_margin"
-            android:layout_marginStart="@dimen/face_scanner_grid_internal_margin"/>
-
-    <include
-            layout="@layout/face_scanner_grid_item"
-            android:layout_rowWeight="1"
-            android:layout_columnWeight="1"
-            android:layout_height="0dp"
-            android:layout_width="0dp"
-            android:layout_marginTop="@dimen/face_scanner_grid_internal_margin"/>
+            android:layout_marginStart="@dimen/face_scanner_grid_internal_margin" />
 
     <include
             layout="@layout/face_scanner_grid_item"
@@ -70,7 +52,15 @@
             android:layout_height="0dp"
             android:layout_width="0dp"
             android:layout_marginTop="@dimen/face_scanner_grid_internal_margin"
-            android:layout_marginStart="@dimen/face_scanner_grid_internal_margin"/>
+            android:layout_marginStart="@dimen/face_scanner_grid_internal_margin" />
+
+    <include
+            layout="@layout/face_scanner_grid_item"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:layout_height="0dp"
+            android:layout_width="0dp"
+            android:layout_marginTop="@dimen/face_scanner_grid_internal_margin" />
 
     <include
             layout="@layout/face_scanner_grid_item"
@@ -79,6 +69,15 @@
             android:layout_height="0dp"
             android:layout_width="0dp"
             android:layout_marginTop="@dimen/face_scanner_grid_internal_margin"
-            android:layout_marginStart="@dimen/face_scanner_grid_internal_margin"/>
+            android:layout_marginStart="@dimen/face_scanner_grid_internal_margin" />
+
+    <include
+            layout="@layout/face_scanner_grid_item"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:layout_height="0dp"
+            android:layout_width="0dp"
+            android:layout_marginTop="@dimen/face_scanner_grid_internal_margin"
+            android:layout_marginStart="@dimen/face_scanner_grid_internal_margin" />
 
 </GridLayout>

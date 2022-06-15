@@ -9,7 +9,7 @@ import kotlinx.android.parcel.Parcelize
 class Face(
     val position: Position,
     @ColorInt val colors: List<Int>,
-): Parcelable {
+) : Parcelable {
     constructor(position: Position, @ColorInt vararg colors: Int) : this(position, colors.toList())
 
     override fun equals(other: Any?): Boolean {

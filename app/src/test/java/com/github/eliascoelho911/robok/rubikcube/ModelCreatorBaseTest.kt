@@ -7,7 +7,6 @@ import android.graphics.Color.RED
 import android.graphics.Color.WHITE
 import android.graphics.Color.YELLOW
 import com.github.eliascoelho911.robok.rubikcube.face.Face
-import com.github.eliascoelho911.robok.rubikcube.face.Position
 import com.github.eliascoelho911.robok.rubikcube.face.Position.BACK
 import com.github.eliascoelho911.robok.rubikcube.face.Position.DOWN
 import com.github.eliascoelho911.robok.rubikcube.face.Position.FRONT
@@ -48,7 +47,7 @@ abstract class ModelCreatorBaseTest {
     @Test
     fun testFaceletsMustBeEqual() {
         forEachFace { expected, result ->
-            assertEquals( expected, result)
+            assertEquals(expected, result)
         }
     }
 }

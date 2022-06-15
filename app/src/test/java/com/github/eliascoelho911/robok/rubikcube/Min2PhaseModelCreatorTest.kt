@@ -10,5 +10,5 @@ class Min2PhaseModelCreatorTest : ModelCreatorBaseTest() {
             "back" to "UFDLBFDBF")
     }
     override val model: Model = modelByFace.joinToString(separator = "") { it.second }
-    override val modelCreator: ModelCreator = Min2PhaseModelCreator
+    override val modelCreator: ModelCreator = Min2PhaseModelCreator()
 }

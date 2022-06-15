@@ -1,8 +1,34 @@
-package com.github.eliascoelho911.robok.rubikcube.face
+package com.github.eliascoelho911.robok.ui.analyzers
 
+import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.Rect
+import androidx.camera.core.ImageAnalysis
+import androidx.camera.core.ImageProxy
+import com.github.eliascoelho911.robok.rubikcube.RubikCube.Companion.FaceLineHeight
+import com.github.eliascoelho911.robok.util.toBitmap
+import com.github.eliascoelho911.robok.util.getColorsOfGrid
 import com.github.eliascoelho911.robok.util.rotate
+
+class FaceColorsAnalyzer(
+    private val cropFrame: Rect,
+    private val previewFrame: Rect,
+    private val faceImageCropper: FaceImageCropper,
+    private val onSuccess: (colors: List<Int>) -> Unit,
+) : ImageAnalysis.Analyzer {
+    @SuppressLint("UnsafeOptInUsageError")
+    override fun analyze(image: ImageProxy) {
+        runCatching {
+            image.image?.toBitmap()?.let { bitmap ->
+                val faceImage = faceImageCropper.crop(bitmap, cropFrame, previewFrame)
+                image.close()
+                faceImage.getColorsOfGrid(FaceLineHeight, FaceLineHeight)
+            }
+        }.onSuccess {
+            it?.run { onSuccess(this) }
+        }
+    }
+}
 
 class FaceImageCropper {
     fun crop(
@@ -28,7 +54,8 @@ class FaceImageCropper {
         val heightFinal = faceFrame.height() * height / previewFrame.height()
         val leftFinal = faceFrame.left * height / previewFrame.height()
         val topFinal = faceFrame.top * height / previewFrame.height()
-        return Bitmap.createBitmap(this, leftFinal, topFinal, widthFinal, heightFinal).also { recycle() }
+        return Bitmap.createBitmap(this, leftFinal, topFinal, widthFinal, heightFinal)
+            .also { recycle() }
     }
 
     private fun Bitmap.adjustRotation(): Bitmap {

@@ -7,8 +7,8 @@
 
     <fragment
             android:id="@+id/captureFragment"
-            android:name="com.github.eliascoelho911.robok.ui.screens.CaptureFragment"
-            tools:layout="@layout/capture_fragment" >
+            android:name="com.github.eliascoelho911.robok.ui.screens.capture.CaptureFragment"
+            tools:layout="@layout/capture_fragment">
         <action
                 android:id="@+id/action_captureFragment_to_rubikCubeSolve"
                 app:destination="@id/rubikCubeSolveFragment"
@@ -17,7 +17,7 @@
     </fragment>
     <fragment
             android:id="@+id/rubikCubeSolveFragment"
-            android:name="com.github.eliascoelho911.robok.ui.screens.RubikCubeSolveFragment"
+            android:name="com.github.eliascoelho911.robok.ui.screens.rubikCubeSolve.RubikCubeSolveFragment"
             tools:layout="@layout/rubik_cube_solve_fragment">
         <argument
                 android:name="rubikCube"

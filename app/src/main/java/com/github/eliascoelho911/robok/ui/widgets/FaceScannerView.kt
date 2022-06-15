@@ -22,14 +22,11 @@ import androidx.core.view.forEachIndexed
 import androidx.core.view.isVisible
 import androidx.lifecycle.LifecycleOwner
 import com.github.eliascoelho911.robok.R
-import com.github.eliascoelho911.robok.rubikcube.face.Face
-import com.github.eliascoelho911.robok.rubikcube.face.FaceColorsAnalyzer
-import com.github.eliascoelho911.robok.rubikcube.face.FaceImageCropper
-import com.github.eliascoelho911.robok.rubikcube.face.Position
+import com.github.eliascoelho911.robok.ui.analyzers.FaceColorsAnalyzer
+import com.github.eliascoelho911.robok.ui.analyzers.FaceImageCropper
 import com.github.eliascoelho911.robok.util.getRect
 import com.github.eliascoelho911.robok.util.setOnAnimationEndListener
 import com.google.android.material.card.MaterialCardView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.concurrent.Executor
 import kotlinx.android.synthetic.main.face_scanner.view.crop_area
 import kotlinx.android.synthetic.main.face_scanner.view.hint_container
@@ -37,7 +34,6 @@ import kotlinx.android.synthetic.main.face_scanner.view.img_hint
 import kotlinx.android.synthetic.main.face_scanner.view.preview_view
 import kotlinx.android.synthetic.main.face_scanner.view.txt_hint
 import kotlinx.android.synthetic.main.face_scanner.view.txt_hint_multiplier
-import org.koin.java.KoinJavaComponent.inject
 
 class FaceScannerView @JvmOverloads constructor(
     context: Context,
@@ -47,7 +43,6 @@ class FaceScannerView @JvmOverloads constructor(
 
     @ColorInt
     private var lastColorsScanned: List<Int> = emptyList()
-    private val faceImageCropper: FaceImageCropper by inject(FaceImageCropper::class.java)
     private val cameraProviderFuture by lazy { ProcessCameraProvider.getInstance(context) }
     private val preview by lazy {
         Preview.Builder()
@@ -66,7 +61,7 @@ class FaceScannerView @JvmOverloads constructor(
         FaceColorsAnalyzer(cropViewRect, previewViewRect, onSuccess = { colors ->
             showColorsOnPreview(colors)
             lastColorsScanned = colors
-        }, faceImageCropper = faceImageCropper)
+        }, faceImageCropper = FaceImageCropper())
     }
     private val showColorsScannedAnim by lazy { loadAnimation(R.anim.show_colors_scanned) }
     private val cropView by lazy { crop_area as GridLayout }
