@@ -3,7 +3,7 @@ package com.github.eliascoelho911.robok.rubikcube
 import android.os.Parcelable
 import com.github.eliascoelho911.robok.rubikcube.face.Face
 import com.github.eliascoelho911.robok.util.ColorUtil.similarityBetweenColors
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 private const val SimilarityLimit = 20
 

@@ -3,6 +3,7 @@ package com.github.eliascoelho911.robok.ui.widgets
 import android.content.Context
 import android.graphics.Rect
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.FrameLayout
@@ -22,18 +23,13 @@ import androidx.core.view.forEachIndexed
 import androidx.core.view.isVisible
 import androidx.lifecycle.LifecycleOwner
 import com.github.eliascoelho911.robok.R
+import com.github.eliascoelho911.robok.databinding.FaceScannerBinding
 import com.github.eliascoelho911.robok.ui.analyzers.FaceColorsAnalyzer
 import com.github.eliascoelho911.robok.ui.analyzers.FaceImageCropper
 import com.github.eliascoelho911.robok.util.getRect
 import com.github.eliascoelho911.robok.util.setOnAnimationEndListener
 import com.google.android.material.card.MaterialCardView
 import java.util.concurrent.Executor
-import kotlinx.android.synthetic.main.face_scanner.view.crop_area
-import kotlinx.android.synthetic.main.face_scanner.view.hint_container
-import kotlinx.android.synthetic.main.face_scanner.view.img_hint
-import kotlinx.android.synthetic.main.face_scanner.view.preview_view
-import kotlinx.android.synthetic.main.face_scanner.view.txt_hint
-import kotlinx.android.synthetic.main.face_scanner.view.txt_hint_multiplier
 
 class FaceScannerView @JvmOverloads constructor(
     context: Context,
@@ -41,13 +37,15 @@ class FaceScannerView @JvmOverloads constructor(
     @AttrRes defStyleAttr: Int = 0,
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
+    private val binding = FaceScannerBinding.inflate(LayoutInflater.from(context), this, true)
+
     @ColorInt
     private var lastColorsScanned: List<Int> = emptyList()
     private val cameraProviderFuture by lazy { ProcessCameraProvider.getInstance(context) }
     private val preview by lazy {
         Preview.Builder()
             .build()
-            .apply { setSurfaceProvider(previewView.surfaceProvider) }
+            .apply { surfaceProvider = binding.previewView.surfaceProvider }
     }
     private val imageCapture: ImageCapture by lazy {
         ImageCapture.Builder()
@@ -64,18 +62,14 @@ class FaceScannerView @JvmOverloads constructor(
         }, faceImageCropper = FaceImageCropper())
     }
     private val showColorsScannedAnim by lazy { loadAnimation(R.anim.show_colors_scanned) }
-    private val cropView by lazy { crop_area as GridLayout }
-    private val previewView by lazy { preview_view }
-    private val hintTextView by lazy { txt_hint }
-    private val hintMultiplierTextView by lazy { txt_hint_multiplier }
-    private val arrowHintView by lazy { img_hint }
-    private val hintContainerView by lazy { hint_container }
+    private val cropView get() = binding.cropArea.root
+    private val previewView get() = binding.previewView
+    private val hintTextView get() = binding.txtHint
+    private val hintMultiplierTextView get() = binding.txtHintMultiplier
+    private val arrowHintView get() = binding.imgHint
+    private val hintContainerView get() = binding.hintContainer
     private val cropViewRect: Rect get() = cropView.getRect()
-    private val previewViewRect: Rect get() = previewView.getRect()
-
-    init {
-        inflate(context, R.layout.face_scanner, this)
-    }
+    private val previewViewRect: Rect get() = binding.previewView.getRect()
 
     fun start(
         lifecycleOwner: LifecycleOwner,

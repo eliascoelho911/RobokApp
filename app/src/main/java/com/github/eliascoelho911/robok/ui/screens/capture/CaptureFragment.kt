@@ -14,16 +14,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.github.eliascoelho911.robok.R
+import com.github.eliascoelho911.robok.databinding.CaptureFragmentBinding
 import com.github.eliascoelho911.robok.rubikcube.RubikCube
 import com.github.eliascoelho911.robok.ui.screens.capture.CaptureFragmentDirections.Companion.actionCaptureFragmentToRubikCubeSolve
-import kotlinx.android.synthetic.main.capture_fragment.fab_capture
-import kotlinx.android.synthetic.main.capture_fragment.fab_reset
-import kotlinx.android.synthetic.main.capture_fragment.face_scanner_view
 
 class CaptureFragment : Fragment() {
-    private val faceScannerView by lazy { face_scanner_view }
-    private val captureButton by lazy { fab_capture }
-    private val resetButton by lazy { fab_reset }
+    private var binding: CaptureFragmentBinding? = null
+    private val faceScannerView by lazy { binding!!.faceScannerView }
+    private val captureButton by lazy { binding!!.fabCapture }
+    private val resetButton by lazy { binding!!.fabReset }
     private val executor get() = ContextCompat.getMainExecutor(requireContext())
     private val viewModel by viewModels<CaptureViewModel>()
     private val rubikCubeInvalidAlertDialog
@@ -40,7 +39,10 @@ class CaptureFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View = inflater.inflate(R.layout.capture_fragment, container, false)
+    ): View {
+        binding = CaptureFragmentBinding.inflate(inflater, container, false)
+        return binding!!.root
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +60,7 @@ class CaptureFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         faceScannerView.finish()
+        binding = null
     }
 
     private fun setupObservers() {

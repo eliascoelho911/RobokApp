@@ -9,21 +9,23 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import com.catalinjurjiu.animcubeandroid.AnimCube
 import com.github.eliascoelho911.robok.R
+import com.github.eliascoelho911.robok.databinding.RubikCubeSolveFragmentBinding
 import com.github.eliascoelho911.robok.rubikcube.AnimCubeModelCreator
 import com.github.eliascoelho911.robok.rubikcube.Moves
 import com.github.eliascoelho911.robok.rubikcube.RubikCube
 import com.github.eliascoelho911.robok.rubikcube.RubikCubeSolver
 import com.github.eliascoelho911.robok.ui.dialogs.LoadingDialog
 import com.github.eliascoelho911.robok.ui.widgets.RubikCubeSolvePlayerView
-import kotlinx.android.synthetic.main.rubik_cube_solve_fragment.player_view
-import kotlinx.android.synthetic.main.rubik_cube_solve_fragment.preview_cube_view
 import kotlinx.coroutines.launch
 
 class RubikCubeSolveFragment : Fragment() {
     private val args: RubikCubeSolveFragmentArgs by navArgs()
     private val modelCreator by lazy { AnimCubeModelCreator() }
+    private var binding: RubikCubeSolveFragmentBinding? = null
+    private val playerView by lazy { binding!!.playerView }
+    private val previewCubeView by lazy { binding!!.previewCubeView }
     private val rubikCubeSolvePlayerHelper: RubikCubeSolvePlayerHelper by lazy {
-        RubikCubeSolvePlayerHelper(RubikCubeSolver(), preview_cube_view, player_view)
+        RubikCubeSolvePlayerHelper(RubikCubeSolver(), previewCubeView, playerView)
     }
     private val rubikCube by lazy { args.rubikCube }
     private val solvingDialog by lazy {
@@ -36,7 +38,15 @@ class RubikCubeSolveFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View = inflater.inflate(R.layout.rubik_cube_solve_fragment, container, false)
+    ): View {
+        binding = RubikCubeSolveFragmentBinding.inflate(inflater, container, false)
+        return binding!!.root
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        binding = null
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -50,7 +60,7 @@ class RubikCubeSolveFragment : Fragment() {
     }
 
     private fun setupPlayerButtons() {
-        player_view.apply {
+        playerView.apply {
             previousBtnOnClickListener = { rubikCubeSolvePlayerHelper.previousMove() }
             nextBtnOnClickListener = { rubikCubeSolvePlayerHelper.nextMove() }
             playBtnOnClickListener = { rubikCubeSolvePlayerHelper.playOrPause() }
@@ -66,7 +76,7 @@ class RubikCubeSolveFragment : Fragment() {
     }
 
     private fun showRubikCubePreview() {
-        preview_cube_view.apply {
+        previewCubeView.apply {
             setCubeModel(rubikCube.createModelWith(modelCreator))
             setCubeColors(rubikCube.distinctColors.values.toIntArray())
         }
