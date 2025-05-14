@@ -6,9 +6,9 @@ import android.graphics.Color.MAGENTA
 import android.graphics.Color.RED
 import android.graphics.Color.WHITE
 import android.graphics.Color.YELLOW
-import com.github.eliascoelho911.robok.rubikcube.face.Position
+import kotlin.reflect.KClass
 
-class AnimCubeModelCreatorTest : ModelCreatorBaseTest() {
+class AnimCubeRubikCubeModelParserTest : RubikCubeModelParserBaseTest() {
     private val colorToModelMapper by lazy {
         mapOf(
             WHITE to "0",
@@ -27,7 +27,7 @@ class AnimCubeModelCreatorTest : ModelCreatorBaseTest() {
             "left" to "353320041",
             "right" to "531135402")
     }
-    override val modelCreator by lazy {
+    override val modelParser by lazy {
         TestAnimCubeModelCreator(colorToModelMapper)
     }
     override val model = modelByFace.joinToString("") { it.second }
@@ -35,7 +35,7 @@ class AnimCubeModelCreatorTest : ModelCreatorBaseTest() {
 
 class TestAnimCubeModelCreator(
     private val colorToModelMapper: Map<Int, String>,
-) : AnimCubeModelCreator() {
-    override fun createColorMapper(distinctColors: Map<Position, Int>): Map<Int, String> =
+) : AnimCubeModelParser() {
+    override fun createColorMapper(distinctColors: Map<KClass<out Face>, Int>): Map<Int, String> =
         colorToModelMapper
 }

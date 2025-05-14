@@ -67,8 +67,12 @@ class CaptureFragment : Fragment() {
         viewModel.currentFaceToScan.observe(viewLifecycleOwner) {
             showHintToScanFace(it)
         }
-        viewModel.scannedRubikCube.observe(viewLifecycleOwner) {
-            navigateToRubikCubeSolve(it)
+        viewModel.scannedRubikCube.observe(viewLifecycleOwner) { it ->
+            it.onSuccess { rubikCube ->
+                navigateToRubikCubeSolve(rubikCube)
+            }.onFailure {
+                rubikCubeInvalidAlertDialog.show()
+            }
         }
     }
 
@@ -135,12 +139,8 @@ class CaptureFragment : Fragment() {
     }
 
     private fun navigateToRubikCubeSolve(rubikCube: RubikCube) {
-        if (rubikCube.isValid) {
-            actionCaptureFragmentToRubikCubeSolve(rubikCube).let {
-                findNavController().navigate(it)
-            }
-        } else {
-            rubikCubeInvalidAlertDialog.show()
+        actionCaptureFragmentToRubikCubeSolve(rubikCube).let {
+            findNavController().navigate(it)
         }
     }
 }

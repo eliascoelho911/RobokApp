@@ -4,25 +4,27 @@ import androidx.annotation.ColorInt
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.github.eliascoelho911.robok.rubikcube.Position
 import com.github.eliascoelho911.robok.rubikcube.RubikCube
-import com.github.eliascoelho911.robok.rubikcube.face.Face
-import com.github.eliascoelho911.robok.rubikcube.face.Position
+import com.github.eliascoelho911.robok.rubikcube.RubikCubeBuilder
 import com.github.eliascoelho911.robok.ui.widgets.Direction
 
 class CaptureViewModel : ViewModel() {
-    private var scannedRubikCubeBuilder = RubikCube.Builder()
-    private val _scannedRubikCube = MutableLiveData<RubikCube>()
+    private var scannedRubikCubeBuilder = RubikCubeBuilder()
+    private val _scannedRubikCube = MutableLiveData<Result<RubikCube>>()
     private val faceScanOrderManager = FaceScanOrderManager.Default
     val currentFaceToScan = faceScanOrderManager.currentFaceToScan
-    val scannedRubikCube: LiveData<RubikCube> get() = _scannedRubikCube
+    val scannedRubikCube: LiveData<Result<RubikCube>> get() = _scannedRubikCube
 
     fun resetScan() {
         faceScanOrderManager.backToFirstFace()
-        scannedRubikCubeBuilder = RubikCube.Builder()
+        scannedRubikCubeBuilder = RubikCubeBuilder()
     }
 
     fun finishesScanningTheCurrentFace(@ColorInt colors: List<Int>) {
-        scannedRubikCubeBuilder.withFace(Face(currentFaceToScan.value!!.position, colors))
+        val position = faceScanOrderManager.currentFaceToScan.value!!.position
+        scannedRubikCubeBuilder.withFace(position, colors)
+
         if (faceScanOrderManager.hasPendentToScan)
             requestToScanNextFace()
         else
@@ -30,7 +32,7 @@ class CaptureViewModel : ViewModel() {
     }
 
     private fun createRubikCube() {
-        _scannedRubikCube.value = scannedRubikCubeBuilder.build()
+        _scannedRubikCube.value = runCatching { scannedRubikCubeBuilder.build() }
     }
 
     private fun requestToScanNextFace() {

@@ -5,10 +5,10 @@ import android.graphics.Bitmap
 import android.graphics.Rect
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
-import com.github.eliascoelho911.robok.rubikcube.RubikCube.Companion.FaceLineHeight
-import com.github.eliascoelho911.robok.util.toBitmap
+import com.github.eliascoelho911.robok.rubikcube.CUBE_CELLS_PER_LINE
 import com.github.eliascoelho911.robok.util.getColorsOfGrid
 import com.github.eliascoelho911.robok.util.rotate
+import com.github.eliascoelho911.robok.util.toBitmap
 
 class FaceColorsAnalyzer(
     private val cropFrame: Rect,
@@ -22,7 +22,7 @@ class FaceColorsAnalyzer(
             image.image?.toBitmap()?.let { bitmap ->
                 val faceImage = faceImageCropper.crop(bitmap, cropFrame, previewFrame)
                 image.close()
-                faceImage.getColorsOfGrid(FaceLineHeight, FaceLineHeight)
+                faceImage.getColorsOfGrid(CUBE_CELLS_PER_LINE, CUBE_CELLS_PER_LINE)
             }
         }.onSuccess {
             it?.run { onSuccess(this) }

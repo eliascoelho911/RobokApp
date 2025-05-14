@@ -10,7 +10,7 @@ import androidx.navigation.fragment.navArgs
 import com.catalinjurjiu.animcubeandroid.AnimCube
 import com.github.eliascoelho911.robok.R
 import com.github.eliascoelho911.robok.databinding.RubikCubeSolveFragmentBinding
-import com.github.eliascoelho911.robok.rubikcube.AnimCubeModelCreator
+import com.github.eliascoelho911.robok.rubikcube.AnimCubeModelParser
 import com.github.eliascoelho911.robok.rubikcube.Moves
 import com.github.eliascoelho911.robok.rubikcube.RubikCube
 import com.github.eliascoelho911.robok.rubikcube.RubikCubeSolver
@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 
 class RubikCubeSolveFragment : Fragment() {
     private val args: RubikCubeSolveFragmentArgs by navArgs()
-    private val modelCreator by lazy { AnimCubeModelCreator() }
+    private val modelParser by lazy { AnimCubeModelParser() }
     private var binding: RubikCubeSolveFragmentBinding? = null
     private val playerView by lazy { binding!!.playerView }
     private val previewCubeView by lazy { binding!!.previewCubeView }
@@ -77,8 +77,8 @@ class RubikCubeSolveFragment : Fragment() {
 
     private fun showRubikCubePreview() {
         previewCubeView.apply {
-            setCubeModel(rubikCube.createModelWith(modelCreator))
-            setCubeColors(rubikCube.distinctColors.values.toIntArray())
+            setCubeModel(modelParser.parse(rubikCube))
+            setCubeColors(modelParser.getDistinctColorsInOrder(rubikCube).toIntArray())
         }
     }
 }

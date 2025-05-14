@@ -1,81 +1,152 @@
 package com.github.eliascoelho911.robok.rubikcube
 
 import android.os.Parcelable
-import com.github.eliascoelho911.robok.rubikcube.face.Face
 import com.github.eliascoelho911.robok.util.ColorUtil.similarityBetweenColors
 import kotlinx.parcelize.Parcelize
 
-private const val SimilarityLimit = 20
-
-typealias Model = String
+const val CUBE_FACES = 6
+const val CUBE_FACE_CELLS = 9
+const val CUBE_CELLS_PER_LINE = 3
 
 @Parcelize
-class RubikCube(val faces: List<Face>) : Parcelable {
-    private val allColors = faces.flatMap { it.colors }
-    val distinctColors by lazy { faces.associate { it.position to it.centerColor() } }
-    val isValid: Boolean
-        get() {
-            val allColorsWithCorrectQuantity =
-                allColors.groupBy { it }.all { it.value.size == NumberOfFacelets }
-            return distinctColors.size == NumberOfFaces && allColorsWithCorrectQuantity
-        }
+data class RubikCube(
+    val upFace: UpFace,
+    val frontFace: FrontFace,
+    val rightFace: RightFace,
+    val backFace: BackFace,
+    val leftFace: LeftFace,
+    val downFace: DownFace
+) : Parcelable {
+    val faces: List<Face>
+        get() = listOf(
+            upFace,
+            frontFace,
+            rightFace,
+            backFace,
+            leftFace,
+            downFace
+        )
+}
 
-    companion object {
-        const val NumberOfFaces = 6
-        const val FaceLineHeight = 3
-        const val NumberOfFacelets = FaceLineHeight * FaceLineHeight
+class RubikCubeBuilder {
+    private var upFace: UpFace? = null
+    private var frontFace: FrontFace? = null
+    private var rightFace: RightFace? = null
+    private var backFace: BackFace? = null
+    private var leftFace: LeftFace? = null
+    private var downFace: DownFace? = null
+
+    private val allFaces: List<Face>
+        get() = listOfNotNull(
+            upFace,
+            frontFace,
+            rightFace,
+            backFace,
+            leftFace,
+            downFace
+        )
+    private val allCells: List<Cell> get() = allFaces.flatMap { it.cells }
+
+    fun withFace(position: Position, colors: List<Int>) = apply {
+        val colorList = ColorList(colors)
+        when (position) {
+            Position.UP -> withUpFace(UpFace(colorList))
+            Position.FRONT -> withFrontFace(FrontFace(colorList))
+            Position.RIGHT -> withRightFace(RightFace(colorList))
+            Position.BACK -> withBackFace(BackFace(colorList))
+            Position.LEFT -> withLeftFace(LeftFace(colorList))
+            Position.DOWN -> withDownFace(DownFace(colorList))
+        }
     }
 
-    fun createModelWith(modelCreator: ModelCreator) =
-        modelCreator.create(this)
+    fun withUpFace(upFace: UpFace) = apply { this.upFace = upFace }
+    fun withFrontFace(frontFace: FrontFace) = apply { this.frontFace = frontFace }
+    fun withRightFace(rightFace: RightFace) = apply { this.rightFace = rightFace }
+    fun withBackFace(backFace: BackFace) = apply { this.backFace = backFace }
+    fun withLeftFace(leftFace: LeftFace) = apply { this.leftFace = leftFace }
+    fun withDownFace(downFace: DownFace) = apply { this.downFace = downFace }
 
-    class Builder {
-        private val originalFaces = mutableListOf<Face>()
+    fun build(): RubikCube {
+        require(allFaces.size == CUBE_FACES) { "allFaces requires $CUBE_FACES faces" }
+        require(allCells.size == CUBE_FACES * CUBE_FACE_CELLS) { "allCells requires $CUBE_FACES faces with $CUBE_FACE_CELLS cells" }
 
-        fun withFace(face: Face) = apply {
-            if (originalFaces.size + 1 > NumberOfFaces) throw IllegalArgumentException("limit of faces is $NumberOfFaces")
-            originalFaces.add(face)
+        val topFace = upFace!!
+        val frontFace = frontFace!!
+        val rightFace = rightFace!!
+        val backFace = backFace!!
+        val leftFace = leftFace!!
+        val bottomFace = downFace!!
+
+        val cellsByColorSimilarity = groupCellsByColorSimilarity()
+
+        return RubikCube(
+            upFace = topFace.copy(cells = normalizeColors(topFace.cells, cellsByColorSimilarity)),
+            frontFace = frontFace.copy(
+                cells = normalizeColors(
+                    frontFace.cells,
+                    cellsByColorSimilarity
+                )
+            ),
+            rightFace = rightFace.copy(
+                cells = normalizeColors(
+                    rightFace.cells,
+                    cellsByColorSimilarity
+                )
+            ),
+            backFace = backFace.copy(
+                cells = normalizeColors(
+                    backFace.cells,
+                    cellsByColorSimilarity
+                )
+            ),
+            leftFace = leftFace.copy(
+                cells = normalizeColors(
+                    leftFace.cells,
+                    cellsByColorSimilarity
+                )
+            ),
+            downFace = bottomFace.copy(
+                cells = normalizeColors(
+                    bottomFace.cells,
+                    cellsByColorSimilarity
+                )
+            )
+        ).also {
+            val colors = it.faces.flatMap { it.cells }.map { it.color }
+            colors.groupBy { it }
+                .forEach { require(it.value.size == CUBE_FACE_CELLS) { "All faces must have the same colors" } }
         }
+    }
 
-        fun build(): RubikCube = RubikCube(originalFaces.standardizesColors())
-
-        private fun List<Face>.standardizesColors(): List<Face> {
-            val allColors = flatMap { it.colors }
-            val colorMapper = createColorMapper(allColors)
-            return map { it.standardizesColors(colorMapper) }
-        }
-
-        private fun Face.standardizesColors(colorMapper: Map<Int, Int>): Face =
-            Face(position, colors.map { colorMapper[it] ?: it })
-
-        private fun createColorMapper(colors: List<Int>): Map<Int, Int> {
-            val referenceColors = findReferenceColors(colors)
-            return colors.associateWith {
-                mostSimilarReferenceColor(referenceColors, it)
-            }
-        }
-
-        private fun findReferenceColors(colors: List<Int>): List<Int> =
-            mutableListOf(colors.first()).apply {
-                for (color in colors) {
-                    if (isDifferentFromAllColors(reference = color, otherColors = this)) {
-                        add(color)
-
-                        if (size == NumberOfFaces) break
+    private fun normalizeColors(
+        cells: List<Cell>,
+        cellsByColorSimilarity: Map<Int, List<Cell>>
+    ): List<Cell> {
+        return buildList {
+            for (cell in cells) {
+                cellsByColorSimilarity.forEach { (groupColor, groupCells) ->
+                    if (groupCells.contains(cell)) {
+                        add(cell.copy(color = groupColor))
+                        return@forEach
                     }
                 }
             }
+        }
+    }
 
-        private fun isDifferentFromAllColors(reference: Int, otherColors: List<Int>) =
-            otherColors.map {
-                similarityBetweenColors(it, reference)
-            }.any { it < SimilarityLimit }.not()
+    /**
+     * Cria um mapa de grupos de celulas que possuem a mesma cor.
+     */
+    private fun groupCellsByColorSimilarity(): Map<Int, List<Cell>> {
+        val centerFaceColors = allFaces.map { it.center().color }
 
-        private fun mostSimilarReferenceColor(
-            referenceColors: List<Int>,
-            color: Int,
-        ) = referenceColors.map {
-            it to similarityBetweenColors(it, color)
-        }.minByOrNull { it.second }!!.first
+        return allCells.groupBy { findMostSimilarColor(centerFaceColors, it.color) }
     }
 }
+
+private fun findMostSimilarColor(
+    referenceColors: Collection<Int>,
+    color: Int,
+): Int = referenceColors.map {
+    it to similarityBetweenColors(it, color)
+}.minByOrNull { it.second }!!.first
