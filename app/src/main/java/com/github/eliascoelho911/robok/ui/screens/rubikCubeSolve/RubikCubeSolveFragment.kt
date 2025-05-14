@@ -11,7 +11,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import com.catalinjurjiu.animcubeandroid.AnimCube
 import com.github.eliascoelho911.robok.R
-import com.github.eliascoelho911.robok.bluetooth.RobotBluetoothManager
+import com.github.eliascoelho911.robok.bluetooth.RobotBluetoothManager.ConnectionState
+import com.github.eliascoelho911.robok.bluetooth.RobotBluetoothManagerImpl
 import com.github.eliascoelho911.robok.databinding.RubikCubeSolveFragmentBinding
 import com.github.eliascoelho911.robok.rubikcube.AnimCubeModelParser
 import com.github.eliascoelho911.robok.rubikcube.Moves
@@ -31,7 +32,7 @@ class RubikCubeSolveFragment : Fragment() {
     private var binding: RubikCubeSolveFragmentBinding? = null
     private val playerView by lazy { binding!!.playerView }
     private val previewCubeView by lazy { binding!!.previewCubeView }
-    private val robotBluetoothManager by lazy { RobotBluetoothManager(requireContext()) }
+    private val robotBluetoothManager by lazy { RobotBluetoothManagerImpl(requireContext()) }
     private val rubikCubeSolvePlayerHelper: RubikCubeSolvePlayerHelper by lazy {
         RubikCubeSolvePlayerHelper(
             RubikCubeSolver(),
@@ -74,7 +75,7 @@ class RubikCubeSolveFragment : Fragment() {
     private fun setupRobotConnectionUI() {
         binding?.apply {
             robotConnectButton.setOnClickListener {
-                if (robotBluetoothManager.connectionState.value == RobotBluetoothManager.ConnectionState.CONNECTED) {
+                if (robotBluetoothManager.connectionState.value == ConnectionState.CONNECTED) {
                     robotBluetoothManager.disconnect()
                 } else {
                     connectToRobot()
@@ -106,40 +107,40 @@ class RubikCubeSolveFragment : Fragment() {
         }
     }
 
-    private fun updateConnectionState(state: RobotBluetoothManager.ConnectionState) {
+    private fun updateConnectionState(state: ConnectionState) {
         binding?.apply {
             val (text, color, icon) = when (state) {
-                RobotBluetoothManager.ConnectionState.CONNECTED -> Triple(
+                ConnectionState.CONNECTED -> Triple(
                     getString(R.string.connected),
                     ContextCompat.getColor(requireContext(), android.R.color.holo_green_dark),
                     R.drawable.ic_usb_24dp
                 )
 
-                RobotBluetoothManager.ConnectionState.CONNECTING -> Triple(
+                ConnectionState.CONNECTING -> Triple(
                     getString(R.string.connecting),
                     ContextCompat.getColor(requireContext(), android.R.color.holo_orange_light),
                     R.drawable.ic_usb_24dp
                 )
 
-                RobotBluetoothManager.ConnectionState.DISCONNECTED -> Triple(
+                ConnectionState.DISCONNECTED -> Triple(
                     getString(R.string.disconnected),
                     ContextCompat.getColor(requireContext(), android.R.color.darker_gray),
                     R.drawable.ic_usb_24dp
                 )
 
-                RobotBluetoothManager.ConnectionState.ERROR -> Triple(
+                ConnectionState.ERROR -> Triple(
                     getString(R.string.robot_connection_error),
                     ContextCompat.getColor(requireContext(), android.R.color.holo_red_dark),
                     R.drawable.ic_usb_off_24dp
                 )
 
-                RobotBluetoothManager.ConnectionState.PERMISSION_REQUIRED -> Triple(
+                ConnectionState.PERMISSION_REQUIRED -> Triple(
                     getString(R.string.robot_permission_required),
                     ContextCompat.getColor(requireContext(), android.R.color.holo_red_light),
                     R.drawable.ic_usb_off_24dp
                 )
 
-                RobotBluetoothManager.ConnectionState.NO_DEVICE -> Triple(
+                ConnectionState.NO_DEVICE -> Triple(
                     getString(R.string.robot_not_found),
                     ContextCompat.getColor(requireContext(), android.R.color.holo_red_light),
                     R.drawable.ic_usb_off_24dp
@@ -188,7 +189,7 @@ private class RubikCubeSolvePlayerHelper(
     private val rubikCubeSolver: RubikCubeSolver,
     private val previewRubikCube: AnimCube,
     private val player: RubikCubeSolvePlayerView,
-    private val robotBluetoothManager: RobotBluetoothManager,
+    private val robotBluetoothManager: RobotBluetoothManagerImpl,
 ) {
     private lateinit var moveSequence: Moves
     private var index = 0
@@ -273,7 +274,7 @@ private class RubikCubeSolvePlayerHelper(
     }
 
     private fun sendMoveToRobot(move: String) {
-        if (robotBluetoothManager.connectionState.value == RobotBluetoothManager.ConnectionState.CONNECTED) {
+        if (robotBluetoothManager.connectionState.value == ConnectionState.CONNECTED) {
             // Start a coroutine to send the command
             CoroutineScope(Dispatchers.IO).launch {
                 robotBluetoothManager.sendCommand("move:hl,cw;")
