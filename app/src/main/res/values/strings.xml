@@ -26,7 +26,13 @@
     <string name="robot_disconnected">O robô não está conectado</string>
     <string name="loading">Carregando</string>
     <string name="connecting">Conectando…</string>
-    <string name="connect_robot_to_continue">Connect the robot to continue</string>
+    <string name="connect_robot_to_continue">Conecte o robô para continuar</string>
+    <string name="robot_status">Status do robô:</string>
+    <string name="connect_to_robot">Conectar ao robô</string>
+    <string name="disconnect_from_robot">Desconectar do robô</string>
+    <string name="robot_connection_error">Erro de conexão</string>
+    <string name="robot_permission_required">Permissão necessária</string>
+    <string name="robot_not_found">Robô não encontrado</string>
     <string name="moves">Movimento %1$d de %2$d</string>
     <string name="solved">Resolvido</string>
 </resources>
