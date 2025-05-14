@@ -3,6 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-parcelize'
     id 'androidx.navigation.safeargs.kotlin'
+    id 'org.jetbrains.kotlin.plugin.compose'
 }
 
 android {
@@ -77,6 +78,9 @@ dependencies {
 
     // Optional - Integration with LiveData
     implementation 'androidx.compose.runtime:runtime-livedata'
+
+    // Google Fonts
+    implementation 'androidx.compose.ui:ui-text-google-fonts'
 
     implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
     implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
