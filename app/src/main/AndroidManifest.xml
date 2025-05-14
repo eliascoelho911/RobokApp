@@ -1,22 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-        package="com.github.eliascoelho911.robok">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.github.eliascoelho911.robok">
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-feature android:name="android.hardware.camera" />
 
     <application
-            android:icon="@mipmap/ic_launcher"
-            android:label="@string/app_name"
-            android:roundIcon="@mipmap/ic_launcher_round"
-            android:supportsRtl="true"
-            android:theme="@style/Theme.Robok"
-            android:name=".RobokApplication">
+        android:name=".RobokApplication"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Robok">
         <activity
-                android:name="com.github.eliascoelho911.robok.ui.RootActivity"
-                android:exported="true"
-                android:configChanges="orientation"
-                android:screenOrientation="portrait">
+            android:name="com.github.eliascoelho911.robok.ui.RootActivity"
+            android:configChanges="orientation"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
+            tools:ignore="DiscouragedApi,LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

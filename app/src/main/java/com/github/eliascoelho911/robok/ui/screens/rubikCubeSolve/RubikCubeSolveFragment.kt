@@ -16,6 +16,7 @@ import com.github.eliascoelho911.robok.rubikcube.RubikCube
 import com.github.eliascoelho911.robok.rubikcube.RubikCubeSolver
 import com.github.eliascoelho911.robok.ui.dialogs.LoadingDialog
 import com.github.eliascoelho911.robok.ui.widgets.RubikCubeSolvePlayerView
+import com.github.eliascoelho911.robok.util.addImePadding
 import kotlinx.coroutines.launch
 
 class RubikCubeSolveFragment : Fragment() {
@@ -53,6 +54,7 @@ class RubikCubeSolveFragment : Fragment() {
         showRubikCubePreview()
         setupPlayer()
         solveRubikCube()
+        previewCubeView.addImePadding()
     }
 
     private fun setupPlayer() {

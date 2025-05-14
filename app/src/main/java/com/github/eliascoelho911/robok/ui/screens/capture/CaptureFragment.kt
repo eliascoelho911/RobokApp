@@ -17,6 +17,7 @@ import com.github.eliascoelho911.robok.R
 import com.github.eliascoelho911.robok.databinding.CaptureFragmentBinding
 import com.github.eliascoelho911.robok.rubikcube.RubikCube
 import com.github.eliascoelho911.robok.ui.screens.capture.CaptureFragmentDirections.Companion.actionCaptureFragmentToRubikCubeSolve
+import com.github.eliascoelho911.robok.util.addImePadding
 
 class CaptureFragment : Fragment() {
     private var binding: CaptureFragmentBinding? = null
@@ -55,6 +56,8 @@ class CaptureFragment : Fragment() {
         requestPermissionToStartScanner.launch(CAMERA)
         setupClickListeners()
         setupObservers()
+        captureButton.addImePadding()
+        resetButton.addImePadding()
     }
 
     override fun onDestroy() {
