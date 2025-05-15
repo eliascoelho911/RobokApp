@@ -35,4 +35,9 @@
     <string name="robot_not_found">Robô não encontrado</string>
     <string name="moves">Movimento %1$d de %2$d</string>
     <string name="solved">Resolvido</string>
+    <string name="next_mode">Próximo movimento</string>
+    <string name="pause">Pausar</string>
+    <string name="play">Continuar</string>
+    <string name="previous_move">Movimento anterior</string>
+    <string name="move">Movimento</string>
 </resources>
