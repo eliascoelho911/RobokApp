@@ -12,18 +12,10 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import com.github.eliascoelho911.robok.R
 import com.github.eliascoelho911.robok.databinding.CaptureFragmentBinding
-import com.github.eliascoelho911.robok.rubikcube.BackFace
-import com.github.eliascoelho911.robok.rubikcube.Cell
-import com.github.eliascoelho911.robok.rubikcube.DownFace
-import com.github.eliascoelho911.robok.rubikcube.FrontFace
-import com.github.eliascoelho911.robok.rubikcube.LeftFace
-import com.github.eliascoelho911.robok.rubikcube.RightFace
 import com.github.eliascoelho911.robok.rubikcube.RubikCube
-import com.github.eliascoelho911.robok.rubikcube.UpFace
-import com.github.eliascoelho911.robok.ui.screens.capture.CaptureFragmentDirections.Companion.actionCaptureFragmentToRubikCubeSolve
+import com.github.eliascoelho911.robok.ui.compose.screens.solve.SolveActivity
 import com.github.eliascoelho911.robok.util.addImePadding
 
 class CaptureFragment : Fragment() {
@@ -60,8 +52,6 @@ class CaptureFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        navigateToRubikCubeSolve(createRubikCubeStub())
-        return
         requestPermissionToStartScanner.launch(CAMERA)
         setupClickListeners()
         setupObservers()
@@ -151,89 +141,7 @@ class CaptureFragment : Fragment() {
     }
 
     private fun navigateToRubikCubeSolve(rubikCube: RubikCube) {
-        actionCaptureFragmentToRubikCubeSolve(rubikCube).let {
-            findNavController().navigate(it)
-        }
+        val intent = SolveActivity.getIntent(requireContext(), rubikCube)
+        startActivity(intent)
     }
 }
-
-private fun createRubikCubeStub() = RubikCube(
-    upFace = UpFace(
-        cells = listOf(
-            Cell(x = 0, y = 0, color = -2573020),
-            Cell(x = 1, y = 0, color = -2573020),
-            Cell(x = 2, y = 0, color = -5063217),
-            Cell(x = 0, y = 1, color = -2573020),
-            Cell(x = 1, y = 1, color = -5827545),
-            Cell(x = 2, y = 1, color = -5063217),
-            Cell(x = 0, y = 2, color = -5827545),
-            Cell(x = 1, y = 2, color = -5063217),
-            Cell(x = 2, y = 2, color = -5063217)
-        )
-    ),
-    frontFace = FrontFace(
-        cells = listOf(
-            Cell(x = 0, y = 0, color = -2573020),
-            Cell(x = 1, y = 0, color = -5827545),
-            Cell(x = 2, y = 0, color = -369869),
-            Cell(x = 0, y = 1, color = -16554827),
-            Cell(x = 1, y = 1, color = -5063217),
-            Cell(x = 2, y = 1, color = -369869),
-            Cell(x = 0, y = 2, color = -2573020),
-            Cell(x = 1, y = 2, color = -5827545),
-            Cell(x = 2, y = 2, color = -5063217)
-        )
-    ),
-    rightFace = RightFace(
-        cells = listOf(
-            Cell(x = 0, y = 0, color = -10763197),
-            Cell(x = 1, y = 0, color = -10763197),
-            Cell(x = 2, y = 0, color = -10763197),
-            Cell(x = 0, y = 1, color = -10763197),
-            Cell(x = 1, y = 1, color = -10763197),
-            Cell(x = 2, y = 1, color = -10763197),
-            Cell(x = 0, y = 2, color = -16554827),
-            Cell(x = 1, y = 2, color = -369869),
-            Cell(x = 2, y = 2, color = -16554827)
-        )
-    ),
-    backFace = BackFace(
-        cells = listOf(
-            Cell(x = 0, y = 0, color = -5827545),
-            Cell(x = 1, y = 0, color = -10763197),
-            Cell(x = 2, y = 0, color = -369869),
-            Cell(x = 0, y = 1, color = -5827545),
-            Cell(x = 1, y = 1, color = -2573020),
-            Cell(x = 2, y = 1, color = -369869),
-            Cell(x = 0, y = 2, color = -2573020),
-            Cell(x = 1, y = 2, color = -2573020),
-            Cell(x = 2, y = 2, color = -369869)
-        )
-    ),
-    leftFace = LeftFace(
-        cells = listOf(
-            Cell(x = 0, y = 0, color = -16554827),
-            Cell(x = 1, y = 0, color = -16554827),
-            Cell(x = 2, y = 0, color = -10763197),
-            Cell(x = 0, y = 1, color = -16554827),
-            Cell(x = 1, y = 1, color = -16554827),
-            Cell(x = 2, y = 1, color = -5827545),
-            Cell(x = 0, y = 2, color = -16554827),
-            Cell(x = 1, y = 2, color = -16554827),
-            Cell(x = 2, y = 2, color = -10763197)
-        )
-    ),
-    downFace = DownFace(
-        cells = listOf(
-            Cell(x = 0, y = 0, color = -369869),
-            Cell(x = 1, y = 0, color = -2573020),
-            Cell(x = 2, y = 0, color = -5827545),
-            Cell(x = 0, y = 1, color = -5063217),
-            Cell(x = 1, y = 1, color = -369869),
-            Cell(x = 2, y = 1, color = -5063217),
-            Cell(x = 0, y = 2, color = -5063217),
-            Cell(x = 1, y = 2, color = -369869),
-            Cell(x = 2, y = 2, color = -5827545)
-        )
-    )
-)

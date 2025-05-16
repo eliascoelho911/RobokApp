@@ -4,11 +4,15 @@ import com.github.eliascoelho911.robok.robot.bluetooth.RobotBluetoothManager
 import com.github.eliascoelho911.robok.rubikcube.BackFace
 import com.github.eliascoelho911.robok.rubikcube.CompatibleWithLeftHand
 import com.github.eliascoelho911.robok.rubikcube.CompatibleWithRightHand
+import com.github.eliascoelho911.robok.rubikcube.DELAY_BETWEEN_COMMANDS
 import com.github.eliascoelho911.robok.rubikcube.DownFace
 import com.github.eliascoelho911.robok.rubikcube.Face
 import com.github.eliascoelho911.robok.rubikcube.FrontFace
+import com.github.eliascoelho911.robok.rubikcube.Hand
 import com.github.eliascoelho911.robok.rubikcube.LeftFace
+import com.github.eliascoelho911.robok.rubikcube.LeftHand
 import com.github.eliascoelho911.robok.rubikcube.RightFace
+import com.github.eliascoelho911.robok.rubikcube.RightHand
 import com.github.eliascoelho911.robok.rubikcube.RubikCube
 import com.github.eliascoelho911.robok.rubikcube.UpFace
 import kotlinx.coroutines.Dispatchers
@@ -18,8 +22,8 @@ import kotlin.math.abs
 
 class Robot(
     val cube: RubikCube,
-    val leftHand: Hand,
-    val rightHand: Hand,
+    val leftHand: LeftHand,
+    val rightHand: RightHand,
     private val bluetoothManager: RobotBluetoothManager
 ) {
     var facePointingToRightHand: CompatibleWithRightHand = cube.rightFace
