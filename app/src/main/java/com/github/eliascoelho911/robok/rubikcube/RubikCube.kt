@@ -26,6 +26,84 @@ data class RubikCube(
             leftFace,
             downFace
         )
+
+    sealed class Movement {
+        abstract fun faceMovedByMovement(cube: RubikCube): Face
+        abstract val isClockwise: Boolean
+        abstract val notation: String
+
+        object U : Movement() {
+            override fun faceMovedByMovement(cube: RubikCube) = cube.upFace
+            override val isClockwise = true
+            override val notation = "U"
+        }
+
+        object UReverse : Movement() {
+            override fun faceMovedByMovement(cube: RubikCube) = cube.upFace
+            override val isClockwise = false
+            override val notation = "U'"
+        }
+
+        object R : Movement() {
+            override fun faceMovedByMovement(cube: RubikCube) = cube.rightFace
+            override val isClockwise = true
+            override val notation = "R"
+        }
+
+        object RReverse : Movement() {
+            override fun faceMovedByMovement(cube: RubikCube) = cube.rightFace
+            override val isClockwise = false
+            override val notation = "R'"
+        }
+
+        object F : Movement() {
+            override fun faceMovedByMovement(cube: RubikCube) = cube.frontFace
+            override val isClockwise = true
+            override val notation = "F"
+        }
+
+        object FReverse : Movement() {
+            override fun faceMovedByMovement(cube: RubikCube) = cube.frontFace
+            override val isClockwise = false
+            override val notation = "F'"
+        }
+
+        object D : Movement() {
+            override fun faceMovedByMovement(cube: RubikCube) = cube.downFace
+            override val isClockwise = true
+            override val notation = "D"
+        }
+
+        object DReverse : Movement() {
+            override fun faceMovedByMovement(cube: RubikCube) = cube.downFace
+            override val isClockwise = false
+            override val notation = "D'"
+        }
+
+        object L : Movement() {
+            override fun faceMovedByMovement(cube: RubikCube) = cube.leftFace
+            override val isClockwise = true
+            override val notation = "L"
+        }
+
+        object LReverse : Movement() {
+            override fun faceMovedByMovement(cube: RubikCube) = cube.leftFace
+            override val isClockwise = false
+            override val notation = "L'"
+        }
+
+        object B : Movement() {
+            override fun faceMovedByMovement(cube: RubikCube) = cube.backFace
+            override val isClockwise = true
+            override val notation = "B"
+        }
+
+        object BReverse : Movement() {
+            override fun faceMovedByMovement(cube: RubikCube) = cube.backFace
+            override val isClockwise = false
+            override val notation = "B'"
+        }
+    }
 }
 
 class RubikCubeBuilder {

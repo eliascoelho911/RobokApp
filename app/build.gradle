@@ -53,6 +53,9 @@ android {
 dependencies {
     def lifecycle_version = '2.9.0'
     def camerax_version = "1.4.2"
+    def koin_version = "4.0.4"
+    def koin_android_version = "4.0.4"
+    def koin_android_compose_version = "4.0.4"
 
     // Compose BOM
     def composeBom = platform('androidx.compose:compose-bom:2025.05.00')
@@ -81,6 +84,13 @@ dependencies {
 
     // Google Fonts
     implementation 'androidx.compose.ui:ui-text-google-fonts'
+
+    // Koin for Dependency Injection
+    implementation "io.insert-koin:koin-core:$koin_version"
+    implementation "io.insert-koin:koin-android:$koin_android_version"
+    implementation "io.insert-koin:koin-androidx-compose:$koin_android_compose_version"
+    testImplementation "io.insert-koin:koin-test:$koin_version"
+    testImplementation "io.insert-koin:koin-test-junit4:$koin_version"
 
     implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
     implementation("androidx.navigation:navigation-ui-ktx:$nav_version")

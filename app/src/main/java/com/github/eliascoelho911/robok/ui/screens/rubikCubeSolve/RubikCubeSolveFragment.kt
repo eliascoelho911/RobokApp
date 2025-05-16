@@ -11,12 +11,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import com.catalinjurjiu.animcubeandroid.AnimCube
 import com.github.eliascoelho911.robok.R
-import com.github.eliascoelho911.robok.bluetooth.RobotBluetoothManager.ConnectionState
-import com.github.eliascoelho911.robok.bluetooth.RobotBluetoothManagerImpl
 import com.github.eliascoelho911.robok.databinding.RubikCubeSolveFragmentBinding
+import com.github.eliascoelho911.robok.robot.bluetooth.RobotBluetoothManager.ConnectionState
+import com.github.eliascoelho911.robok.robot.bluetooth.RobotBluetoothManagerImpl
 import com.github.eliascoelho911.robok.rubikcube.AnimCubeModelParser
-import com.github.eliascoelho911.robok.rubikcube.Moves
 import com.github.eliascoelho911.robok.rubikcube.RubikCube
+import com.github.eliascoelho911.robok.rubikcube.RubikCubeMoves
 import com.github.eliascoelho911.robok.rubikcube.RubikCubeSolver
 import com.github.eliascoelho911.robok.ui.dialogs.LoadingDialog
 import com.github.eliascoelho911.robok.ui.widgets.RubikCubeSolvePlayerView
@@ -191,7 +191,7 @@ private class RubikCubeSolvePlayerHelper(
     private val player: RubikCubeSolvePlayerView,
     private val robotBluetoothManager: RobotBluetoothManagerImpl,
 ) {
-    private lateinit var moveSequence: Moves
+    private lateinit var moveSequence: RubikCubeMoves
     private var index = 0
     private var isPause = true
     private val hasNextMove get() = index < moveSequence.size

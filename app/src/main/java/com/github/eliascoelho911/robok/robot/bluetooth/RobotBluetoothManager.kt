@@ -1,4 +1,4 @@
-package com.github.eliascoelho911.robok.bluetooth
+package com.github.eliascoelho911.robok.robot.bluetooth
 
 import kotlinx.coroutines.flow.StateFlow
 

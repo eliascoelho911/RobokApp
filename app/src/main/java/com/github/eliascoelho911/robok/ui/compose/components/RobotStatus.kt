@@ -19,9 +19,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.eliascoelho911.robok.R
-import com.github.eliascoelho911.robok.bluetooth.MockRobotBluetoothManager
-import com.github.eliascoelho911.robok.bluetooth.RobotBluetoothManager
-import com.github.eliascoelho911.robok.bluetooth.RobotBluetoothManager.ConnectionState
+import com.github.eliascoelho911.robok.robot.bluetooth.MockRobotBluetoothManager
+import com.github.eliascoelho911.robok.robot.bluetooth.RobotBluetoothManager
+import com.github.eliascoelho911.robok.robot.bluetooth.RobotBluetoothManager.ConnectionState
 
 /**
  * A Compose component that displays the robot connection status and provides a connect/disconnect button.

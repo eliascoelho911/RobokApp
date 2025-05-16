@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
@@ -49,11 +48,10 @@ import com.github.eliascoelho911.robok.R
  * @param currentMove The current move being displayed
  * @param currentMoveIndex The index of the current move (0-based)
  * @param totalMoves Total number of moves in the sequence
- * @param isPlaying Whether the animation is currently playing
+ * @param isPlaying Whether the animation is currently playing (not used in controls)
  * @param isSolved Whether the cube is solved (all moves complete)
  * @param onPreviousClick Callback when previous button is clicked
  * @param onNextClick Callback when next button is clicked
- * @param onPlayPauseClick Callback when play/pause button is clicked
  * @param modifier Modifier to be applied to the component
  */
 @Composable
@@ -65,7 +63,6 @@ fun SolvePlayer(
     isSolved: Boolean = false,
     onPreviousClick: () -> Unit,
     onNextClick: () -> Unit,
-    onPlayPauseClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val progress = if (totalMoves > 0) {
@@ -193,7 +190,7 @@ fun SolvePlayer(
                 // Previous button
                 FilledIconButton(
                     onClick = onPreviousClick,
-                    modifier = Modifier.size(48.dp),
+                    modifier = Modifier.size(56.dp),
                     enabled = currentMoveIndex > 0,
                     colors = IconButtonDefaults.filledIconButtonColors(
                         containerColor = MaterialTheme.colorScheme.surfaceVariant,
@@ -205,44 +202,16 @@ fun SolvePlayer(
                     Icon(
                         painter = painterResource(id = R.drawable.ic_previous_24),
                         contentDescription = stringResource(R.string.previous_move),
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(28.dp)
                     )
                 }
 
-                Spacer(modifier = Modifier.width(16.dp))
-
-                // Play/Pause button
-                FilledIconButton(
-                    onClick = onPlayPauseClick,
-                    modifier = Modifier.size(64.dp),
-                    enabled = !isSolved,
-                    shape = CircleShape,
-                    colors = IconButtonDefaults.filledIconButtonColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.onPrimary,
-                        disabledContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
-                        disabledContentColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.5f)
-                    )
-                ) {
-                    Icon(
-                        painter = painterResource(
-                            id = if (isPlaying) R.drawable.ic_pause_24 else R.drawable.ic_play_arrow_24
-                        ),
-                        contentDescription = if (isPlaying) {
-                            stringResource(R.string.pause)
-                        } else {
-                            stringResource(R.string.play)
-                        },
-                        modifier = Modifier.size(32.dp)
-                    )
-                }
-
-                Spacer(modifier = Modifier.width(16.dp))
+                Spacer(modifier = Modifier.width(32.dp))
 
                 // Next button
                 FilledIconButton(
                     onClick = onNextClick,
-                    modifier = Modifier.size(48.dp),
+                    modifier = Modifier.size(56.dp),
                     enabled = currentMoveIndex < totalMoves - 1 && !isSolved,
                     colors = IconButtonDefaults.filledIconButtonColors(
                         containerColor = MaterialTheme.colorScheme.surfaceVariant,
@@ -254,7 +223,7 @@ fun SolvePlayer(
                     Icon(
                         painter = painterResource(id = R.drawable.ic_next_24),
                         contentDescription = stringResource(R.string.next_mode),
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(28.dp)
                     )
                 }
             }
@@ -274,7 +243,6 @@ fun RubikCubeSolvePlayerPreview_Playing() {
             isSolved = false,
             onPreviousClick = {},
             onNextClick = {},
-            onPlayPauseClick = {},
             modifier = Modifier.padding(16.dp)
         )
     }
@@ -292,7 +260,6 @@ fun RubikCubeSolvePlayerPreview_Paused() {
             isSolved = false,
             onPreviousClick = {},
             onNextClick = {},
-            onPlayPauseClick = {},
             modifier = Modifier.padding(16.dp)
         )
     }
@@ -310,7 +277,6 @@ fun RubikCubeSolvePlayerPreview_Solved() {
             isSolved = true,
             onPreviousClick = {},
             onNextClick = {},
-            onPlayPauseClick = {},
             modifier = Modifier.padding(16.dp)
         )
     }
@@ -329,9 +295,6 @@ class RubikCubeSolvePlayerState {
     var totalMoves by mutableStateOf(0)
         private set
 
-    var isPlaying by mutableStateOf(false)
-        private set
-
     var isSolved by mutableStateOf(false)
         private set
 
@@ -345,28 +308,14 @@ class RubikCubeSolvePlayerState {
         totalMoves = total
     }
 
-    fun play() {
-        isPlaying = true
-    }
-
-    fun pause() {
-        isPlaying = false
-    }
-
-    fun togglePlayPause() {
-        isPlaying = !isPlaying
-    }
-
     fun markSolved() {
         currentMove = ""
         isSolved = true
-        isPlaying = false
     }
 
     fun reset() {
         currentMove = ""
         currentMoveIndex = 0
-        isPlaying = false
         isSolved = false
     }
 }

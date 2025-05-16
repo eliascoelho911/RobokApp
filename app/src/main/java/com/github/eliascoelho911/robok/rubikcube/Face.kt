@@ -3,8 +3,11 @@ package com.github.eliascoelho911.robok.rubikcube
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
-sealed class Face {
-    abstract val cells: List<Cell>
+sealed interface CompatibleWithLeftHand : Face
+sealed interface CompatibleWithRightHand : Face
+
+sealed interface Face {
+    val cells: List<Cell>
 
     fun getCell(x: Int, y: Int): Cell {
         require(x in 1..CUBE_CELLS_PER_LINE && y in 1..CUBE_CELLS_PER_LINE)
@@ -30,41 +33,41 @@ private fun createCellsByColors(colors: ColorList): List<Cell> {
 @Parcelize
 data class UpFace(
     override val cells: List<Cell>
-) : Face(), Parcelable {
+) : CompatibleWithLeftHand, Parcelable {
     constructor(colors: ColorList) : this(createCellsByColors(colors))
 }
 
 @Parcelize
 data class DownFace(
     override val cells: List<Cell>
-) : Face(), Parcelable {
+) : CompatibleWithLeftHand, Parcelable {
     constructor(colors: ColorList) : this(createCellsByColors(colors))
 }
 
 @Parcelize
 data class RightFace(
     override val cells: List<Cell>
-) : Face(), Parcelable {
+) : CompatibleWithRightHand, Parcelable {
     constructor(colors: ColorList) : this(createCellsByColors(colors))
 }
 
 @Parcelize
 data class LeftFace(
     override val cells: List<Cell>
-) : Face(), Parcelable {
+) : CompatibleWithRightHand, Parcelable {
     constructor(colors: ColorList) : this(createCellsByColors(colors))
 }
 
 @Parcelize
 data class FrontFace(
     override val cells: List<Cell>
-) : Face(), Parcelable {
+) : CompatibleWithLeftHand, CompatibleWithRightHand, Parcelable {
     constructor(colors: ColorList) : this(createCellsByColors(colors))
 }
 
 @Parcelize
 data class BackFace(
     override val cells: List<Cell>
-) : Face(), Parcelable {
+) : CompatibleWithLeftHand, CompatibleWithRightHand, Parcelable {
     constructor(colors: ColorList) : this(createCellsByColors(colors))
 }

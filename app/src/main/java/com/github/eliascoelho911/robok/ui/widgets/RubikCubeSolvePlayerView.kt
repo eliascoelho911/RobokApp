@@ -9,7 +9,6 @@ import android.widget.FrameLayout
 import androidx.annotation.AttrRes
 import com.github.eliascoelho911.robok.R
 import com.github.eliascoelho911.robok.databinding.RubikCubeSolvePlayerBinding
-import com.github.eliascoelho911.robok.rubikcube.Move
 import com.github.eliascoelho911.robok.util.getAttrColor
 
 class RubikCubeSolvePlayerView @JvmOverloads constructor(
