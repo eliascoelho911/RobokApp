@@ -1,7 +1,5 @@
 package com.github.eliascoelho911.robok.rubikcube
 
-const val DELAY_BETWEEN_COMMANDS = 3000L
-
 sealed interface Hand {
     val handId: String
     val gripperId: String
@@ -15,4 +13,10 @@ data object LeftHand : Hand {
 data object RightHand : Hand {
     override val handId: String = "hr"
     override val gripperId: String = "gr"
+}
+
+enum class HandRotation(val value: String) {
+    Clockwise("cw"),
+    CounterClockwise("cw'"),
+    Middle("mid");
 }

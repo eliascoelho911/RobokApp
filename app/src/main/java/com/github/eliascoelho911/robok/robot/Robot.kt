@@ -4,11 +4,10 @@ import com.github.eliascoelho911.robok.robot.bluetooth.RobotBluetoothManager
 import com.github.eliascoelho911.robok.rubikcube.BackFace
 import com.github.eliascoelho911.robok.rubikcube.CompatibleWithLeftHand
 import com.github.eliascoelho911.robok.rubikcube.CompatibleWithRightHand
-import com.github.eliascoelho911.robok.rubikcube.DELAY_BETWEEN_COMMANDS
 import com.github.eliascoelho911.robok.rubikcube.DownFace
 import com.github.eliascoelho911.robok.rubikcube.Face
 import com.github.eliascoelho911.robok.rubikcube.FrontFace
-import com.github.eliascoelho911.robok.rubikcube.Hand
+import com.github.eliascoelho911.robok.rubikcube.HandActionManager
 import com.github.eliascoelho911.robok.rubikcube.LeftFace
 import com.github.eliascoelho911.robok.rubikcube.LeftHand
 import com.github.eliascoelho911.robok.rubikcube.RightFace
@@ -16,7 +15,6 @@ import com.github.eliascoelho911.robok.rubikcube.RightHand
 import com.github.eliascoelho911.robok.rubikcube.RubikCube
 import com.github.eliascoelho911.robok.rubikcube.UpFace
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import kotlin.math.abs
 
@@ -29,6 +27,8 @@ class Robot(
     var facePointingToRightHand: CompatibleWithRightHand = cube.rightFace
     var facePointingToLeftHand: CompatibleWithLeftHand = cube.downFace
 
+    val handActionManager by lazy { HandActionManager(leftHand, rightHand, bluetoothManager) }
+
     suspend fun runMovement(movement: RubikCube.Movement): Boolean {
         return runCatching {
             withContext(Dispatchers.IO) {
@@ -37,10 +37,10 @@ class Robot(
                     handleFace(
                         face,
                         onCompatibleWithLeftHand = {
-                            leftHand.rotate(clockwise = movement.isClockwise)
+                            handActionManager.rotateLeftHand(clockwise = movement.isClockwise)
                         },
                         onCompatibleWithRightHand = {
-                            rightHand.rotate(clockwise = movement.isClockwise)
+                            handActionManager.rotateRightHand(clockwise = movement.isClockwise)
                         }
                     )
                 }
@@ -161,38 +161,23 @@ class Robot(
     }
 
     private suspend fun rotateCubeWithLeftHand(steps: Int) {
-        rightHand.open()
+        handActionManager.openRightHand()
 
         repeat(abs(steps)) {
-            leftHand.rotate(clockwise = steps > 0)
+            handActionManager.rotateLeftHand(clockwise = steps > 0)
         }
 
-        rightHand.close()
+        handActionManager.closeRightHand()
     }
 
     private suspend fun rotateCubeWithRightHand(steps: Int) {
-        leftHand.open()
+        handActionManager.openLeftHand()
 
         repeat(abs(steps)) {
-            rightHand.rotate(clockwise = steps > 0)
+            handActionManager.rotateRightHand(clockwise = steps > 0)
         }
 
-        leftHand.close()
-    }
-
-    private suspend fun Hand.open() {
-        bluetoothManager.sendCommand("move:${this.gripperId},open;")
-        delay(DELAY_BETWEEN_COMMANDS)
-    }
-
-    private suspend fun Hand.close() {
-        bluetoothManager.sendCommand("move:${this.gripperId},close;")
-        delay(DELAY_BETWEEN_COMMANDS)
-    }
-
-    private suspend fun Hand.rotate(clockwise: Boolean) {
-        bluetoothManager.sendCommand("move:${this.handId},${if (clockwise) "cw" else "cw'"};")
-        delay(DELAY_BETWEEN_COMMANDS)
+        handActionManager.closeLeftHand()
     }
 }
 

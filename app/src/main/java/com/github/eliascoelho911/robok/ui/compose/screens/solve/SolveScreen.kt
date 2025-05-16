@@ -11,36 +11,45 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.SettingsRemote
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.github.eliascoelho911.robok.R
 import com.github.eliascoelho911.robok.robot.Robot
 import com.github.eliascoelho911.robok.robot.bluetooth.RobotBluetoothManager
 import com.github.eliascoelho911.robok.robot.bluetooth.RobotBluetoothManager.ConnectionState
-import com.github.eliascoelho911.robok.rubikcube.BackFace
-import com.github.eliascoelho911.robok.rubikcube.Cell
-import com.github.eliascoelho911.robok.rubikcube.DownFace
-import com.github.eliascoelho911.robok.rubikcube.FrontFace
-import com.github.eliascoelho911.robok.rubikcube.LeftFace
-import com.github.eliascoelho911.robok.rubikcube.RightFace
-import com.github.eliascoelho911.robok.rubikcube.RubikCube
 import com.github.eliascoelho911.robok.rubikcube.RubikCubeSolver
-import com.github.eliascoelho911.robok.rubikcube.UpFace
+import com.github.eliascoelho911.robok.rubikcube.createRubikCubeStub
+import com.github.eliascoelho911.robok.ui.compose.components.RobotManualControlSheet
 import com.github.eliascoelho911.robok.ui.compose.components.RobotSetupAssistant
 import com.github.eliascoelho911.robok.ui.compose.components.RobotStatus
 import com.github.eliascoelho911.robok.ui.compose.components.SolvePlayer
 import com.github.eliascoelho911.robok.ui.compose.theme.AppTheme
+import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SolveScreen(
     viewModel: SolveViewModel,
@@ -48,6 +57,10 @@ fun SolveScreen(
 ) {
     val state by viewModel.state.collectAsState()
     val connectionState by viewModel.connectionState.collectAsStateWithLifecycle(ConnectionState.DISCONNECTED)
+    val coroutineScope = rememberCoroutineScope()
+
+    var showBottomSheet by remember { mutableStateOf(false) }
+    val modalBottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     val isSolved =
         state.currentMoveIndex >= state.rubikCubeMoves.size - 1 && state.rubikCubeMoves.isNotEmpty()
@@ -60,8 +73,7 @@ fun SolveScreen(
     }
 
     Scaffold(
-        modifier = modifier
-            .fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
     ) { innerPadding ->
         Box(
             modifier = Modifier
@@ -84,6 +96,50 @@ fun SolveScreen(
                     .imePadding()
                     .padding(bottom = 16.dp)
             )
+
+            // Manual control FAB
+            if (connectionState == ConnectionState.CONNECTED) {
+                FloatingActionButton(
+                    onClick = {
+                        showBottomSheet = true
+                        coroutineScope.launch {
+                            modalBottomSheetState.expand()
+                        }
+                    },
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(top = 60.dp) // Position below the connection status
+                        .size(48.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.SettingsRemote,
+                        contentDescription = stringResource(R.string.manual_control_desc)
+                    )
+                }
+            }
+
+            // Modal Bottom Sheet
+            if (showBottomSheet) {
+                ModalBottomSheet(
+                    onDismissRequest = {
+                        coroutineScope.launch {
+                            modalBottomSheetState.hide()
+                        }
+                        showBottomSheet = false
+                    },
+                    sheetState = modalBottomSheetState,
+                ) {
+                    RobotManualControlSheet(
+                        robot = viewModel.robot,
+                        onDismiss = {
+                            coroutineScope.launch {
+                                modalBottomSheetState.hide()
+                            }
+                            showBottomSheet = false
+                        }
+                    )
+                }
+            }
 
             Column(
                 modifier = Modifier.fillMaxSize(),
@@ -166,84 +222,3 @@ fun SolveScreenPreview() {
         SolveScreen(viewModel = viewModel)
     }
 }
-
-private fun createRubikCubeStub() = RubikCube(
-    upFace = UpFace(
-        cells = listOf(
-            Cell(x = 0, y = 0, color = -1320180),
-            Cell(x = 1, y = 0, color = -3796710),
-            Cell(x = 2, y = 0, color = -33758),
-            Cell(x = 0, y = 1, color = -16747558),
-            Cell(x = 1, y = 1, color = -4666656),
-            Cell(x = 2, y = 1, color = -33758),
-            Cell(x = 0, y = 2, color = -1320180),
-            Cell(x = 1, y = 2, color = -3796710),
-            Cell(x = 2, y = 2, color = -4666656)
-        )
-    ),
-    frontFace = FrontFace(
-        cells = listOf(
-            Cell(x = 0, y = 0, color = -33758),
-            Cell(x = 1, y = 0, color = -1320180),
-            Cell(x = 2, y = 0, color = -3796710),
-            Cell(x = 0, y = 1, color = -4666656),
-            Cell(x = 1, y = 1, color = -33758),
-            Cell(x = 2, y = 1, color = -4666656),
-            Cell(x = 0, y = 2, color = -4666656),
-            Cell(x = 1, y = 2, color = -33758),
-            Cell(x = 2, y = 2, color = -3796710)
-        )
-    ),
-    rightFace = RightFace(
-        cells = listOf(
-            Cell(x = 0, y = 0, color = -16747558),
-            Cell(x = 1, y = 0, color = -9374135),
-            Cell(x = 2, y = 0, color = -9374135),
-            Cell(x = 0, y = 1, color = -33758),
-            Cell(x = 1, y = 1, color = -9374135),
-            Cell(x = 2, y = 1, color = -9374135),
-            Cell(x = 0, y = 2, color = -16747558),
-            Cell(x = 1, y = 2, color = -9374135),
-            Cell(x = 2, y = 2, color = -9374135)
-        )
-    ),
-    backFace = BackFace(
-        cells = listOf(
-            Cell(x = 0, y = 0, color = -4666656),
-            Cell(x = 1, y = 0, color = -4666656),
-            Cell(x = 2, y = 0, color = -3796710),
-            Cell(x = 0, y = 1, color = -4666656),
-            Cell(x = 1, y = 1, color = -3796710),
-            Cell(x = 2, y = 1, color = -1320180),
-            Cell(x = 0, y = 2, color = -4666656),
-            Cell(x = 1, y = 2, color = -1320180),
-            Cell(x = 2, y = 2, color = -1320180)
-        )
-    ),
-    leftFace = LeftFace(
-        cells = listOf(
-            Cell(x = 0, y = 0, color = -9374135),
-            Cell(x = 1, y = 0, color = -3796710),
-            Cell(x = 2, y = 0, color = -9374135),
-            Cell(x = 0, y = 1, color = -16747558),
-            Cell(x = 1, y = 1, color = -16747558),
-            Cell(x = 2, y = 1, color = -16747558),
-            Cell(x = 0, y = 2, color = -16747558),
-            Cell(x = 1, y = 2, color = -16747558),
-            Cell(x = 2, y = 2, color = -16747558)
-        )
-    ),
-    downFace = DownFace(
-        cells = listOf(
-            Cell(x = 0, y = 0, color = -33758),
-            Cell(x = 1, y = 0, color = -1320180),
-            Cell(x = 2, y = 0, color = -1320180),
-            Cell(x = 0, y = 1, color = -33758),
-            Cell(x = 1, y = 1, color = -1320180),
-            Cell(x = 2, y = 1, color = -3796710),
-            Cell(x = 0, y = 2, color = -33758),
-            Cell(x = 1, y = 2, color = -9374135),
-            Cell(x = 2, y = 2, color = -3796710)
-        )
-    )
-)

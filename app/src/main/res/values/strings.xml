@@ -49,4 +49,16 @@
     <string name="robot_setup_connect_action">Conectar</string>
     <string name="robot_setup_complete">Configuração completa!\nAgora você pode controlar o robô usando o player abaixo.</string>
     <string name="robot_setup_restart">Reiniciar configuração</string>
+
+    <!-- Controle manual do robô -->
+    <string name="manual_control_title">Controle Manual do Robô</string>
+    <string name="manual_control_desc">Controle manualmente as mãos do robô</string>
+    <string name="left_hand">Mão Esquerda</string>
+    <string name="right_hand">Mão Direita</string>
+    <string name="open">Abrir</string>
+    <string name="close">Fechar</string>
+    <string name="rotate_cw">Girar Horário</string>
+    <string name="rotate_ccw">Girar Anti-horário</string>
+    <string name="rotate_middle">Girar Meio</string>
+    <string name="close_controls">Fechar Controles</string>
 </resources>

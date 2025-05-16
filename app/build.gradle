@@ -84,6 +84,7 @@ dependencies {
 
     // Google Fonts
     implementation 'androidx.compose.ui:ui-text-google-fonts'
+    implementation 'androidx.compose.material:material-icons-extended'
 
     // Koin for Dependency Injection
     implementation "io.insert-koin:koin-core:$koin_version"
