@@ -32,7 +32,7 @@ val rubikCubeModule = module {
  * View models module for all app's ViewModels
  */
 val viewModelModule = module {
-    viewModel { (robot: Robot) -> SolveViewModel(robot) }
+    viewModel { (robot: Robot) -> SolveViewModel(robot, get()) }
 }
 
 /**

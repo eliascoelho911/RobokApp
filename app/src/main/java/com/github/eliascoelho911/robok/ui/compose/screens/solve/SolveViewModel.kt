@@ -4,19 +4,30 @@ import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.eliascoelho911.robok.robot.Robot
+import com.github.eliascoelho911.robok.robot.bluetooth.RobotBluetoothManager.ConnectionState
 import com.github.eliascoelho911.robok.rubikcube.RubikCube
 import com.github.eliascoelho911.robok.rubikcube.RubikCubeMoves
+import com.github.eliascoelho911.robok.rubikcube.RubikCubeSolver
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class SolveViewModel(
-    private val robot: Robot
+    val robot: Robot,
+    val rubikCubeSolver: RubikCubeSolver
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<SolveState>(SolveState.Empty)
     val state = _state.asStateFlow()
+
+    val connectionState = robot.bluetoothManager.connectionState
+    val cube = robot.cube
+
+    init {
+        attemptToConnectToRobot()
+        solveCubeAndUpdateMovements()
+    }
 
     fun onNext() {
         val nextMovement = state.value.nextMovement
@@ -30,7 +41,37 @@ class SolveViewModel(
         runMove(previousMovement, state.value.previousMovementIndex)
     }
 
+    fun attemptToConnectToRobot() {
+        viewModelScope.launch {
+            robot.bluetoothManager.connect()
+            // TODO Dar feedbacks para o usuário (conectando, pedir para ligar o bluetooth, etc)
+        }
+    }
+
+    fun disconnectFromRobot() {
+        robot.bluetoothManager.disconnect()
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        disconnectFromRobot()
+    }
+
+    private fun solveCubeAndUpdateMovements() {
+        viewModelScope.launch {
+            val movements = rubikCubeSolver.solve(cube)
+
+            _state.update {
+                it.copy(rubikCubeMoves = movements, currentMoveIndex = 0)
+            }
+        }
+    }
+
     private fun runMove(move: RubikCube.Movement, newIndex: Int) {
+        if (connectionState.value != ConnectionState.CONNECTED) {
+            return
+        }
+
         viewModelScope.launch {
             robot.runMovement(move)
         }

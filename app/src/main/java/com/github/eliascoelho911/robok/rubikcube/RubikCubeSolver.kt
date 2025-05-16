@@ -13,6 +13,9 @@ class RubikCubeSolver {
         withContext(Dispatchers.Default) {
             val model = modelParser.parse(rubikCube)
             Search().solution(model, 21, 100000000, 10000, 0)
-                .replace("  ", " ").split(" ").filterNot { it.isBlank() }
+                .replace("  ", " ")
+                .split(" ")
+                .filterNot { it.isBlank() }
+                .map { RubikCube.Movement.fromNotation(it)!! }
         }
 }

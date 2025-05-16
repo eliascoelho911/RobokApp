@@ -103,6 +103,16 @@ data class RubikCube(
             override val isClockwise = false
             override val notation = "B'"
         }
+
+        companion object {
+            fun fromNotation(notation: String): Movement? {
+                val movements = listOf(
+                    U, UReverse, R, RReverse, F, FReverse, D, DReverse, L, LReverse, B, BReverse
+                )
+
+                return movements.find { it.notation == notation }
+            }
+        }
     }
 }
 

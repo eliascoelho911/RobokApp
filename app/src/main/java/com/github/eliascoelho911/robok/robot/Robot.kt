@@ -22,9 +22,9 @@ import kotlin.math.abs
 
 class Robot(
     val cube: RubikCube,
-    val leftHand: LeftHand,
-    val rightHand: RightHand,
-    private val bluetoothManager: RobotBluetoothManager
+    val bluetoothManager: RobotBluetoothManager,
+    val leftHand: LeftHand = LeftHand,
+    val rightHand: RightHand = RightHand,
 ) {
     var facePointingToRightHand: CompatibleWithRightHand = cube.rightFace
     var facePointingToLeftHand: CompatibleWithLeftHand = cube.downFace
@@ -44,6 +44,14 @@ class Robot(
                         }
                     )
                 }
+            }
+        }.isSuccess
+    }
+
+    suspend fun receiveCube(): Boolean {
+        return runCatching {
+            withContext(Dispatchers.IO) {
+                bluetoothManager.sendCommand("receive:0;")
             }
         }.isSuccess
     }
@@ -101,7 +109,7 @@ class Robot(
 
         if (steps == 0) return
 
-        rotateRightHand(steps)
+        rotateCubeWithRightHand(steps)
 
         facePointingToLeftHand = face
     }
@@ -147,12 +155,12 @@ class Robot(
 
         if (steps == 0) return
 
-        rotateLeftHand(steps)
+        rotateCubeWithLeftHand(steps)
 
         facePointingToRightHand = face
     }
 
-    private suspend fun rotateLeftHand(steps: Int) {
+    private suspend fun rotateCubeWithLeftHand(steps: Int) {
         rightHand.open()
 
         repeat(abs(steps)) {
@@ -162,7 +170,7 @@ class Robot(
         rightHand.close()
     }
 
-    private suspend fun rotateRightHand(steps: Int) {
+    private suspend fun rotateCubeWithRightHand(steps: Int) {
         leftHand.open()
 
         repeat(abs(steps)) {
