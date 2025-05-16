@@ -40,4 +40,13 @@
     <string name="play">Continuar</string>
     <string name="previous_move">Movimento anterior</string>
     <string name="move">Movimento</string>
+    <string name="insert_cube_title">Para começar, primeiro\nInsira o cubo no robô</string>
+    <string name="insert_cube_action">Inserir Cubo</string>
+    <string name="cube_insertion_failed">Falha ao inserir o cubo. Tente novamente.</string>
+    <string name="robot_setup_title">Assistente de configuração do robô</string>
+    <string name="robot_setup_step1">1. Conectar ao robô</string>
+    <string name="robot_setup_step2">2. Inserir o cubo no robô</string>
+    <string name="robot_setup_connect_action">Conectar</string>
+    <string name="robot_setup_complete">Configuração completa!\nAgora você pode controlar o robô usando o player abaixo.</string>
+    <string name="robot_setup_restart">Reiniciar configuração</string>
 </resources>

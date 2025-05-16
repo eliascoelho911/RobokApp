@@ -61,6 +61,7 @@ fun SolvePlayer(
     totalMoves: Int,
     isPlaying: Boolean,
     isSolved: Boolean = false,
+    isEnabled: Boolean = true,
     onPreviousClick: () -> Unit,
     onNextClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -191,7 +192,7 @@ fun SolvePlayer(
                 FilledIconButton(
                     onClick = onPreviousClick,
                     modifier = Modifier.size(56.dp),
-                    enabled = currentMoveIndex > 0,
+                    enabled = currentMoveIndex > 0 && isEnabled,
                     colors = IconButtonDefaults.filledIconButtonColors(
                         containerColor = MaterialTheme.colorScheme.surfaceVariant,
                         contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -212,7 +213,7 @@ fun SolvePlayer(
                 FilledIconButton(
                     onClick = onNextClick,
                     modifier = Modifier.size(56.dp),
-                    enabled = currentMoveIndex < totalMoves - 1 && !isSolved,
+                    enabled = currentMoveIndex < totalMoves - 1 && !isSolved && isEnabled,
                     colors = IconButtonDefaults.filledIconButtonColors(
                         containerColor = MaterialTheme.colorScheme.surfaceVariant,
                         contentColor = MaterialTheme.colorScheme.onSurfaceVariant,

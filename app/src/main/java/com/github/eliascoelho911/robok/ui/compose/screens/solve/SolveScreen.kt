@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
@@ -34,6 +35,7 @@ import com.github.eliascoelho911.robok.rubikcube.RightFace
 import com.github.eliascoelho911.robok.rubikcube.RubikCube
 import com.github.eliascoelho911.robok.rubikcube.RubikCubeSolver
 import com.github.eliascoelho911.robok.rubikcube.UpFace
+import com.github.eliascoelho911.robok.ui.compose.components.RobotSetupAssistant
 import com.github.eliascoelho911.robok.ui.compose.components.RobotStatus
 import com.github.eliascoelho911.robok.ui.compose.components.SolvePlayer
 import com.github.eliascoelho911.robok.ui.compose.theme.AppTheme
@@ -91,12 +93,35 @@ fun SolveScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
+                RobotSetupAssistant(
+                    connectionState = connectionState,
+                    cubeReceived = state.cubeReceived,
+                    onConnectClick = {
+                        if (connectionState == ConnectionState.CONNECTED) {
+                            viewModel.disconnectFromRobot()
+                        } else {
+                            viewModel.attemptToConnectToRobot()
+                        }
+                    },
+                    onInsertCubeClick = {
+                        viewModel.receiveCube()
+                    },
+                    onRestartClick = {
+                        viewModel.resetSetup()
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
                 SolvePlayer(
                     currentMove = getCurrentMoveNotation(state),
                     currentMoveIndex = state.currentMoveIndex,
                     totalMoves = state.rubikCubeMoves.size,
                     isPlaying = false,
                     isSolved = isSolved,
+                    isEnabled = state.cubeReceived,
                     onPreviousClick = { viewModel.onPrevious() },
                     onNextClick = { viewModel.onNext() },
                     modifier = Modifier

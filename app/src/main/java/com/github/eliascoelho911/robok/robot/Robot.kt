@@ -191,7 +191,7 @@ class Robot(
     }
 
     private suspend fun Hand.rotate(clockwise: Boolean) {
-        bluetoothManager.sendCommand("move:${this.handId},${if (clockwise) "cw" else "ccw"};")
+        bluetoothManager.sendCommand("move:${this.handId},${if (clockwise) "cw" else "cw'"};")
         delay(DELAY_BETWEEN_COMMANDS)
     }
 }

@@ -52,6 +52,23 @@ class SolveViewModel(
         robot.bluetoothManager.disconnect()
     }
 
+    fun receiveCube() {
+        if (connectionState.value != ConnectionState.CONNECTED) {
+            return
+        }
+
+        viewModelScope.launch {
+            val success = robot.receiveCube()
+            if (success) {
+                _state.update { it.copy(cubeReceived = true) }
+            }
+        }
+    }
+
+    fun resetSetup() {
+        _state.update { it.copy(cubeReceived = false) }
+    }
+
     override fun onCleared() {
         super.onCleared()
         disconnectFromRobot()
@@ -86,6 +103,7 @@ class SolveViewModel(
 data class SolveState(
     val rubikCubeMoves: RubikCubeMoves,
     val currentMoveIndex: Int = 0,
+    val cubeReceived: Boolean = false,
 ) {
     val nextMovement: RubikCube.Movement
         get() = rubikCubeMoves[nextMovementIndex]
