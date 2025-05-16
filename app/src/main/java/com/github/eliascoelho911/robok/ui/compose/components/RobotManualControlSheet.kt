@@ -73,7 +73,7 @@ fun RobotManualControlSheet(
                     coroutineScope = coroutineScope,
                     updateProgressState = { inProgress -> isOperationInProgress = inProgress }
                 ) {
-                    robot.handActionManager.rotateLeftHand(clockwise = true)
+                    robot.handActionManager.rotateLeftHand(clockwise = true, isAuto = false)
                 }
             },
             onRotateToMiddleClick = {
@@ -81,7 +81,7 @@ fun RobotManualControlSheet(
                     coroutineScope = coroutineScope,
                     updateProgressState = { inProgress -> isOperationInProgress = inProgress }
                 ) {
-                    robot.handActionManager.rotateLeftHand(HandRotation.Middle)
+                    robot.handActionManager.rotateLeftHand(HandRotation.Middle, isAuto = false)
                 }
             },
             onRotateCounterClockwiseClick = {
@@ -89,7 +89,7 @@ fun RobotManualControlSheet(
                     coroutineScope = coroutineScope,
                     updateProgressState = { inProgress -> isOperationInProgress = inProgress }
                 ) {
-                    robot.handActionManager.rotateLeftHand(clockwise = false)
+                    robot.handActionManager.rotateLeftHand(clockwise = false, isAuto = false)
                 }
             }
         )
@@ -119,7 +119,7 @@ fun RobotManualControlSheet(
                     coroutineScope = coroutineScope,
                     updateProgressState = { inProgress -> isOperationInProgress = inProgress }
                 ) {
-                    robot.handActionManager.rotateRightHand(clockwise = true)
+                    robot.handActionManager.rotateRightHand(clockwise = true, isAuto = false)
                 }
             },
             onRotateToMiddleClick = {
@@ -127,7 +127,7 @@ fun RobotManualControlSheet(
                     coroutineScope = coroutineScope,
                     updateProgressState = { inProgress -> isOperationInProgress = inProgress }
                 ) {
-                    robot.handActionManager.rotateRightHand(HandRotation.Middle)
+                    robot.handActionManager.rotateRightHand(HandRotation.Middle, isAuto = false)
                 }
             },
             onRotateCounterClockwiseClick = {
@@ -135,7 +135,7 @@ fun RobotManualControlSheet(
                     coroutineScope = coroutineScope,
                     updateProgressState = { inProgress -> isOperationInProgress = inProgress }
                 ) {
-                    robot.handActionManager.rotateRightHand(clockwise = false)
+                    robot.handActionManager.rotateRightHand(clockwise = false, isAuto = false)
                 }
             }
         )

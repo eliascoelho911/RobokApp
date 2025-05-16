@@ -8,11 +8,15 @@ import android.content.Context
 import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.withContext
 import java.io.IOException
 import java.util.UUID
+import kotlin.system.measureTimeMillis
+
+private const val DELAY_BETWEEN_COMMANDS = 2000L
 
 /**
  * Implementation of RobotBluetoothConnectionManager that uses Android's Bluetooth API
@@ -115,20 +119,38 @@ class RobotBluetoothManagerImpl(private val context: Context) : RobotBluetoothMa
         }
     }
 
-    override suspend fun sendCommand(command: String): Boolean = withContext(Dispatchers.IO) {
-        if (bluetoothSocket?.isConnected != true) {
-            return@withContext false
-        }
+    override suspend fun sendCommand(command: String, awaitFinished: Boolean): Boolean =
+        withContext(Dispatchers.IO) {
+            if (bluetoothSocket?.isConnected != true) {
+                return@withContext false
+            }
 
-        try {
-            val outputStream = bluetoothSocket?.outputStream
-            outputStream?.write(command.toByteArray())
-            outputStream?.flush()
-            return@withContext true
-        } catch (e: IOException) {
-            _connectionState.value = RobotBluetoothManager.ConnectionState.ERROR
-            disconnect()
-            return@withContext false
+            operationWithExactDuration(if (awaitFinished) DELAY_BETWEEN_COMMANDS else 0) {
+                try {
+                    val outputStream = bluetoothSocket?.outputStream
+                    outputStream?.write(command.toByteArray())
+                    outputStream?.flush()
+                    return@operationWithExactDuration true
+                } catch (e: IOException) {
+                    _connectionState.value = RobotBluetoothManager.ConnectionState.ERROR
+                    disconnect()
+                    return@operationWithExactDuration false
+                }
+            }
         }
+}
+
+private suspend fun <T> operationWithExactDuration(durationMs: Long, doWork: suspend () -> T): T {
+    var returns: T? = null
+
+    val elapsedTime = measureTimeMillis {
+        returns = doWork()
     }
+
+    val remainingTime = durationMs - elapsedTime
+    if (remainingTime > 0) {
+        delay(remainingTime)
+    }
+
+    return returns!!
 }

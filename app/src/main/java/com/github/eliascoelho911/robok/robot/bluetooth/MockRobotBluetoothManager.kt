@@ -55,7 +55,10 @@ class MockRobotBluetoothManager : RobotBluetoothManager {
         }
     }
 
-    override suspend fun sendCommand(command: String): Boolean {
+    override suspend fun sendCommand(
+        command: String,
+        awaitFinished: Boolean
+    ): Boolean {
         // Only accept commands if connected
         if (_connectionState.value != RobotBluetoothManager.ConnectionState.CONNECTED) {
             return false

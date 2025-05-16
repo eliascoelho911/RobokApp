@@ -1,5 +1,6 @@
 package com.github.eliascoelho911.robok.robot
 
+import android.util.Log
 import com.github.eliascoelho911.robok.robot.bluetooth.RobotBluetoothManager
 import com.github.eliascoelho911.robok.rubikcube.BackFace
 import com.github.eliascoelho911.robok.rubikcube.CompatibleWithLeftHand
@@ -24,51 +25,105 @@ class Robot(
     val leftHand: LeftHand = LeftHand,
     val rightHand: RightHand = RightHand,
 ) {
+    companion object {
+        private const val TAG = "RobokRobot"
+    }
+    
     var facePointingToRightHand: CompatibleWithRightHand = cube.rightFace
     var facePointingToLeftHand: CompatibleWithLeftHand = cube.downFace
 
     val handActionManager by lazy { HandActionManager(leftHand, rightHand, bluetoothManager) }
 
     suspend fun runMovement(movement: RubikCube.Movement): Boolean {
+        Log.i(
+            TAG,
+            "Executando movimento: ${movement.notation} (clockwise: ${movement.isClockwise})"
+        )
         return runCatching {
             withContext(Dispatchers.IO) {
                 val face = movement.faceMovedByMovement(cube)
+                Log.i(TAG, "Face a ser movida: ${face.javaClass.simpleName}")
+                
                 if (rotateCubeToMoveFace(face)) {
+                    Log.i(TAG, "Cubo rotacionado com sucesso para mover a face")
                     handleFace(
                         face,
                         onCompatibleWithLeftHand = {
+                            Log.i(
+                                TAG,
+                                "Rotacionando mão esquerda (clockwise: ${movement.isClockwise})"
+                            )
                             handActionManager.rotateLeftHand(clockwise = movement.isClockwise)
                         },
                         onCompatibleWithRightHand = {
+                            Log.i(
+                                TAG,
+                                "Rotacionando mão direita (clockwise: ${movement.isClockwise})"
+                            )
                             handActionManager.rotateRightHand(clockwise = movement.isClockwise)
                         }
                     )
+                } else {
+                    Log.e(TAG, "Falha ao rotacionar o cubo para mover a face")
                 }
             }
+        }.also { result ->
+            Log.i(
+                TAG,
+                "Movimento ${movement.notation} ${if (result.isSuccess) "executado com sucesso" else "falhou"}"
+            )
         }.isSuccess
     }
 
     suspend fun receiveCube(): Boolean {
+        Log.i(TAG, "Recebendo cubo...")
         return runCatching {
             withContext(Dispatchers.IO) {
                 bluetoothManager.sendCommand("receive:0;")
+                Log.i(TAG, "Comando para receber cubo enviado")
+            }
+        }.also { result ->
+            if (result.isSuccess) {
+                Log.i(TAG, "Cubo recebido com sucesso")
+            } else {
+                Log.e(TAG, "Falha ao receber cubo", result.exceptionOrNull())
             }
         }.isSuccess
     }
 
     private suspend fun rotateCubeToMoveFace(face: Face): Boolean {
+        Log.i(TAG, "Rotacionando cubo para mover a face: ${face.javaClass.simpleName}")
         return runCatching {
             withContext(Dispatchers.IO) {
                 handleFace(
                     face,
-                    onCompatibleWithLeftHand = { pointFaceToLeftHand(it) },
-                    onCompatibleWithRightHand = { pointFaceToRightHand(it) }
+                    onCompatibleWithLeftHand = {
+                        Log.i(
+                            TAG,
+                            "Posicionando face ${it.javaClass.simpleName} para a mão esquerda"
+                        )
+                        pointFaceToLeftHand(it)
+                    },
+                    onCompatibleWithRightHand = {
+                        Log.i(
+                            TAG,
+                            "Posicionando face ${it.javaClass.simpleName} para a mão direita"
+                        )
+                        pointFaceToRightHand(it)
+                    }
                 )
+            }
+        }.also { result ->
+            if (result.isFailure) {
+                Log.e(TAG, "Falha ao rotacionar cubo", result.exceptionOrNull())
             }
         }.isSuccess
     }
 
     private suspend fun pointFaceToLeftHand(face: CompatibleWithLeftHand) {
+        Log.i(TAG, "Posicionando face para mão esquerda: ${face.javaClass.simpleName}")
+        Log.i(TAG, "Face atual na mão esquerda: ${facePointingToLeftHand.javaClass.simpleName}")
+        
         val steps = when (face) {
             is BackFace -> {
                 when (facePointingToLeftHand) {
@@ -107,14 +162,21 @@ class Robot(
             }
         }
 
-        if (steps == 0) return
+        if (steps == 0) {
+            Log.i(TAG, "Não é necessário rotacionar, face já está na posição correta")
+            return
+        }
 
         rotateCubeWithRightHand(steps)
 
+        Log.i(TAG, "Face ${face.javaClass.simpleName} posicionada para mão esquerda")
         facePointingToLeftHand = face
     }
 
     private suspend fun pointFaceToRightHand(face: CompatibleWithRightHand) {
+        Log.i(TAG, "Posicionando face para mão direita: ${face.javaClass.simpleName}")
+        Log.i(TAG, "Face atual na mão direita: ${facePointingToRightHand.javaClass.simpleName}")
+        
         val steps = when (face) {
             is BackFace -> {
                 when (facePointingToRightHand) {
@@ -153,41 +215,54 @@ class Robot(
             }
         }
 
-        if (steps == 0) return
+        if (steps == 0) {
+            Log.i(TAG, "Não é necessário rotacionar, face já está na posição correta")
+            return
+        }
 
         rotateCubeWithLeftHand(steps)
 
+        Log.i(TAG, "Face ${face.javaClass.simpleName} posicionada para mão direita")
         facePointingToRightHand = face
     }
 
     private suspend fun rotateCubeWithLeftHand(steps: Int) {
-        handActionManager.openRightHand()
+        Log.i(TAG, "Rotacionando cubo com mão esquerda, passos: $steps")
 
-        repeat(abs(steps)) {
-            handActionManager.rotateLeftHand(clockwise = steps > 0)
-        }
+        handActionManager.rotateLeftHand(clockwise = steps > 0, amount = abs(steps))
 
-        handActionManager.closeRightHand()
+        Log.i(TAG, "Rotação do cubo com mão esquerda completada")
     }
 
     private suspend fun rotateCubeWithRightHand(steps: Int) {
-        handActionManager.openLeftHand()
+        Log.i(TAG, "Rotacionando cubo com mão direita, passos: $steps")
 
-        repeat(abs(steps)) {
-            handActionManager.rotateRightHand(clockwise = steps > 0)
-        }
+        handActionManager.rotateRightHand(clockwise = steps > 0, amount = abs(steps))
 
-        handActionManager.closeLeftHand()
+        Log.i(TAG, "Rotação do cubo com mão direita completada")
     }
-}
 
-private suspend fun handleFace(
-    face: Face,
-    onCompatibleWithLeftHand: suspend (CompatibleWithLeftHand) -> Unit,
-    onCompatibleWithRightHand: suspend (CompatibleWithRightHand) -> Unit
-) {
-    when (face) {
-        is CompatibleWithLeftHand -> onCompatibleWithLeftHand(face)
-        is CompatibleWithRightHand -> onCompatibleWithRightHand(face)
+    private suspend fun handleFace(
+        face: Face,
+        onCompatibleWithLeftHand: suspend (CompatibleWithLeftHand) -> Unit,
+        onCompatibleWithRightHand: suspend (CompatibleWithRightHand) -> Unit
+    ) {
+        Log.i(TAG, "Manipulando face: ${face.javaClass.simpleName}")
+        when (face) {
+            is CompatibleWithLeftHand -> {
+                Log.i(TAG, "Face compatível com mão esquerda")
+                onCompatibleWithLeftHand(face)
+            }
+
+            is CompatibleWithRightHand -> {
+                Log.i(TAG, "Face compatível com mão direita")
+                onCompatibleWithRightHand(face)
+            }
+
+            else -> {
+                Log.e(TAG, "Tipo de face não suportado: ${face.javaClass.simpleName}")
+            }
+        }
+        Log.i(TAG, "Manipulação de face concluída")
     }
 }

@@ -38,7 +38,7 @@ interface RobotBluetoothManager {
      * @param command The command to send
      * @return true if command was sent successfully, false otherwise
      */
-    suspend fun sendCommand(command: String): Boolean
+    suspend fun sendCommand(command: String, awaitFinished: Boolean = true): Boolean
 
     /**
      * Possible states of the Bluetooth connection
