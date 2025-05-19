@@ -79,7 +79,7 @@ class SolveViewModel(
             val movements = rubikCubeSolver.solve(cube)
 
             _state.update {
-                it.copy(rubikCubeMoves = movements, currentMoveIndex = 0)
+                it.copy(rubikCubeMoves = movements, currentMoveIndex = -1)
             }
         }
     }
@@ -102,7 +102,7 @@ class SolveViewModel(
 @Immutable
 data class SolveState(
     val rubikCubeMoves: RubikCubeMoves,
-    val currentMoveIndex: Int = 0,
+    val currentMoveIndex: Int = -1,
     val cubeReceived: Boolean = false,
 ) {
     val nextMovement: RubikCube.Movement

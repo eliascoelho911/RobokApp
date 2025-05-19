@@ -40,6 +40,7 @@
     <string name="play">Continuar</string>
     <string name="previous_move">Movimento anterior</string>
     <string name="move">Movimento</string>
+    <string name="move_count">Total de movimentos</string>
     <string name="insert_cube_title">Para começar, primeiro\nInsira o cubo no robô</string>
     <string name="insert_cube_action">Inserir Cubo</string>
     <string name="cube_insertion_failed">Falha ao inserir o cubo. Tente novamente.</string>

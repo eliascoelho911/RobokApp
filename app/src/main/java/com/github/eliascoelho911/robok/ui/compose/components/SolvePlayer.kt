@@ -46,6 +46,7 @@ import com.github.eliascoelho911.robok.R
  * A modern Material 3 player control for Rubik's Cube solve animations
  *
  * @param currentMove The current move being displayed
+ * @param nextMove The next move in the sequence
  * @param currentMoveIndex The index of the current move (0-based)
  * @param totalMoves Total number of moves in the sequence
  * @param isPlaying Whether the animation is currently playing (not used in controls)
@@ -57,6 +58,7 @@ import com.github.eliascoelho911.robok.R
 @Composable
 fun SolvePlayer(
     currentMove: String,
+    nextMove: String = "",
     currentMoveIndex: Int,
     totalMoves: Int,
     isPlaying: Boolean,
@@ -93,7 +95,7 @@ fun SolvePlayer(
             ) {
                 // Current move display with highlight
                 AnimatedVisibility(
-                    visible = !isSolved && currentMove.isNotEmpty(),
+                    visible = !isSolved && currentMove.isNotEmpty() && currentMoveIndex > 0,
                     enter = fadeIn(),
                     exit = fadeOut()
                 ) {
@@ -108,6 +110,29 @@ fun SolvePlayer(
                             style = MaterialTheme.typography.headlineMedium,
                             color = MaterialTheme.colorScheme.onPrimaryContainer,
                             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                        )
+                    }
+                }
+
+                AnimatedVisibility(
+                    visible = !isSolved && nextMove.isNotEmpty() && currentMoveIndex < totalMoves,
+                    enter = fadeIn(),
+                    exit = fadeOut()
+                ) {
+                    val alpha = 0.4f
+                    Card(
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer.copy(
+                                alpha = alpha
+                            )
+                        ),
+                        modifier = Modifier.padding(end = 16.dp)
+                    ) {
+                        Text(
+                            text = nextMove,
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = alpha),
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                         )
                     }
                 }
@@ -136,23 +161,41 @@ fun SolvePlayer(
 
                 // Move counter
                 val movesText = buildAnnotatedString {
-                    withStyle(
-                        style = SpanStyle(
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            fontWeight = FontWeight.Light
-                        )
-                    ) {
-                        append(stringResource(R.string.move))
-                        append(" ")
-                    }
-
-                    withStyle(
-                        style = SpanStyle(
-                            color = MaterialTheme.colorScheme.primary,
-                            fontWeight = FontWeight.Bold
-                        )
-                    ) {
-                        append("$currentMoveIndex")
+                    if (currentMoveIndex == 0) {
+                        withStyle(
+                            style = SpanStyle(
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                fontWeight = FontWeight.Light
+                            )
+                        ) {
+                            append(stringResource(R.string.move_count))
+                            append(": ")
+                        }
+                    } else {
+                        withStyle(
+                            style = SpanStyle(
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                fontWeight = FontWeight.Light
+                            )
+                        ) {
+                            append(stringResource(R.string.move))
+                            append(" ")
+                        }
+                        withStyle(
+                            style = SpanStyle(
+                                color = MaterialTheme.colorScheme.primary,
+                                fontWeight = FontWeight.Bold
+                            )
+                        ) {
+                            append("$currentMoveIndex")
+                        }
+                        withStyle(
+                            style = SpanStyle(
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        ) {
+                            append("/")
+                        }
                     }
 
                     withStyle(
@@ -160,7 +203,6 @@ fun SolvePlayer(
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     ) {
-                        append("/")
                         append("$totalMoves")
                     }
                 }
@@ -213,7 +255,7 @@ fun SolvePlayer(
                 FilledIconButton(
                     onClick = onNextClick,
                     modifier = Modifier.size(56.dp),
-                    enabled = currentMoveIndex < totalMoves - 1 && !isSolved && isEnabled,
+                    enabled = currentMoveIndex < totalMoves && !isSolved && isEnabled,
                     colors = IconButtonDefaults.filledIconButtonColors(
                         containerColor = MaterialTheme.colorScheme.surfaceVariant,
                         contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -239,6 +281,25 @@ fun RubikCubeSolvePlayerPreview_Playing() {
         SolvePlayer(
             currentMove = "R'",
             currentMoveIndex = 4,
+            nextMove = "U",
+            totalMoves = 20,
+            isPlaying = true,
+            isSolved = false,
+            onPreviousClick = {},
+            onNextClick = {},
+            modifier = Modifier.padding(16.dp)
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun RubikCubeSolvePlayerPreview_First() {
+    Surface(color = MaterialTheme.colorScheme.background) {
+        SolvePlayer(
+            currentMove = "",
+            currentMoveIndex = -1,
+            nextMove = "U",
             totalMoves = 20,
             isPlaying = true,
             isSolved = false,
@@ -290,6 +351,9 @@ class RubikCubeSolvePlayerState {
     var currentMove by mutableStateOf("")
         private set
 
+    var nextMove by mutableStateOf("")
+        private set
+
     var currentMoveIndex by mutableStateOf(0)
         private set
 
@@ -299,8 +363,9 @@ class RubikCubeSolvePlayerState {
     var isSolved by mutableStateOf(false)
         private set
 
-    fun updateMove(move: String, index: Int) {
+    fun updateMove(move: String, nextMove: String = "", index: Int) {
         currentMove = move
+        this.nextMove = nextMove
         currentMoveIndex = index
         isSolved = false
     }
@@ -311,11 +376,13 @@ class RubikCubeSolvePlayerState {
 
     fun markSolved() {
         currentMove = ""
+        nextMove = ""
         isSolved = true
     }
 
     fun reset() {
         currentMove = ""
+        nextMove = ""
         currentMoveIndex = 0
         isSolved = false
     }

@@ -67,7 +67,7 @@ fun SolveScreen(
 
     // Automatically attempt to connect when the screen is first shown
     LaunchedEffect(key1 = Unit) {
-        if (connectionState == ConnectionState.DISCONNECTED) {
+        if (connectionState !in listOf(ConnectionState.CONNECTED, ConnectionState.CONNECTING)) {
             viewModel.attemptToConnectToRobot()
         }
     }
@@ -173,7 +173,8 @@ fun SolveScreen(
 
                 SolvePlayer(
                     currentMove = getCurrentMoveNotation(state),
-                    currentMoveIndex = state.currentMoveIndex,
+                    nextMove = getNextMoveNotation(state),
+                    currentMoveIndex = state.currentMoveIndex + 1,
                     totalMoves = state.rubikCubeMoves.size,
                     isPlaying = false,
                     isSolved = isSolved,
@@ -191,10 +192,18 @@ fun SolveScreen(
  * Obtém a notação do movimento atual
  */
 private fun getCurrentMoveNotation(state: SolveState): String {
-    return if (state.rubikCubeMoves.isEmpty() || state.currentMoveIndex >= state.rubikCubeMoves.size) {
+    return if (state.rubikCubeMoves.isEmpty() || state.currentMoveIndex >= state.rubikCubeMoves.size || state.currentMoveIndex == -1) {
         ""
     } else {
         state.rubikCubeMoves[state.currentMoveIndex].notation
+    }
+}
+
+private fun getNextMoveNotation(state: SolveState): String {
+    return if (state.rubikCubeMoves.isEmpty() || state.currentMoveIndex >= state.rubikCubeMoves.size - 1) {
+        ""
+    } else {
+        state.rubikCubeMoves[state.currentMoveIndex + 1].notation
     }
 }
 
