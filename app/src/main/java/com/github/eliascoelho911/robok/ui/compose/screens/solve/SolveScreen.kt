@@ -39,7 +39,7 @@ import com.github.eliascoelho911.robok.R
 import com.github.eliascoelho911.robok.robot.Robot
 import com.github.eliascoelho911.robok.robot.bluetooth.RobotBluetoothManager
 import com.github.eliascoelho911.robok.robot.bluetooth.RobotBluetoothManager.ConnectionState
-import com.github.eliascoelho911.robok.rubikcube.RubikCubeSolver
+import com.github.eliascoelho911.robok.rubikcube.interaction.RubikCubeSolver
 import com.github.eliascoelho911.robok.rubikcube.rubikCubeStub3
 import com.github.eliascoelho911.robok.ui.compose.components.RobotManualControlSheet
 import com.github.eliascoelho911.robok.ui.compose.components.RobotSetupAssistant

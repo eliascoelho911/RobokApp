@@ -7,7 +7,7 @@ import com.github.eliascoelho911.robok.robot.Robot
 import com.github.eliascoelho911.robok.robot.bluetooth.RobotBluetoothManager.ConnectionState
 import com.github.eliascoelho911.robok.rubikcube.RubikCube
 import com.github.eliascoelho911.robok.rubikcube.RubikCubeMoves
-import com.github.eliascoelho911.robok.rubikcube.RubikCubeSolver
+import com.github.eliascoelho911.robok.rubikcube.interaction.RubikCubeSolver
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update

@@ -4,7 +4,7 @@ import com.github.eliascoelho911.robok.robot.Robot
 import com.github.eliascoelho911.robok.robot.bluetooth.MockRobotBluetoothManager
 import com.github.eliascoelho911.robok.robot.bluetooth.RobotBluetoothManager
 import com.github.eliascoelho911.robok.robot.bluetooth.RobotBluetoothManagerImpl
-import com.github.eliascoelho911.robok.rubikcube.RubikCubeSolver
+import com.github.eliascoelho911.robok.rubikcube.interaction.RubikCubeSolver
 import com.github.eliascoelho911.robok.ui.compose.screens.solve.SolveViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.qualifier.named

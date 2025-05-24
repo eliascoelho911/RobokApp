@@ -8,13 +8,11 @@ import com.github.eliascoelho911.robok.rubikcube.CompatibleWithRightHand
 import com.github.eliascoelho911.robok.rubikcube.DownFace
 import com.github.eliascoelho911.robok.rubikcube.Face
 import com.github.eliascoelho911.robok.rubikcube.FrontFace
-import com.github.eliascoelho911.robok.rubikcube.HandActionManager
 import com.github.eliascoelho911.robok.rubikcube.LeftFace
-import com.github.eliascoelho911.robok.rubikcube.LeftHand
 import com.github.eliascoelho911.robok.rubikcube.RightFace
-import com.github.eliascoelho911.robok.rubikcube.RightHand
 import com.github.eliascoelho911.robok.rubikcube.RubikCube
 import com.github.eliascoelho911.robok.rubikcube.UpFace
+import com.github.eliascoelho911.robok.rubikcube.interaction.HandActionManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlin.math.abs
@@ -61,20 +59,14 @@ class Robot(
                                 TAG,
                                 "Rotacionando mão esquerda (clockwise: ${movement.isClockwise})"
                             )
-                            handActionManager.rotateLeftHand(
-                                clockwise = movement.isClockwise,
-                                rotateCube = false
-                            )
+                            handActionManager.rotateFaceWithLeftHand(movement.isClockwise)
                         },
                         onCompatibleWithRightHand = {
                             Log.i(
                                 TAG,
                                 "Rotacionando mão direita (clockwise: ${movement.isClockwise})"
                             )
-                            handActionManager.rotateRightHand(
-                                clockwise = movement.isClockwise,
-                                rotateCube = false
-                            )
+                            handActionManager.rotateFaceWithRightHand(movement.isClockwise)
                         }
                     )
                 } else {
@@ -243,10 +235,9 @@ class Robot(
     private suspend fun rotateCubeWithLeftHand(steps: Int) {
         Log.i(TAG, "Rotacionando cubo com mão esquerda, passos: $steps")
 
-        handActionManager.rotateLeftHand(
+        handActionManager.rotateCubeWithLeftHand(
             clockwise = steps > 0,
-            amount = abs(steps),
-            rotateCube = true
+            amount = abs(steps)
         )
 
         Log.i(TAG, "Rotação do cubo com mão esquerda completada")
@@ -255,10 +246,9 @@ class Robot(
     private suspend fun rotateCubeWithRightHand(steps: Int) {
         Log.i(TAG, "Rotacionando cubo com mão direita, passos: $steps")
 
-        handActionManager.rotateRightHand(
+        handActionManager.rotateCubeWithRightHand(
             clockwise = steps > 0,
-            amount = abs(steps),
-            rotateCube = true
+            amount = abs(steps)
         )
 
         Log.i(TAG, "Rotação do cubo com mão direita completada")

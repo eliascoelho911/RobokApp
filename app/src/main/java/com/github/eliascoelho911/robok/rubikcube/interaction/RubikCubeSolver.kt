@@ -1,5 +1,8 @@
-package com.github.eliascoelho911.robok.rubikcube
+package com.github.eliascoelho911.robok.rubikcube.interaction
 
+import com.github.eliascoelho911.robok.rubikcube.Min2PhaseModelParser
+import com.github.eliascoelho911.robok.rubikcube.RubikCube
+import com.github.eliascoelho911.robok.rubikcube.RubikCubeMoves
 import cs.min2phase.Search
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

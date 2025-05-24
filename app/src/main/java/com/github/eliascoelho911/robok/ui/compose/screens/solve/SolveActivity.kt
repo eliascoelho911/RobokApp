@@ -5,10 +5,10 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import com.github.eliascoelho911.robok.robot.LeftHand
+import com.github.eliascoelho911.robok.robot.RightHand
 import com.github.eliascoelho911.robok.robot.Robot
 import com.github.eliascoelho911.robok.robot.bluetooth.RobotBluetoothManager
-import com.github.eliascoelho911.robok.rubikcube.LeftHand
-import com.github.eliascoelho911.robok.rubikcube.RightHand
 import com.github.eliascoelho911.robok.rubikcube.RubikCube
 import com.github.eliascoelho911.robok.ui.compose.theme.AppTheme
 import org.koin.android.ext.android.inject

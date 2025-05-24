@@ -37,8 +37,8 @@ import com.github.eliascoelho911.robok.rubikcube.FrontFace
 import com.github.eliascoelho911.robok.rubikcube.LeftFace
 import com.github.eliascoelho911.robok.rubikcube.RightFace
 import com.github.eliascoelho911.robok.rubikcube.RubikCube
-import com.github.eliascoelho911.robok.rubikcube.RubikCubeSolver
 import com.github.eliascoelho911.robok.rubikcube.UpFace
+import com.github.eliascoelho911.robok.rubikcube.interaction.RubikCubeSolver
 
 /**
  * Compose wrapper for the AnimCube Android library view.

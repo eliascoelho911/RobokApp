@@ -130,7 +130,6 @@ class RobotBluetoothManagerImpl(private val context: Context) : RobotBluetoothMa
             Log.d("RobotBluetoothManagerImpl", "Enviando comando ao robo: $command")
 
             if (bluetoothSocket?.isConnected != true) {
-                Log.d("RobotBluetoothManagerImpl", "Nao esta conectado ao robo")
                 return@withContext false
             }
 

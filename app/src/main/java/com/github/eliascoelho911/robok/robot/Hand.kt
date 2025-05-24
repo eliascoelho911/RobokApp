@@ -1,4 +1,4 @@
-package com.github.eliascoelho911.robok.rubikcube
+package com.github.eliascoelho911.robok.robot
 
 sealed interface Hand {
     val handId: String
