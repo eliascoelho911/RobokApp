@@ -15,13 +15,23 @@ class HandActionManager(
         closeHand(leftHand)
     }
 
-    suspend fun rotateLeftHand(clockwise: Boolean, amount: Int = 1, isAuto: Boolean = true) {
+    suspend fun rotateLeftHand(
+        clockwise: Boolean,
+        amount: Int = 1,
+        rotateCube: Boolean,
+        isAuto: Boolean = true
+    ) {
         val handRotation = if (clockwise) HandRotation.Clockwise else HandRotation.CounterClockwise
-        rotateLeftHand(handRotation, amount, isAuto)
+        rotateLeftHand(handRotation, amount, rotateCube, isAuto)
     }
 
-    suspend fun rotateLeftHand(rotation: HandRotation, amount: Int = 1, isAuto: Boolean = true) {
-        handleHandRotation(leftHand, rotation, amount, isAuto)
+    suspend fun rotateLeftHand(
+        rotation: HandRotation,
+        amount: Int = 1,
+        rotateCube: Boolean,
+        isAuto: Boolean = true
+    ) {
+        handleHandRotation(leftHand, rotation, amount, rotateCube, isAuto)
     }
 
     suspend fun openRightHand() {
@@ -32,38 +42,62 @@ class HandActionManager(
         closeHand(rightHand)
     }
 
-    suspend fun rotateRightHand(clockwise: Boolean, amount: Int = 1, isAuto: Boolean = true) {
+    suspend fun rotateRightHand(
+        clockwise: Boolean,
+        amount: Int = 1,
+        rotateCube: Boolean,
+        isAuto: Boolean = true
+    ) {
         val handRotation = if (clockwise) HandRotation.Clockwise else HandRotation.CounterClockwise
-        rotateRightHand(handRotation, amount, isAuto)
+        rotateRightHand(handRotation, amount, rotateCube, isAuto)
     }
 
-    suspend fun rotateRightHand(rotation: HandRotation, amount: Int = 1, isAuto: Boolean = true) {
-        handleHandRotation(rightHand, rotation, amount, isAuto)
+    suspend fun rotateRightHand(
+        rotation: HandRotation,
+        amount: Int = 1,
+        rotateCube: Boolean,
+        isAuto: Boolean = true
+    ) {
+        handleHandRotation(rightHand, rotation, amount, rotateCube, isAuto)
     }
 
     private suspend fun handleHandRotation(
         hand: Hand,
         rotation: HandRotation,
         amount: Int,
+        rotateCube: Boolean,
         isAuto: Boolean = true
     ) {
         repeat(amount) {
-            rotateHand(hand, rotation, isAuto)
+            rotateHand(hand, rotation, rotateCube, isAuto)
         }
     }
 
-    private suspend fun rotateHand(hand: Hand, rotation: HandRotation, isAuto: Boolean = true) {
+    private suspend fun rotateHand(
+        hand: Hand,
+        rotation: HandRotation,
+        rotateCube: Boolean,
+        isAuto: Boolean = true
+    ) {
         if (isAuto) {
             val otherHand = getOtherHand(hand)
 
             closeHand(hand)
-            openHand(otherHand)
+
+            if (rotateCube) {
+                openHand(otherHand)
+            } else {
+                closeHand(otherHand)
+            }
 
             bluetoothManager.sendRotationCommand(hand, rotation)
-            closeHand(otherHand)
+
+            if (rotateCube) closeHand(otherHand)
             openHand(hand)
             bluetoothManager.sendRotationCommand(hand, HandRotation.Middle)
             closeHand(hand)
+            bluetoothManager.sendRotationCommand(hand, HandRotation.Middle)
+            bluetoothManager.sendRotationCommand(otherHand, HandRotation.Middle)
         } else {
             bluetoothManager.sendRotationCommand(hand, rotation)
         }

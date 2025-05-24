@@ -40,7 +40,7 @@ import com.github.eliascoelho911.robok.robot.Robot
 import com.github.eliascoelho911.robok.robot.bluetooth.RobotBluetoothManager
 import com.github.eliascoelho911.robok.robot.bluetooth.RobotBluetoothManager.ConnectionState
 import com.github.eliascoelho911.robok.rubikcube.RubikCubeSolver
-import com.github.eliascoelho911.robok.rubikcube.createRubikCubeStub
+import com.github.eliascoelho911.robok.rubikcube.rubikCubeStub3
 import com.github.eliascoelho911.robok.ui.compose.components.RobotManualControlSheet
 import com.github.eliascoelho911.robok.ui.compose.components.RobotSetupAssistant
 import com.github.eliascoelho911.robok.ui.compose.components.RobotStatus
@@ -214,7 +214,7 @@ fun SolveScreenPreview() {
     if (activity is ComponentActivity) {
         activity.enableEdgeToEdge()
     }
-    val rubikCube = remember { createRubikCubeStub() }
+    val rubikCube = remember { rubikCubeStub3 }
     val bluetoothManager = koinInject<RobotBluetoothManager>()
     val solver = koinInject<RubikCubeSolver>()
     val robot = remember(rubikCube) {

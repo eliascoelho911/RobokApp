@@ -43,7 +43,15 @@ class Robot(
             withContext(Dispatchers.IO) {
                 val face = movement.faceMovedByMovement(cube)
                 Log.i(TAG, "Face a ser movida: ${face.javaClass.simpleName}")
-                
+                Log.i(
+                    TAG,
+                    "Face apontada para a mão direita: ${facePointingToRightHand.javaClass.simpleName}"
+                )
+                Log.i(
+                    TAG,
+                    "Face apontada para a mão esquerda: ${facePointingToLeftHand.javaClass.simpleName}"
+                )
+
                 if (rotateCubeToMoveFace(face)) {
                     Log.i(TAG, "Cubo rotacionado com sucesso para mover a face")
                     handleFace(
@@ -53,14 +61,20 @@ class Robot(
                                 TAG,
                                 "Rotacionando mão esquerda (clockwise: ${movement.isClockwise})"
                             )
-                            handActionManager.rotateLeftHand(clockwise = movement.isClockwise)
+                            handActionManager.rotateLeftHand(
+                                clockwise = movement.isClockwise,
+                                rotateCube = false
+                            )
                         },
                         onCompatibleWithRightHand = {
                             Log.i(
                                 TAG,
                                 "Rotacionando mão direita (clockwise: ${movement.isClockwise})"
                             )
-                            handActionManager.rotateRightHand(clockwise = movement.isClockwise)
+                            handActionManager.rotateRightHand(
+                                clockwise = movement.isClockwise,
+                                rotateCube = false
+                            )
                         }
                     )
                 } else {
@@ -229,7 +243,11 @@ class Robot(
     private suspend fun rotateCubeWithLeftHand(steps: Int) {
         Log.i(TAG, "Rotacionando cubo com mão esquerda, passos: $steps")
 
-        handActionManager.rotateLeftHand(clockwise = steps > 0, amount = abs(steps))
+        handActionManager.rotateLeftHand(
+            clockwise = steps > 0,
+            amount = abs(steps),
+            rotateCube = true
+        )
 
         Log.i(TAG, "Rotação do cubo com mão esquerda completada")
     }
@@ -237,7 +255,11 @@ class Robot(
     private suspend fun rotateCubeWithRightHand(steps: Int) {
         Log.i(TAG, "Rotacionando cubo com mão direita, passos: $steps")
 
-        handActionManager.rotateRightHand(clockwise = steps > 0, amount = abs(steps))
+        handActionManager.rotateRightHand(
+            clockwise = steps > 0,
+            amount = abs(steps),
+            rotateCube = true
+        )
 
         Log.i(TAG, "Rotação do cubo com mão direita completada")
     }

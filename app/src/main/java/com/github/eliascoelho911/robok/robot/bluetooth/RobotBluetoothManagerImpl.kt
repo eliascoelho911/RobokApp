@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
 import android.content.Context
 import android.content.pm.PackageManager
+import android.util.Log
 import androidx.core.app.ActivityCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -38,11 +39,16 @@ class RobotBluetoothManagerImpl(private val context: Context) : RobotBluetoothMa
         private const val ROBOT_NAME_PREFIX = "HC-05" // Robot device name prefix
     }
 
-    override fun isBluetoothSupported(): Boolean = bluetoothAdapter != null
+    override fun isBluetoothSupported(): Boolean {
+        return bluetoothAdapter != null
+    }
 
-    override fun isBluetoothEnabled(): Boolean = bluetoothAdapter?.isEnabled == true
+    override fun isBluetoothEnabled(): Boolean {
+        return bluetoothAdapter?.isEnabled == true
+    }
 
     override suspend fun connect(): Boolean = withContext(Dispatchers.IO) {
+
         if (bluetoothAdapter == null) {
             _connectionState.value = RobotBluetoothManager.ConnectionState.ERROR
             return@withContext false
@@ -80,6 +86,7 @@ class RobotBluetoothManagerImpl(private val context: Context) : RobotBluetoothMa
 
     private suspend fun connectToDevice(device: BluetoothDevice): Boolean =
         withContext(Dispatchers.IO) {
+
             try {
                 if (ActivityCompat.checkSelfPermission(
                         context,
@@ -115,23 +122,29 @@ class RobotBluetoothManagerImpl(private val context: Context) : RobotBluetoothMa
             bluetoothSocket = null
             _connectionState.value = RobotBluetoothManager.ConnectionState.DISCONNECTED
         } catch (e: IOException) {
-            // Ignore close errors
         }
     }
 
     override suspend fun sendCommand(command: String, awaitFinished: Boolean): Boolean =
         withContext(Dispatchers.IO) {
+            Log.d("RobotBluetoothManagerImpl", "Enviando comando ao robo: $command")
+
             if (bluetoothSocket?.isConnected != true) {
+                Log.d("RobotBluetoothManagerImpl", "Nao esta conectado ao robo")
                 return@withContext false
             }
 
             operationWithExactDuration(if (awaitFinished) DELAY_BETWEEN_COMMANDS else 0) {
                 try {
                     val outputStream = bluetoothSocket?.outputStream
-                    outputStream?.write(command.toByteArray())
+                    outputStream?.write("$command\n".toByteArray())
                     outputStream?.flush()
                     return@operationWithExactDuration true
                 } catch (e: IOException) {
+                    Log.d(
+                        "RobotBluetoothManagerImpl",
+                        "Erro ao enviar comando ao robo: ${e.message}"
+                    )
                     _connectionState.value = RobotBluetoothManager.ConnectionState.ERROR
                     disconnect()
                     return@operationWithExactDuration false

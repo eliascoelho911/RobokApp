@@ -12,10 +12,16 @@ class RubikCubeSolver {
     private suspend fun findShorterSolutions(rubikCube: RubikCube): RubikCubeMoves =
         withContext(Dispatchers.Default) {
             val model = modelParser.parse(rubikCube)
-            Search().solution(model, 21, 100000000, 10000, 0)
-                .replace("  ", " ")
+            val solution = Search().solution(model, 21, 100000000, 10000, 0)
+            solution.replace("  ", " ")
                 .split(" ")
                 .filterNot { it.isBlank() }
+                .map {
+                    if (it.contains("2")) it.replace("2", "").let { listOf(it, it) } else listOf(
+                        it
+                    )
+                }
+                .flatten()
                 .map { RubikCube.Movement.fromNotation(it)!! }
         }
 }
