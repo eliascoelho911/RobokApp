@@ -32,6 +32,10 @@ data class RubikCube(
         abstract val isClockwise: Boolean
         abstract val notation: String
 
+        override fun toString(): String {
+            return notation
+        }
+
         object U : Movement() {
             override fun faceMovedByMovement(cube: RubikCube) = cube.upFace
             override val isClockwise = true

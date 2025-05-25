@@ -269,80 +269,80 @@ fun PreviewAnimCubeSimple() {
 private fun createRubikCubeStub() = RubikCube(
     upFace = UpFace(
         cells = listOf(
-            Cell(x = 0, y = 0, color = -2573020),
-            Cell(x = 1, y = 0, color = -2573020),
-            Cell(x = 2, y = 0, color = -5063217),
-            Cell(x = 0, y = 1, color = -2573020),
-            Cell(x = 1, y = 1, color = -5827545),
-            Cell(x = 2, y = 1, color = -5063217),
-            Cell(x = 0, y = 2, color = -5827545),
-            Cell(x = 1, y = 2, color = -5063217),
-            Cell(x = 2, y = 2, color = -5063217)
+            Cell(x = 0, y = 0, color = -4448715),
+            Cell(x = 1, y = 0, color = -6110763),
+            Cell(x = 2, y = 0, color = -3093200),
+            Cell(x = 0, y = 1, color = -6110763),
+            Cell(x = 1, y = 1, color = -6110763),
+            Cell(x = 2, y = 1, color = -6110763),
+            Cell(x = 0, y = 2, color = -4448715),
+            Cell(x = 1, y = 2, color = -6110763),
+            Cell(x = 2, y = 2, color = -956103)
         )
     ),
     frontFace = FrontFace(
         cells = listOf(
-            Cell(x = 0, y = 0, color = -2573020),
-            Cell(x = 1, y = 0, color = -5827545),
-            Cell(x = 2, y = 0, color = -369869),
-            Cell(x = 0, y = 1, color = -16554827),
-            Cell(x = 1, y = 1, color = -5063217),
-            Cell(x = 2, y = 1, color = -369869),
-            Cell(x = 0, y = 2, color = -2573020),
-            Cell(x = 1, y = 2, color = -5827545),
-            Cell(x = 2, y = 2, color = -5063217)
+            Cell(x = 0, y = 0, color = -3093200),
+            Cell(x = 1, y = 0, color = -4448715),
+            Cell(x = 2, y = 0, color = -3093200),
+            Cell(x = 0, y = 1, color = -956103),
+            Cell(x = 1, y = 1, color = -16751161),
+            Cell(x = 2, y = 1, color = -16751161),
+            Cell(x = 0, y = 2, color = -12070315),
+            Cell(x = 1, y = 2, color = -4448715),
+            Cell(x = 2, y = 2, color = -6110763)
         )
     ),
     rightFace = RightFace(
         cells = listOf(
-            Cell(x = 0, y = 0, color = -10763197),
-            Cell(x = 1, y = 0, color = -10763197),
-            Cell(x = 2, y = 0, color = -10763197),
-            Cell(x = 0, y = 1, color = -10763197),
-            Cell(x = 1, y = 1, color = -10763197),
-            Cell(x = 2, y = 1, color = -10763197),
-            Cell(x = 0, y = 2, color = -16554827),
-            Cell(x = 1, y = 2, color = -369869),
-            Cell(x = 2, y = 2, color = -16554827)
+            Cell(x = 0, y = 0, color = -12070315),
+            Cell(x = 1, y = 0, color = -956103),
+            Cell(x = 2, y = 0, color = -956103),
+            Cell(x = 0, y = 1, color = -3093200),
+            Cell(x = 1, y = 1, color = -956103),
+            Cell(x = 2, y = 1, color = -3093200),
+            Cell(x = 0, y = 2, color = -12070315),
+            Cell(x = 1, y = 2, color = -16751161),
+            Cell(x = 2, y = 2, color = -956103)
         )
     ),
     backFace = BackFace(
         cells = listOf(
-            Cell(x = 0, y = 0, color = -5827545),
-            Cell(x = 1, y = 0, color = -10763197),
-            Cell(x = 2, y = 0, color = -369869),
-            Cell(x = 0, y = 1, color = -5827545),
-            Cell(x = 1, y = 1, color = -2573020),
-            Cell(x = 2, y = 1, color = -369869),
-            Cell(x = 0, y = 2, color = -2573020),
-            Cell(x = 1, y = 2, color = -2573020),
-            Cell(x = 2, y = 2, color = -369869)
+            Cell(x = 0, y = 0, color = -16751161),
+            Cell(x = 1, y = 0, color = -12070315),
+            Cell(x = 2, y = 0, color = -3093200),
+            Cell(x = 0, y = 1, color = -12070315),
+            Cell(x = 1, y = 1, color = -12070315),
+            Cell(x = 2, y = 1, color = -12070315),
+            Cell(x = 0, y = 2, color = -16751161),
+            Cell(x = 1, y = 2, color = -12070315),
+            Cell(x = 2, y = 2, color = -16751161)
         )
     ),
     leftFace = LeftFace(
         cells = listOf(
-            Cell(x = 0, y = 0, color = -16554827),
-            Cell(x = 1, y = 0, color = -16554827),
-            Cell(x = 2, y = 0, color = -10763197),
-            Cell(x = 0, y = 1, color = -16554827),
-            Cell(x = 1, y = 1, color = -16554827),
-            Cell(x = 2, y = 1, color = -5827545),
-            Cell(x = 0, y = 2, color = -16554827),
-            Cell(x = 1, y = 2, color = -16554827),
-            Cell(x = 2, y = 2, color = -10763197)
+            Cell(x = 0, y = 0, color = -16751161),
+            Cell(x = 1, y = 0, color = -16751161),
+            Cell(x = 2, y = 0, color = -12070315),
+            Cell(x = 0, y = 1, color = -4448715),
+            Cell(x = 1, y = 1, color = -4448715),
+            Cell(x = 2, y = 1, color = -3093200),
+            Cell(x = 0, y = 2, color = -4448715),
+            Cell(x = 1, y = 2, color = -16751161),
+            Cell(x = 2, y = 2, color = -4448715)
         )
     ),
     downFace = DownFace(
         cells = listOf(
-            Cell(x = 0, y = 0, color = -369869),
-            Cell(x = 1, y = 0, color = -2573020),
-            Cell(x = 2, y = 0, color = -5827545),
-            Cell(x = 0, y = 1, color = -5063217),
-            Cell(x = 1, y = 1, color = -369869),
-            Cell(x = 2, y = 1, color = -5063217),
-            Cell(x = 0, y = 2, color = -5063217),
-            Cell(x = 1, y = 2, color = -369869),
-            Cell(x = 2, y = 2, color = -5827545)
+            Cell(x = 0, y = 0, color = -6110763),
+            Cell(x = 1, y = 0, color = -3093200),
+            Cell(x = 2, y = 0, color = -956103),
+            Cell(x = 0, y = 1, color = -4448715),
+            Cell(x = 1, y = 1, color = -3093200),
+            Cell(x = 2, y = 1, color = -956103),
+            Cell(x = 0, y = 2, color = -6110763),
+            Cell(x = 1, y = 2, color = -956103),
+            Cell(x = 2, y = 2, color = -6110763)
         )
     )
 )

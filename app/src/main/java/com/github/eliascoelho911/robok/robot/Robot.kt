@@ -152,9 +152,9 @@ class Robot(
             is FrontFace -> {
                 when (facePointingToLeftHand) {
                     is BackFace -> -2
-                    is DownFace -> 1
+                    is DownFace -> -1
                     is FrontFace -> 0
-                    is UpFace -> -1
+                    is UpFace -> 1
                 }
             }
 

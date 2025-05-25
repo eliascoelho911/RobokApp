@@ -39,12 +39,15 @@ import com.github.eliascoelho911.robok.R
 import com.github.eliascoelho911.robok.robot.Robot
 import com.github.eliascoelho911.robok.robot.bluetooth.RobotBluetoothManager
 import com.github.eliascoelho911.robok.robot.bluetooth.RobotBluetoothManager.ConnectionState
+import com.github.eliascoelho911.robok.rubikcube.AnimCubeModelParser
 import com.github.eliascoelho911.robok.rubikcube.interaction.RubikCubeSolver
 import com.github.eliascoelho911.robok.rubikcube.rubikCubeStub3
+import com.github.eliascoelho911.robok.ui.compose.components.AnimCube
 import com.github.eliascoelho911.robok.ui.compose.components.RobotManualControlSheet
 import com.github.eliascoelho911.robok.ui.compose.components.RobotSetupAssistant
 import com.github.eliascoelho911.robok.ui.compose.components.RobotStatus
 import com.github.eliascoelho911.robok.ui.compose.components.SolvePlayer
+import com.github.eliascoelho911.robok.ui.compose.components.rememberAnimCubeState
 import com.github.eliascoelho911.robok.ui.compose.theme.AppTheme
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
@@ -58,12 +61,16 @@ fun SolveScreen(
     val state by viewModel.state.collectAsState()
     val connectionState by viewModel.connectionState.collectAsStateWithLifecycle(ConnectionState.DISCONNECTED)
     val coroutineScope = rememberCoroutineScope()
+    val rubikCube = remember { viewModel.robot.cube }
 
     var showBottomSheet by remember { mutableStateOf(false) }
     val modalBottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
-    val isSolved =
+    val isSolved = remember(state.currentMoveIndex) {
         state.currentMoveIndex >= state.rubikCubeMoves.size - 1 && state.rubikCubeMoves.isNotEmpty()
+    }
+
+    val animCubeState = rememberAnimCubeState()
 
     // Automatically attempt to connect when the screen is first shown
     LaunchedEffect(key1 = Unit) {
@@ -96,6 +103,65 @@ fun SolveScreen(
                     .imePadding()
                     .padding(bottom = 16.dp)
             )
+
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                AnimCube(
+                    modifier = Modifier.weight(1f),
+                    cubeModel = remember(rubikCube) { AnimCubeModelParser().parse(rubikCube) },
+                    cubeColors = remember(rubikCube) {
+                        AnimCubeModelParser().getDistinctColorsInOrder(rubikCube)
+                            .toIntArray()
+                    },
+                    moveSequence = state.rubikCubeMoves.joinToString(" "),
+                    state = animCubeState,
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                RobotSetupAssistant(
+                    connectionState = connectionState,
+                    cubeReceived = state.cubeReceived,
+                    onConnectClick = {
+                        if (connectionState == ConnectionState.CONNECTED) {
+                            viewModel.disconnectFromRobot()
+                        } else {
+                            viewModel.attemptToConnectToRobot()
+                        }
+                    },
+                    onInsertCubeClick = {
+                        viewModel.receiveCube()
+                    },
+                    onRestartClick = {
+                        viewModel.resetSetup()
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                SolvePlayer(
+                    currentMove = getCurrentMoveNotation(state),
+                    nextMove = getNextMoveNotation(state),
+                    currentMoveIndex = state.currentMoveIndex + 1,
+                    totalMoves = state.rubikCubeMoves.size,
+                    isPlaying = false,
+                    isSolved = isSolved,
+                    isEnabled = state.cubeReceived,
+                    onPreviousClick = {
+                        viewModel.onPrevious()
+                        animCubeState.animateMoveReversed()
+                    },
+                    onNextClick = {
+                        viewModel.onNext()
+                        animCubeState.animateMove()
+                    },
+                    modifier = Modifier
+                )
+            }
 
             // Manual control FAB
             if (connectionState == ConnectionState.CONNECTED) {
@@ -139,50 +205,6 @@ fun SolveScreen(
                         }
                     )
                 }
-            }
-
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Spacer(modifier = Modifier.weight(1f))
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                RobotSetupAssistant(
-                    connectionState = connectionState,
-                    cubeReceived = state.cubeReceived,
-                    onConnectClick = {
-                        if (connectionState == ConnectionState.CONNECTED) {
-                            viewModel.disconnectFromRobot()
-                        } else {
-                            viewModel.attemptToConnectToRobot()
-                        }
-                    },
-                    onInsertCubeClick = {
-                        viewModel.receiveCube()
-                    },
-                    onRestartClick = {
-                        viewModel.resetSetup()
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                SolvePlayer(
-                    currentMove = getCurrentMoveNotation(state),
-                    nextMove = getNextMoveNotation(state),
-                    currentMoveIndex = state.currentMoveIndex + 1,
-                    totalMoves = state.rubikCubeMoves.size,
-                    isPlaying = false,
-                    isSolved = isSolved,
-                    isEnabled = state.cubeReceived,
-                    onPreviousClick = { viewModel.onPrevious() },
-                    onNextClick = { viewModel.onNext() },
-                    modifier = Modifier
-                )
             }
         }
     }

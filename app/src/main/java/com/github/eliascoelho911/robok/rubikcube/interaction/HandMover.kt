@@ -52,12 +52,11 @@ internal abstract class HandMover {
     }
 
     protected suspend fun resetToMiddle(hand: Hand, otherHand: Hand) {
-        closeHand(otherHand)
         openHand(hand)
         sendRotationCommand(hand, HandRotation.Middle, fast = true)
         closeHand(hand)
-        sendRotationCommand(hand, HandRotation.Middle, fast = true)
-        sendRotationCommand(otherHand, HandRotation.Middle, fast = true)
+//        sendRotationCommand(hand, HandRotation.Middle, fast = true)
+//        sendRotationCommand(otherHand, HandRotation.Middle, fast = true)
     }
 
     protected suspend fun sendRotationCommand(hand: Hand, rotation: HandRotation, fast: Boolean) {
@@ -92,6 +91,7 @@ internal class CubeRotator(
 
         sendRotationCommand(hand, rotation, fast = true)
 
+        closeHand(otherHand)
         resetToMiddle(hand, otherHand)
     }
 
