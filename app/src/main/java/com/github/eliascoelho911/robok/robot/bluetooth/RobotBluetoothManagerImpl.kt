@@ -17,7 +17,7 @@ import java.io.IOException
 import java.util.UUID
 import kotlin.system.measureTimeMillis
 
-private const val DELAY_BETWEEN_COMMANDS = 2000L
+private const val DELAY_BETWEEN_COMMANDS = 3000L
 
 /**
  * Implementation of RobotBluetoothConnectionManager that uses Android's Bluetooth API

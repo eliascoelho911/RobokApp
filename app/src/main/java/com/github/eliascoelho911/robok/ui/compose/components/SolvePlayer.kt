@@ -66,6 +66,7 @@ fun SolvePlayer(
     isEnabled: Boolean = true,
     onPreviousClick: () -> Unit,
     onNextClick: () -> Unit,
+    onPlayPauseClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val progress = if (totalMoves > 0) {
@@ -249,7 +250,30 @@ fun SolvePlayer(
                     )
                 }
 
-                Spacer(modifier = Modifier.width(32.dp))
+                Spacer(modifier = Modifier.width(16.dp))
+
+                // Play/Pause button
+                FilledIconButton(
+                    onClick = onPlayPauseClick,
+                    modifier = Modifier.size(64.dp),
+                    enabled = isEnabled && !isSolved,
+                    colors = IconButtonDefaults.filledIconButtonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary,
+                        disabledContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
+                        disabledContentColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.5f)
+                    )
+                ) {
+                    Icon(
+                        painter = painterResource(
+                            id = if (isPlaying) R.drawable.ic_pause_24 else R.drawable.ic_play_arrow_24
+                        ),
+                        contentDescription = if (isPlaying) "Pause" else "Play",
+                        modifier = Modifier.size(32.dp)
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(16.dp))
 
                 // Next button
                 FilledIconButton(
@@ -287,6 +311,7 @@ fun RubikCubeSolvePlayerPreview_Playing() {
             isSolved = false,
             onPreviousClick = {},
             onNextClick = {},
+            onPlayPauseClick = {},
             modifier = Modifier.padding(16.dp)
         )
     }
@@ -305,6 +330,7 @@ fun RubikCubeSolvePlayerPreview_First() {
             isSolved = false,
             onPreviousClick = {},
             onNextClick = {},
+            onPlayPauseClick = {},
             modifier = Modifier.padding(16.dp)
         )
     }
@@ -322,6 +348,7 @@ fun RubikCubeSolvePlayerPreview_Paused() {
             isSolved = false,
             onPreviousClick = {},
             onNextClick = {},
+            onPlayPauseClick = {},
             modifier = Modifier.padding(16.dp)
         )
     }
@@ -339,6 +366,7 @@ fun RubikCubeSolvePlayerPreview_Solved() {
             isSolved = true,
             onPreviousClick = {},
             onNextClick = {},
+            onPlayPauseClick = {},
             modifier = Modifier.padding(16.dp)
         )
     }

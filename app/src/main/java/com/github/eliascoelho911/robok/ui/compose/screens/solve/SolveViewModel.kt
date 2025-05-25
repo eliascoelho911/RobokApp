@@ -8,6 +8,7 @@ import com.github.eliascoelho911.robok.robot.bluetooth.RobotBluetoothManager.Con
 import com.github.eliascoelho911.robok.rubikcube.RubikCube
 import com.github.eliascoelho911.robok.rubikcube.RubikCubeMoves
 import com.github.eliascoelho911.robok.rubikcube.interaction.RubikCubeSolver
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -24,6 +25,8 @@ class SolveViewModel(
     val connectionState = robot.bluetoothManager.connectionState
     val cube = robot.cube
 
+    private var playPauseJob: Job? = null
+
     init {
         attemptToConnectToRobot()
         solveCubeAndUpdateMovements()
@@ -32,13 +35,40 @@ class SolveViewModel(
     fun onNext() {
         val nextMovement = state.value.nextMovement
 
-        runMove(nextMovement, state.value.nextMovementIndex)
+        viewModelScope.launch {
+            runMove(nextMovement, state.value.nextMovementIndex)
+        }
     }
 
     fun onPrevious() {
         val previousMovement = state.value.previousMovement
 
-        runMove(previousMovement, state.value.previousMovementIndex)
+        viewModelScope.launch {
+            runMove(previousMovement, state.value.previousMovementIndex)
+        }
+    }
+
+    fun onPlayPause() {
+        if (state.value.rubikCubeMoves.isEmpty()) {
+            return
+        }
+
+        if (playPauseJob?.isActive == true) {
+            playPauseJob?.cancel()
+            _state.update { it.copy(isPlaying = false) }
+            return
+        }
+
+        _state.update { it.copy(isPlaying = true) }
+
+        playPauseJob = viewModelScope.launch {
+            for (index in state.value.currentMoveIndex until state.value.rubikCubeMoves.size) {
+                val nextMovement = state.value.nextMovement
+
+                runMove(nextMovement, state.value.nextMovementIndex)
+            }
+            _state.update { it.copy(isPlaying = false) }
+        }
     }
 
     fun attemptToConnectToRobot() {
@@ -84,14 +114,12 @@ class SolveViewModel(
         }
     }
 
-    private fun runMove(move: RubikCube.Movement, newIndex: Int) {
+    private suspend fun runMove(move: RubikCube.Movement, newIndex: Int) {
         if (connectionState.value != ConnectionState.CONNECTED) {
             return
         }
 
-        viewModelScope.launch {
-            robot.runMovement(move)
-        }
+        robot.runMovement(move)
 
         _state.update {
             it.copy(currentMoveIndex = newIndex)
@@ -104,6 +132,7 @@ data class SolveState(
     val rubikCubeMoves: RubikCubeMoves,
     val currentMoveIndex: Int = -1,
     val cubeReceived: Boolean = false,
+    val isPlaying: Boolean = false
 ) {
     val nextMovement: RubikCube.Movement
         get() = rubikCubeMoves[nextMovementIndex]

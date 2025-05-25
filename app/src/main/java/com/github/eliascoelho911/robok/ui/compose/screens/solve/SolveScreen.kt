@@ -148,7 +148,7 @@ fun SolveScreen(
                     nextMove = getNextMoveNotation(state),
                     currentMoveIndex = state.currentMoveIndex + 1,
                     totalMoves = state.rubikCubeMoves.size,
-                    isPlaying = false,
+                    isPlaying = state.isPlaying,
                     isSolved = isSolved,
                     isEnabled = state.cubeReceived,
                     onPreviousClick = {
@@ -158,6 +158,9 @@ fun SolveScreen(
                     onNextClick = {
                         viewModel.onNext()
                         animCubeState.animateMove()
+                    },
+                    onPlayPauseClick = {
+                        viewModel.onPlayPause()
                     },
                     modifier = Modifier
                 )
